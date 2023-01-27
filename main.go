@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/spf13/cobra"
+	"solenopsys-cli-xs/commands/cluster"
 	"solenopsys-cli-xs/commands/keys"
 	"solenopsys-cli-xs/commands/node"
 )
@@ -20,4 +21,5 @@ func main() {
 func initCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(node.Cmd)
 	rootCmd.AddCommand(keys.Cmd)
+	rootCmd.AddCommand(cluster.Cmd)
 }

@@ -10,7 +10,6 @@ import (
 var cmdAccount = &cobra.Command{
 	Use:   "key",
 	Short: "Gen key",
-	Long:  `Print current time`,
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		keyring := keys.NewDeleteKeyReq("bla")
