@@ -5,10 +5,12 @@ go 1.19
 require (
 	github.com/cosmos/cosmos-sdk v0.46.8
 	github.com/cosmos/go-bip39 v1.0.0
+	github.com/k3s-io/helm-controller v0.13.1
 	github.com/spf13/cobra v1.6.1
 	github.com/tyler-smith/go-bip32 v1.0.0
 	k8s.io/apimachinery v0.26.1
 	k8s.io/client-go v0.26.1
+	k8s.io/klog/v2 v2.80.1
 )
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
@@ -128,7 +130,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/api v0.26.1 // indirect
-	k8s.io/klog/v2 v2.80.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20221012153701-172d655c2280 // indirect
 	k8s.io/utils v0.0.0-20221107191617-1a15be271d1d // indirect
 	sigs.k8s.io/json v0.0.0-20220713155537-f223a00ba0e2 // indirect
