@@ -5,18 +5,15 @@ import (
 	"fmt"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"log"
 )
 
 func ConnectToKubernets() {
 	// Create a new Kubernetes client
-	const configPath = "/etc/rancher/k3s/k3s.yaml"
-	config, err := clientcmd.BuildConfigFromFlags("", configPath)
-	if err != nil {
-		log.Fatal(err)
-	}
-	clientset, err := kubernetes.NewForConfig(config)
+	clientset, err := GetClientSet()
+
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -27,4 +24,19 @@ func ConnectToKubernets() {
 		log.Fatal(err)
 	}
 	fmt.Printf("There are %d pods in the default namespace\n", len(pods.Items))
+}
+
+func GetClientSet() (*kubernetes.Clientset, error) {
+	config, err := GetConfig()
+	if err != nil {
+		log.Fatal(err)
+	}
+	return kubernetes.NewForConfig(config)
+
+}
+
+func GetConfig() (*rest.Config, error) {
+	const configPath = "/etc/rancher/k3s/k3s.yaml"
+	config, err := clientcmd.BuildConfigFromFlags("", configPath)
+	return config, err
 }
