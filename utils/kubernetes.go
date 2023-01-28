@@ -22,7 +22,7 @@ func ConnectToKubernets() {
 	}
 
 	// List all pods in the default namespace
-	pods, err := clientset.CoreV1().Pods("").List(context.TODO(), metav1.ListOptions{})
+	pods, err := clientset.CoreV1().Pods("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
 		log.Fatal(err)
 	}
