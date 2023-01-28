@@ -1,4 +1,4 @@
-package charts
+package chart
 
 import (
 	"fmt"
@@ -20,8 +20,10 @@ var cmdInstall = &cobra.Command{
 		chart := args[0]
 		repoUrl := args[2]
 		version := args[1]
-		api.CreateHelmChartSimple(chart, repoUrl, version)
-
-		fmt.Println("Installed: ", chart)
+		simple, err := api.CreateHelmChartSimple(chart, repoUrl, version)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Installed: ", simple.Name)
 	},
 }

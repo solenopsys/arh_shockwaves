@@ -1,4 +1,4 @@
-package charts
+package chart
 
 import (
 	"fmt"
@@ -7,10 +7,10 @@ import (
 	"solenopsys-cli-xs/utils"
 )
 
-var cmdList = cobra.Command{
+var cmdList = &cobra.Command{
 	Use:   "list",
-	Short: "List charts",
-	Args:  cobra.MinimumNArgs(3),
+	Short: "List chart",
+	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		config, err := utils.GetConfig()
 		if err != nil {
@@ -22,9 +22,9 @@ var cmdList = cobra.Command{
 		if err != nil {
 			log.Fatal(err)
 		}
-		for i, item := range charts.Items {
-			fmt.Println(i, item.Name)
+		for _, item := range charts.Items {
+			fmt.Println(item.Name)
 		}
-		fmt.Println("Removed: ", args[0])
+
 	},
 }

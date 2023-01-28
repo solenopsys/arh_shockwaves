@@ -1,4 +1,4 @@
-package charts
+package chart
 
 import (
 	"fmt"
