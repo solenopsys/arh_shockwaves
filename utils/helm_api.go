@@ -24,7 +24,7 @@ func NewAPI(rc *rest.Config) HelmApi {
 	return HelmApi{HelmClientSet: helmcln, Namespace: "installers"}
 }
 
-func (f *HelmApi) CreateHelmChartSimple(name string, repo string, version string) (*helmapiv1.HelmChart, error) {
+func (f *HelmApi) CreateHelmChartSimple(name string, repo string, version string, targetNamespace string) (*helmapiv1.HelmChart, error) {
 	chart := &helmapiv1.HelmChart{
 		ObjectMeta: metav1.ObjectMeta{
 			Name:      name, // название в кубере
@@ -34,9 +34,10 @@ func (f *HelmApi) CreateHelmChartSimple(name string, repo string, version string
 			},
 		},
 		Spec: helmapiv1.HelmChartSpec{
-			Chart:   name, // исходные данные
-			Version: version,
-			Repo:    repo,
+			Chart:           name, // исходные данные
+			Version:         version,
+			Repo:            repo,
+			TargetNamespace: targetNamespace,
 			Set: map[string]intstr.IntOrString{
 				"rbac.enabled": {
 					Type:   intstr.String,
@@ -54,7 +55,10 @@ func (f *HelmApi) CreateHelmChartSimple(name string, repo string, version string
 }
 
 func (f *HelmApi) DeleteHelmChart(name string) error {
-	return f.HelmClientSet.HelmV1().HelmCharts(f.Namespace).Delete(context.TODO(), name, metav1.DeleteOptions{})
+	grace := int64(10)
+	background := metav1.DeletePropagationBackground
+	options := metav1.DeleteOptions{GracePeriodSeconds: &grace, PropagationPolicy: &background}
+	return f.HelmClientSet.HelmV1().HelmCharts(f.Namespace).Delete(context.TODO(), name, options)
 }
 
 func (f *HelmApi) GetHelmChart(name string) (*helmapiv1.HelmChart, error) {

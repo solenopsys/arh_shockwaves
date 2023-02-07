@@ -20,7 +20,7 @@ var cmdInstall = &cobra.Command{
 		chart := args[0]
 		repoUrl := args[2]
 		version := args[1]
-		simple, err := api.CreateHelmChartSimple(chart, repoUrl, version)
+		simple, err := api.CreateHelmChartSimple(chart, repoUrl, version, "default")
 		if err != nil {
 			log.Fatal(err)
 		}

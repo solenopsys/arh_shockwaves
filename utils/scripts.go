@@ -19,7 +19,7 @@ func downloadScript(url string) ([]byte, error) {
 	}
 }
 
-func readFile(fileName string) ([]byte, error) {
+func ReadFile(fileName string) ([]byte, error) {
 	data, err := ioutil.ReadFile(fileName)
 	if err != nil {
 		fmt.Println(err)
@@ -42,7 +42,7 @@ func CommandApplyFromUrl(url string, command string) {
 
 func CommandApplyFromFile(file string, command string) {
 	fmt.Println("Start install")
-	httpBody, err := readFile(file)
+	httpBody, err := ReadFile(file)
 	if err != nil {
 		fmt.Println(err.Error())
 		return

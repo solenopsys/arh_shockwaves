@@ -3,6 +3,7 @@ package utils
 import (
 	"context"
 	"fmt"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -39,4 +40,14 @@ func GetConfig() (*rest.Config, error) {
 	const configPath = "/etc/rancher/k3s/k3s.yaml"
 	config, err := clientcmd.BuildConfigFromFlags("", configPath)
 	return config, err
+}
+
+func CreateNamespace(name string) error {
+	clientset, err := GetClientSet()
+	if err != nil {
+		return err
+	}
+	namespace := &corev1.Namespace{ObjectMeta: metav1.ObjectMeta{Name: name}}
+	_, err = clientset.CoreV1().Namespaces().Create(context.TODO(), namespace, metav1.CreateOptions{})
+	return err
 }
