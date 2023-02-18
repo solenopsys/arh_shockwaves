@@ -3,7 +3,7 @@ package node
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"solenopsys-cli-xs/utils"
+	"xs/utils"
 )
 
 var cmdNodeInstall = &cobra.Command{

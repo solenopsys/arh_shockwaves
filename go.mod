@@ -1,4 +1,4 @@
-module solenopsys-cli-xs
+module xs
 
 go 1.19
 

@@ -2,7 +2,7 @@ package node
 
 import (
 	"github.com/spf13/cobra"
-	"solenopsys-cli-xs/utils"
+	"xs/utils"
 )
 
 var cmdNodeRemove = &cobra.Command{

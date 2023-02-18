@@ -2,7 +2,7 @@ package cluster
 
 import (
 	"github.com/spf13/cobra"
-	"solenopsys-cli-xs/utils"
+	"xs/utils"
 )
 
 var cmdStatus = &cobra.Command{

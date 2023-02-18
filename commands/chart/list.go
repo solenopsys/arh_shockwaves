@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"log"
-	"solenopsys-cli-xs/utils"
+	"xs/utils"
 )
 
 var cmdList = &cobra.Command{

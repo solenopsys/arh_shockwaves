@@ -3,7 +3,7 @@ package net
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"solenopsys-cli-xs/utils"
+	"xs/utils"
 )
 
 var cmdList = &cobra.Command{

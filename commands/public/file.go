@@ -5,7 +5,7 @@ import (
 	"fmt"
 	ipfs "github.com/ipfs/go-ipfs-api"
 	"github.com/spf13/cobra"
-	"solenopsys-cli-xs/utils"
+	"xs/utils"
 )
 
 var cmdFile = &cobra.Command{
