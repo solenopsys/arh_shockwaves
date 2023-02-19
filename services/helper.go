@@ -1,4 +1,4 @@
-package dev
+package services
 
 import (
 	"encoding/json"
@@ -47,7 +47,7 @@ func (h *InitHelper) createConfig() *Config {
 	return &config
 }
 
-func (h *InitHelper) initRepository() {
+func (h *InitHelper) InitRepository() {
 	println("Init repository")
 	h.loadDirsConfig()
 	h.createDirs()

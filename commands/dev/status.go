@@ -5,9 +5,9 @@ import (
 	"xs/services"
 )
 
-var cmdSync = &cobra.Command{
-	Use:   "sync ",
-	Short: "Sync modules by configuration",
+var cmdStatus = &cobra.Command{
+	Use:   "status",
+	Short: "Show status of installed env programs (git,nx,npm,go,...)",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		loader := services.NewLoader()

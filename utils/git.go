@@ -13,9 +13,10 @@ func CloneGitRepository(url string, path string) error {
 		cmd := exec.Command("git", "clone", url, path)
 		return cmd.Run()
 	} else {
-		fullpath, _ := filepath.Abs(gitDir)
-		println("Repository already exists: " + fullpath)
-		return nil
+		fullPath, _ := filepath.Abs(gitDir)
+		println("Repository already exists update: " + fullPath)
+		cmd := exec.Command("git", "pull", url, path)
+		return cmd.Run()
 	}
 
 }
