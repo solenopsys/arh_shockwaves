@@ -8,6 +8,7 @@ require (
 	github.com/ipfs/go-ipfs-api v0.3.0
 	github.com/k3s-io/helm-controller v0.13.1
 	github.com/miekg/dns v1.1.43
+	github.com/rs/zerolog v1.27.0
 	github.com/spf13/cobra v1.6.1
 	github.com/tyler-smith/go-bip32 v1.0.0
 	k8s.io/api v0.26.1
@@ -88,6 +89,7 @@ require (
 	github.com/libp2p/go-openssl v0.0.7 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
 	github.com/mailru/easyjson v0.7.6 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.16 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.2-0.20181231171920-c182affec369 // indirect
 	github.com/mimoo/StrobeGo v0.0.0-20210601165009-122bf33a46e0 // indirect

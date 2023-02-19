@@ -24,11 +24,14 @@ type InitHelper struct {
 }
 
 func (h *InitHelper) createDir(dir string) {
+	println("Create dir: ", dir)
 	os.Mkdir(dir, 0755)
 }
 
 func (h *InitHelper) createDirs() {
+
 	dirs := h.dirs
+
 	for _, dir := range dirs {
 		h.createDir(dir)
 	}
@@ -45,6 +48,7 @@ func (h *InitHelper) createConfig() *Config {
 }
 
 func (h *InitHelper) initRepository() {
+	println("Init repository")
 	h.loadDirsConfig()
 	h.createDirs()
 	h.createConfig()
@@ -52,7 +56,10 @@ func (h *InitHelper) initRepository() {
 
 func (h *InitHelper) loadDirsConfig() {
 	dirs := []string{}
-	file, _ := os.ReadFile(h.dirsFileName)
+	file, err := os.ReadFile(h.dirsFileName)
+	if err != nil {
+		panic(err)
+	}
 	json.Unmarshal(file, &dirs)
 	h.dirs = dirs
 }
@@ -61,6 +68,6 @@ func NewHelper() *InitHelper {
 	helper := InitHelper{}
 	helper.PackageType = Git
 	helper.configName = "config/xs.json"
-	helper.dirsFileName = "config/dirs.json"
+	helper.dirsFileName = "config/folders.json"
 	return &helper
 }

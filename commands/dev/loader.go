@@ -21,32 +21,45 @@ type ConfLoader struct {
 }
 
 func (c *ConfLoader) loadConfig() *[]ModuleGroup {
-	file := "front-modules.json"
+
 	config := &[]ModuleGroup{}
-	err := json.Unmarshal([]byte(file), config)
+	fileName := c.configName
+	fileData, err := utils.ReadFile(fileName)
+	if err == nil {
+		err = json.Unmarshal([]byte(fileData), config)
+	}
 	if err != nil {
 		panic(err)
 	}
+
 	return config
 }
 
 func (c *ConfLoader) loadBase() {
-	utils.CloneGitRepository("https://github.com/solenopsys/treerepo-template", "./")
+	println("Start load base\n")
+
+	err := utils.CloneGitRepository("https://github.com/solenopsys/treerepo-template.git", "./")
+	if err != nil {
+		println("Error: %", err)
+		panic(err)
+	}
+
 }
 
 func (c *ConfLoader) syncModules() {
 	groups := *c.loadConfig()
 	for _, group := range groups {
 		for _, module := range group.Modules {
-			println("Start load: %", module.Name)
-			go utils.CloneGitRepository(module.Git, "./packages/"+group.Dir+"/"+module.Directory)
+			println("Start load repository: ", module.Name)
+			path := "./front/packages/" + group.Dir + "/" + module.Directory
+			utils.CloneGitRepository(module.Git, path)
 		}
 	}
 }
 
 func NewLoader() *ConfLoader {
 	loader := ConfLoader{}
-	loader.configName = "config/front-modules.json"
+	loader.configName = "./config/front-modules.json"
 	return &loader
 }
 
