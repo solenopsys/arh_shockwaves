@@ -17,11 +17,26 @@ type GitModuleGroup struct {
 }
 
 type ConfLoader struct {
+	repoType   string
 	configName string
+	targetDir  string
+	data       *[]GitModuleGroup
 }
 
-func (c *ConfLoader) loadConfig() *[]GitModuleGroup {
+const treeRepoLink = "https://github.com/solenopsys/treerepo-template.git"
 
+func LoadBase() {
+	println("Start load base\n")
+
+	err := utils.CloneGitRepository(treeRepoLink, "./")
+	if err != nil {
+		println("Error: %", err)
+		panic(err)
+	}
+
+}
+
+func (c *ConfLoader) LoadConfig() {
 	config := &[]GitModuleGroup{}
 	fileName := c.configName
 	fileData, err := utils.ReadFile(fileName)
@@ -31,38 +46,51 @@ func (c *ConfLoader) loadConfig() *[]GitModuleGroup {
 	if err != nil {
 		panic(err)
 	}
-
-	return config
-}
-
-func (c *ConfLoader) LoadBase() {
-	println("Start load base\n")
-
-	err := utils.CloneGitRepository("https://github.com/solenopsys/treerepo-template.git", "./")
-	if err != nil {
-		println("Error: %", err)
-		panic(err)
-	}
-
+	c.data = config
 }
 
 func (c *ConfLoader) SyncModules() {
-	groups := *c.loadConfig()
+	groups := *c.data
 	for _, group := range groups {
 		for _, module := range group.Modules {
-			println("Start load repository: ", module.Name)
-			path := "./front/packages/" + group.Dir + "/" + module.Directory
+			println("Start load repository:", module.Name)
+			path := c.targetDir + "/" + group.Dir + "/" + module.Directory
 			utils.CloneGitRepository(module.Git, path)
 		}
 	}
 }
 
-func NewLoader() *ConfLoader {
+func NewFrontLoader() *ConfLoader {
 	loader := ConfLoader{}
 	loader.configName = "./config/front-modules.json"
+	loader.targetDir = "./front/packages"
+	return &loader
+}
+
+func NewBackLoader() *ConfLoader {
+	loader := ConfLoader{}
+	loader.configName = "./config/back-modules.json"
+	loader.targetDir = "./back"
 	return &loader
 }
 
 func (c *ConfLoader) injectConfiguration() {
 	// c.loadModules()
+}
+func syncFront() {
+	loader := NewFrontLoader()
+	loader.LoadConfig()
+	// loader.SyncModules()
+	InjectConfToJson(loader, "./front/tsconfig.base.json")
+}
+
+func syncBack() {
+	backLoader := NewBackLoader()
+	backLoader.LoadConfig()
+	backLoader.SyncModules()
+}
+
+func SyncAllModules() {
+	syncFront()
+	syncBack()
 }

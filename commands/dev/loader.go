@@ -35,17 +35,6 @@ func (c *ConfLoader) loadConfig() *[]ModuleGroup {
 	return config
 }
 
-func (c *ConfLoader) loadBase() {
-	println("Start load base\n")
-
-	err := utils.CloneGitRepository("https://github.com/solenopsys/treerepo-template.git", "./")
-	if err != nil {
-		println("Error: %", err)
-		panic(err)
-	}
-
-}
-
 func (c *ConfLoader) syncModules() {
 	groups := *c.loadConfig()
 	for _, group := range groups {

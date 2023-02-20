@@ -10,9 +10,8 @@ var cmdInit = &cobra.Command{
 	Short: "Init tree repository",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		loader := services.NewLoader()
-		loader.LoadBase()
+		services.LoadBase()
 		services.NewHelper().InitRepository()
-		loader.SyncModules()
+		services.SyncAllModules()
 	},
 }

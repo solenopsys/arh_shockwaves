@@ -10,7 +10,6 @@ var cmdSync = &cobra.Command{
 	Short: "Sync modules by configuration",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		loader := services.NewLoader()
-		loader.SyncModules()
+		services.SyncAllModules()
 	},
 }
