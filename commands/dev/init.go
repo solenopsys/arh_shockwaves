@@ -6,12 +6,22 @@ import (
 )
 
 var cmdInit = &cobra.Command{
-	Use:   "init ",
-	Short: "Init tree repository",
-	Args:  cobra.MinimumNArgs(0),
+	Use:   "init [front/back]",
+	Short: "Init monorepo",
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		services.LoadBase()
 		services.NewHelper().InitRepository()
-		services.SyncAllModules()
+		getLoader(args).SyncFunc()
 	},
+}
+
+func getLoader(args []string) *services.ConfLoader {
+	if args[0] == "front" {
+		return services.NewFrontLoader()
+	} else if args[0] == "back" {
+		return services.NewBackLoader()
+	} else {
+		panic("Unknown type needed (front/back)")
+	}
 }

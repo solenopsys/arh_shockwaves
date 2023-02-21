@@ -24,12 +24,11 @@ func InjectConfToJson(c *ConfLoader, fileName string) {
 	modulesConf := make(map[string][]string)
 
 	groups := *c.data
-	for _, group := range groups {
-		for _, module := range group.Modules {
 
-			path := c.targetDir + "/" + group.Dir + "/" + module.Directory
+	for section, group := range groups.Modules {
+		for _, module := range group {
+			path := section + "/" + c.targetDir + "/" + module.Directory
 			tsFile := path + "/src/index.ts"
-
 			println("Inject to config:", module.Name, tsFile)
 			modulesConf[module.Name] = []string{tsFile}
 		}

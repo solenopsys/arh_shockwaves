@@ -9,6 +9,7 @@ import (
 func CloneGitRepository(url string, path string) error {
 	gitDir := path + "/.git"
 
+	println("Start clone repository: " + url + " to " + path)
 	if _, err := os.Stat(gitDir); os.IsNotExist(err) {
 		cmd := exec.Command("git", "clone", url, path)
 		return cmd.Run()

@@ -17,10 +17,9 @@ type Config struct {
 }
 
 type InitHelper struct {
-	dirs         []string
-	PackageType  PackageTypes
-	configName   string
-	dirsFileName string
+	dirs        []string
+	PackageType PackageTypes
+	configName  string
 }
 
 func (h *InitHelper) createDir(dir string) {
@@ -49,25 +48,12 @@ func (h *InitHelper) createConfig() *Config {
 
 func (h *InitHelper) InitRepository() {
 	println("Init repository")
-	h.loadDirsConfig()
-	h.createDirs()
 	h.createConfig()
-}
-
-func (h *InitHelper) loadDirsConfig() {
-	dirs := []string{}
-	file, err := os.ReadFile(h.dirsFileName)
-	if err != nil {
-		panic(err)
-	}
-	json.Unmarshal(file, &dirs)
-	h.dirs = dirs
 }
 
 func NewHelper() *InitHelper {
 	helper := InitHelper{}
 	helper.PackageType = Git
-	helper.configName = "config/xs.json"
-	helper.dirsFileName = "config/folders.json"
+	helper.configName = "xs.json"
 	return &helper
 }
