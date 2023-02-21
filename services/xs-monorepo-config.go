@@ -52,7 +52,7 @@ func (c *ConfLoader) SyncModules() {
 	for section, group := range groups.Modules {
 		for _, module := range group {
 			path := c.targetDir + "/" + section + "/" + module.Directory
-			utils.CloneGitRepository(module.Git, path)
+			utils.CloneGitRepository(module.Git, path, true)
 		}
 	}
 }
@@ -60,7 +60,7 @@ func (c *ConfLoader) SyncModules() {
 func LoadBase(monorepoLink string) {
 	println("Load base\n")
 
-	err := utils.CloneGitRepository(monorepoLink, "./")
+	err := utils.CloneGitRepository(monorepoLink, "./", false)
 	if err != nil {
 		panic(err)
 	}
