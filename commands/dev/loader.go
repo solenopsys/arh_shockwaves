@@ -39,7 +39,7 @@ func (c *ConfLoader) syncModules() {
 	groups := *c.loadConfig()
 	for _, group := range groups {
 		for _, module := range group.Modules {
-			println("Start load repository: ", module.Name)
+			println("Load repository: ", module.Name)
 			path := "./front/packages/" + group.Dir + "/" + module.Directory
 			utils.CloneGitRepository(module.Git, path)
 		}

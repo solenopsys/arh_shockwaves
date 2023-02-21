@@ -10,18 +10,19 @@ var cmdInit = &cobra.Command{
 	Short: "Init monorepo",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		services.LoadBase()
-		services.NewHelper().InitRepository()
-		getLoader(args).SyncFunc()
-	},
-}
+		//validate arg 0 is front or back
+		repoType := args[0]
 
-func getLoader(args []string) *services.ConfLoader {
-	if args[0] == "front" {
-		return services.NewFrontLoader()
-	} else if args[0] == "back" {
-		return services.NewBackLoader()
-	} else {
-		panic("Unknown type needed (front/back)")
-	}
+		if repoType == "front" {
+			services.LoadBase("https://github.com/solenopsys/xs-fronts-template.git")
+			services.NewFrontLoader().SyncFunc()
+		} else if repoType == "back" {
+			services.LoadBase("https://github.com/solenopsys/xs-backs-template.git")
+			services.NewBackLoader().SyncFunc()
+		} else {
+			println("Invalid argument, only front or back allowed")
+			return
+		}
+
+	},
 }

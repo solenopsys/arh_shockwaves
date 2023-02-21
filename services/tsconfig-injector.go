@@ -27,16 +27,16 @@ func InjectConfToJson(c *ConfLoader, fileName string) {
 
 	for section, group := range groups.Modules {
 		for _, module := range group {
-			path := section + "/" + c.targetDir + "/" + module.Directory
+			path := c.targetDir + "/" + section + "/" + module.Directory
 			tsFile := path + "/src/index.ts"
-			println("Inject to config:", module.Name, tsFile)
-			modulesConf[module.Name] = []string{tsFile}
+			println("Inject to config:", module.Npm, tsFile)
+			modulesConf[module.Npm] = []string{tsFile}
 		}
 	}
 
 	confData["paths"] = modulesConf
 
-	newJSON, err := json.Marshal(confData)
+	newJSON, err := json.MarshalIndent(confData, "", "  ")
 	if err != nil {
 		panic(err)
 	}

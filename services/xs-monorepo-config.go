@@ -5,37 +5,6 @@ import (
 	"xs/utils"
 )
 
-/*
-		{
-		  "format": {
-		    "name": "xs-backs",
-		    "version": "1.0.0"
-		  },
-		  "modules": {
-		    "platform": [
-		      {
-		        "directory": "invicta/helm-repository",
-		        "git": "https://github.com/solenopsys/converged-microservice-helm-repository-invicta",
-		        "load": true
-		      },
-	     {
-	        "npm":"@solenopsys/lib-clusters",
-	        "directory": "clusters",
-	        "git": "https://github.com/solenopsys/sc-fl-helm",
-	        "use": "git",
-	        "load": true
-	      },
-	    {
-	        "npm":"@solenopsys/lib-clusters",
-	        "directory": "clusters",
-	        "git": "https://github.com/solenopsys/sc-fl-helm",
-	        "use": "npm",
-	        "load": true
-	      }
-		    ]
-		  }
-		}
-*/
 type XsMonorepoFormat struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
@@ -47,7 +16,6 @@ type XsMonorepoConfig struct {
 }
 
 type XsMonorepoModule struct {
-	Name      string `json:"name"`
 	Directory string `json:"directory"`
 	Git       string `json:"git"`
 	Load      bool   `json:"load"`
@@ -63,9 +31,8 @@ type ConfLoader struct {
 	SyncFunc   func()
 }
 
-func (c *ConfLoader) LoadConfig() {
+func LoadConfigFile(fileName string) *XsMonorepoConfig {
 	config := &XsMonorepoConfig{}
-	fileName := c.configName
 	fileData, err := utils.ReadFile(fileName)
 	if err == nil {
 		err = json.Unmarshal([]byte(fileData), config)
@@ -73,26 +40,27 @@ func (c *ConfLoader) LoadConfig() {
 	if err != nil {
 		panic(err)
 	}
-	c.data = config
+	return config
+}
+
+func (c *ConfLoader) LoadConfig() {
+	c.data = LoadConfigFile(c.configName)
 }
 
 func (c *ConfLoader) SyncModules() {
 	groups := *c.data
 	for section, group := range groups.Modules {
 		for _, module := range group {
-			println("Start load repository:", module.Name)
-			path := section + "/" + c.targetDir + "/" + module.Directory
+			path := c.targetDir + "/" + section + "/" + module.Directory
 			utils.CloneGitRepository(module.Git, path)
 		}
 	}
 }
 
-const treeRepoLink = "https://github.com/solenopsys/treerepo-template.git"
+func LoadBase(monorepoLink string) {
+	println("Load base\n")
 
-func LoadBase() {
-	println("Start load base\n")
-
-	err := utils.CloneGitRepository(treeRepoLink, "./")
+	err := utils.CloneGitRepository(monorepoLink, "./")
 	if err != nil {
 		panic(err)
 	}
@@ -119,7 +87,7 @@ func syncFront() {
 	loader := NewFrontLoader()
 	loader.LoadConfig()
 	loader.SyncModules()
-	InjectConfToJson(loader, "./front/tsconfig.base.json")
+	InjectConfToJson(loader, "./tsconfig.base.json")
 }
 
 func syncBack() {
