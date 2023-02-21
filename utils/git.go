@@ -22,8 +22,13 @@ func CloneGitRepository(url string, path string, asModule bool) error {
 	} else {
 		fullPath, _ := filepath.Abs(gitDir)
 		println("Repository already exists update: " + fullPath)
-		cmd := exec.Command("git", "pull")
-		return cmd.Run()
+		if asModule {
+			cmd := exec.Command("git", "submodule", "update", "--init", "--recursive")
+			return cmd.Run()
+		} else {
+			cmd := exec.Command("git", "update", "--init", "--recursive")
+			return cmd.Run()
+		}
 	}
 
 }
