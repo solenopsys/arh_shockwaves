@@ -25,7 +25,7 @@ func InjectConfToJson(c *ConfLoader, fileName string) {
 
 	groups := *c.data
 
-	for section, group := range groups.Modules {
+	for section, group := range groups.Groups {
 		for _, module := range group {
 			path := c.targetDir + "/" + section + "/" + module.Directory
 			tsFile := path + "/src/index.ts"

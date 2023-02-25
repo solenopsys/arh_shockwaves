@@ -11,8 +11,8 @@ type XsMonorepoFormat struct {
 }
 
 type XsMonorepoConfig struct {
-	Format  XsMonorepoFormat              `json:"format"`
-	Modules map[string][]XsMonorepoModule `json:"modules"`
+	Format XsMonorepoFormat              `json:"format"`
+	Groups map[string][]XsMonorepoModule `json:"groups"`
 }
 
 type XsMonorepoModule struct {
@@ -49,7 +49,7 @@ func (c *ConfLoader) LoadConfig() {
 
 func (c *ConfLoader) SyncModules() {
 	groups := *c.data
-	for section, group := range groups.Modules {
+	for section, group := range groups.Groups {
 		for _, module := range group {
 			path := c.targetDir + "/" + section + "/" + module.Directory
 			utils.CloneGitRepository(module.Git, path, true)
