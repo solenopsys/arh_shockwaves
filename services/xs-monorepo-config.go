@@ -52,7 +52,7 @@ func (c *ConfLoader) SyncModules() {
 	for section, group := range groups.Groups {
 		for _, module := range group {
 			path := c.targetDir + "/" + section + "/" + module.Directory
-			utils.CloneGitRepository(module.Git, path, true)
+			utils.CloneGitRepository(module.Git, path, true, false)
 		}
 	}
 }
@@ -60,7 +60,7 @@ func (c *ConfLoader) SyncModules() {
 func LoadBase(monorepoLink string) {
 	println("Load base\n")
 
-	err := utils.CloneGitRepository(monorepoLink, "./", false)
+	err := utils.CloneGitRepository(monorepoLink, "./", false, false)
 	if err != nil {
 		panic(err)
 	}
@@ -78,7 +78,7 @@ func NewFrontLoader() *ConfLoader {
 func NewBackLoader() *ConfLoader {
 	loader := ConfLoader{}
 	loader.configName = "./xs.json"
-	loader.targetDir = "./"
+	loader.targetDir = ""
 	loader.SyncFunc = syncBack
 	return &loader
 }

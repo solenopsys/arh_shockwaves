@@ -6,9 +6,6 @@ import (
 	"xs/utils"
 )
 
-type Packages struct {
-}
-
 func InjectConfToJson(c *ConfLoader, fileName string) {
 
 	existingJSON, err := utils.ReadFile(fileName)
@@ -34,7 +31,7 @@ func InjectConfToJson(c *ConfLoader, fileName string) {
 		}
 	}
 
-	confData["paths"] = modulesConf
+	confData["compilerOptions"].(map[string]any)["paths"] = modulesConf
 
 	newJSON, err := json.MarshalIndent(confData, "", "  ")
 	if err != nil {
