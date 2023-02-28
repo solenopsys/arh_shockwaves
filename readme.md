@@ -1,7 +1,6 @@
 # XS - (eXec Solenopsys) - cli tool
 
-
-## Functions
+Point to start global infrastructure of Solenopsys
 
 ### chart
 
