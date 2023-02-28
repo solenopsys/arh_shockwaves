@@ -90,19 +90,19 @@ Public content in ipfs
 
 Help about any command
 
-## Get Started
+# Get Started
 
-### Compile
+## Compile
 
-#### for Windows
+### for Windows
 
 `GOOS=windows GOARCH=amd64 go build -o xs.exe main.go`
 
-#### for Linux
+### for Linux
 
 `GOOS=linux GOARCH=amd64 go build -o xs e main.go`
 
-### Get source code for development
+## Get source code for development
 
 `xs dev init front` - get frontends monorepo
 
