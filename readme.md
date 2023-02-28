@@ -1,16 +1,36 @@
 # XS - (eXec Solenopsys) - cli tool
 
-Point to start global infrastructure of Solenopsys
+Point to start global infrastructure of Solenopsys network.
 
-# Functions
+### You may use it for: 
+- start own Converged cluster  
+- get source code for development
+- public your projects in Solenopsys network
+- create own application for Converged
+
+## Get Started
+
+### Compile for Windows
+
+`GOOS=windows GOARCH=amd64 go build -o xs.exe main.go`
+
+### Compile for Linux
+
+`GOOS=linux GOARCH=amd64 go build -o xs e main.go`
+
+### Get source code for development
+
+`xs dev init front` - get frontends monorepo
+
+`xs dev init back` - get backend monorepo
+
+## Functions
 
 ### chart
 
 Helm charts manipulation functions
 
 `xs chart [command]`
-
-**Subcommands:**
 
 - **install** - Install chart
 - **list** - List chart
@@ -22,8 +42,6 @@ Cluster manipulation functions
 
 `xs cluster [command]`
 
-**Subcommands:**
-
 - **status** - Cluster status
 
 ### dev
@@ -31,8 +49,6 @@ Cluster manipulation functions
 Developer functions
 
 `xs dev [command]`
-
-**Subcommands:**
 
 - **init**       - Init monorepo
 - **install**    - Install all necessary programs (git,nx,npm,go,...)
@@ -46,8 +62,6 @@ Keys manipulation functions
 
 `xs key [command]`
 
-**Subcommands:**
-
 - **key**        - Gen key
 - **pub**        - Generate public key
 - **seed**       - Generate seed
@@ -58,8 +72,6 @@ Solenopsys network information
 
 `xs net [command]`
 
-**Subcommands:**
-
 - **list**       - List nodes of start network
 
 ### node
@@ -68,10 +80,7 @@ Node control functions
 
 `xs node [command]`
 
-**Subcommands:**
-
 - **install**  - Install node
-
 - **remove**     - Remove node
 - **status**    - Status of node
 
@@ -81,29 +90,10 @@ Public content in ipfs
 
 `xs public [command]`
 
-**Subcommands:**
-
 - **dir**       - Public dir in ipfs
 - **file**     - Public file in ipfs
 
 ### help
-
 Help about any command
 
-# Get Started
 
-## Compile
-
-### for Windows
-
-`GOOS=windows GOARCH=amd64 go build -o xs.exe main.go`
-
-### for Linux
-
-`GOOS=linux GOARCH=amd64 go build -o xs e main.go`
-
-## Get source code for development
-
-`xs dev init front` - get frontends monorepo
-
-`xs dev init back` - get backend monorepo
