@@ -12,9 +12,9 @@ Helm charts manipulation functions
 
 **Subcommands:**
 
-- **install**     Install chart
-- **list**        List chart
-- **remove**      Module chart
+- **install** - Install chart
+- **list** - List chart
+- **remove** - Module chart
 
 ### cluster
 
@@ -24,7 +24,7 @@ Cluster manipulation functions
 
 **Subcommands:**
 
-- **status**      Cluster status
+- **status** - Cluster status
 
 ### dev
 
@@ -34,10 +34,10 @@ Developer functions
 
 **Subcommands:**
 
-- **init**        Init monorepo
-- **install**     Install all necessary programs (git,nx,npm,go,...)
-- **status**      Show status of installed env programs (git,nx,npm,go,...)
-- **sync**        Sync modules by configuration
+- **init**       - Init monorepo
+- **install**    - Install all necessary programs (git,nx,npm,go,...)
+- **status**     - Show status of installed env programs (git,nx,npm,go,...)
+- **sync**       - Sync modules by configuration
 
 
 ### key
@@ -48,9 +48,9 @@ Keys manipulation functions
 
 **Subcommands:**
 
-- **key**         Gen key
-- **pub**         Generate public key
-- **seed**        Generate seed
+- **key**        - Gen key
+- **pub**        - Generate public key
+- **seed**       - Generate seed
 
 ### net
 
@@ -60,7 +60,7 @@ Solenopsys network information
 
 **Subcommands:**
 
-- **list**        List nodes of start network
+- **list**       - List nodes of start network
 
 ### node
 
@@ -73,8 +73,7 @@ Node control functions
 - **install**  - Install node
 
 - **remove**     - Remove node
-
-- **status**    -  Status of node
+- **status**    - Status of node
 
 ### public
 
@@ -84,8 +83,8 @@ Public content in ipfs
 
 **Subcommands:**
 
-- **dir**       -  Public dir in ipfs
-- **file**     -   Public file in ipfs
+- **dir**       - Public dir in ipfs
+- **file**     - Public file in ipfs
 
 ### help
 
