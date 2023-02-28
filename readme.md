@@ -2,6 +2,8 @@
 
 Point to start global infrastructure of Solenopsys
 
+# Functions
+
 ### chart
 
 Helm charts manipulation functions
