@@ -16,7 +16,7 @@ Point to start global infrastructure of Solenopsys network.
 
 ### Compile for Linux
 
-`GOOS=linux GOARCH=amd64 go build -o xs e main.go`
+`GOOS=linux GOARCH=amd64 go build -o xs main.go`
 
 ### Get source code for development
 

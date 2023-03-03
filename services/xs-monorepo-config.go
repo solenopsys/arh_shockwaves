@@ -78,7 +78,7 @@ func NewFrontLoader() *ConfLoader {
 func NewBackLoader() *ConfLoader {
 	loader := ConfLoader{}
 	loader.configName = "./xs.json"
-	loader.targetDir = ""
+	loader.targetDir = "./"
 	loader.SyncFunc = syncBack
 	return &loader
 }
