@@ -9,16 +9,14 @@ import (
 	"xs/commands/net"
 	"xs/commands/node"
 	"xs/commands/public"
+	user "xs/commands/user"
 )
 
 func main() {
 	var rootCmd = &cobra.Command{Use: "xs"}
-
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
-
 	initCommands(rootCmd)
-
 	rootCmd.Execute()
 }
 
@@ -30,4 +28,5 @@ func initCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(public.Cmd)
 	rootCmd.AddCommand(net.Cmd)
 	rootCmd.AddCommand(dev.Cmd)
+	rootCmd.AddCommand(user.Cmd)
 }
