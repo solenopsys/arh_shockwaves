@@ -42,7 +42,7 @@ func postRequest(url string, data []byte) (*http.Response, error) {
 
 //
 
-func LoadKey(password string, login string) *RegisterData {
+func LoadKey(password string, login string) []byte {
 
 	hash := GenHash(password, login)
 	response, err := postRequest("http://127.0.0.1:8899/api/key", []byte(hash))
@@ -50,14 +50,18 @@ func LoadKey(password string, login string) *RegisterData {
 	defer response.Body.Close()
 	// response to RegisterData
 
-	var register RegisterData = RegisterData{}
-
 	bodyBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		panic(err)
 	}
 
-	err = json.Unmarshal(bodyBytes, &register)
+	return bodyBytes
+
+}
+
+func UnMarshal(bytes []byte) *RegisterData {
+	var register RegisterData = RegisterData{}
+	err := json.Unmarshal(bytes, &register)
 
 	if err != nil {
 		log.Println(err)

@@ -31,8 +31,18 @@ var cmdLogin = &cobra.Command{
 		println("Print password:", password)
 		key := utils.LoadKey(password, login)
 		// hidden password read
+		regData := utils.UnMarshal(key)
 
-		println(key)
+		secret, err := utils.DecryptKeyData(regData.EncryptedKey, password)
+
+		utils.GenJwt(regData.PublicKey, "simple", secret)
+
+		fileName, err := utils.WriteSessionToTempFile(key)
+		if err != nil {
+			println("Error saving session to file:", err)
+			return
+		}
+		println("Session saved to file", fileName)
 
 	},
 }

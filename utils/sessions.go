@@ -7,7 +7,7 @@ import (
 
 const pattern = "xs-session-"
 
-func writeSessionToTempFile(data string) (string, error) {
+func WriteSessionToTempFile(data []byte) (string, error) {
 	dir := os.TempDir()
 
 	tempFile, err := os.CreateTemp(dir, pattern)
@@ -16,12 +16,12 @@ func writeSessionToTempFile(data string) (string, error) {
 	}
 	defer tempFile.Close()
 
-	_, err = tempFile.WriteString(data)
+	_, err = tempFile.Write(data)
 	if err != nil {
 		return "", err
 	}
 
-	return tempFile.Name(), nil
+	return tempFile.Name(), err
 }
 
 func findYongestFile(files []string) (string, error) {
@@ -42,12 +42,18 @@ func findYongestFile(files []string) (string, error) {
 	return youngestFile, nil
 }
 
-func readSessionFromTempFile() (string, error) {
+func ReadSessionFromTempFile() ([]byte, error) {
 	dir := os.TempDir()
 	filePattern := filepath.Join(dir, pattern+"*")
 	files, err := filepath.Glob(filePattern)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-	return findYongestFile(files)
+	fileName, err := findYongestFile(files)
+
+	if err != nil {
+		return nil, err
+	}
+	bytes, err := ReadFile(fileName)
+	return bytes, err
 }
