@@ -35,9 +35,10 @@ var cmdLogin = &cobra.Command{
 
 		secret, err := utils.DecryptKeyData(regData.EncryptedKey, password)
 
-		utils.GenJwt(regData.PublicKey, "simple", secret)
+		jwt := utils.GenJwt(regData.PublicKey, "simple", secret)
 
-		fileName, err := utils.WriteSessionToTempFile(key)
+		dataBytes := []byte(jwt)
+		fileName, err := utils.WriteSessionToTempFile(dataBytes)
 		if err != nil {
 			println("Error saving session to file:", err)
 			return
