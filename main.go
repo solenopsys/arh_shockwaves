@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/spf13/cobra"
+	"xs/commands/auth"
 	"xs/commands/chart"
 	"xs/commands/cluster"
 	"xs/commands/dev"
@@ -9,7 +10,6 @@ import (
 	"xs/commands/net"
 	"xs/commands/node"
 	"xs/commands/public"
-	user "xs/commands/user"
 )
 
 func main() {
@@ -28,5 +28,5 @@ func initCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(public.Cmd)
 	rootCmd.AddCommand(net.Cmd)
 	rootCmd.AddCommand(dev.Cmd)
-	rootCmd.AddCommand(user.Cmd)
+	rootCmd.AddCommand(auth.Cmd)
 }

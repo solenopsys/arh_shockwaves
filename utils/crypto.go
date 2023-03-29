@@ -3,40 +3,20 @@ package utils
 import (
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/ecdsa"
+	"crypto/elliptic"
 	"crypto/sha256"
 	"encoding/hex"
-	"fmt"
-	"github.com/golang-jwt/jwt/v4"
+	"errors"
 	"golang.org/x/crypto/pbkdf2"
-	"time"
+	"math/big"
 )
-
-func GenJwt(user string, access string, secret []byte) string {
-	claims := jwt.MapClaims{
-		"iat":      time.Now().Unix(),
-		"exp":      time.Now().Add(time.Hour * 24).Unix(),
-		"issuer":   "urn:solenopsys:issuer",
-		"audience": "urn:solenopsys:audience",
-		"user":     user,
-		"access":   access,
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-	signedToken, err := token.SignedString(secret)
-	if err != nil {
-		fmt.Println("Error signing token:", err)
-		return ""
-	}
-
-	return signedToken
-}
 
 func DecryptKeyData(encryptedText string, password string) ([]byte, error) {
 	// algorithm := "AES-256-CBC"
 	key := make([]byte, 32)
 	iv := make([]byte, 16)
-	salt := make([]byte, 8)
+	salt := make([]byte, 0)
 
 	// Generate key and IV from password and salt using PBKDF2
 	derivedKey := pbkdf2.Key([]byte(password), salt, 100000, len(key)+len(iv), sha256.New)
@@ -60,4 +40,47 @@ func DecryptKeyData(encryptedText string, password string) ([]byte, error) {
 	// Remove padding
 	paddingLen := int(encryptedData[len(encryptedData)-1])
 	return encryptedData[:len(encryptedData)-paddingLen], nil
+}
+
+func LoadPrivateKeyFromString(keyStr string) (*ecdsa.PrivateKey, error) {
+	keyBytes, err := hex.DecodeString(keyStr)
+	if err != nil {
+		return nil, err
+	}
+
+	curve := elliptic.P256() // secp256k1 curve
+	if len(keyBytes) != curve.Params().BitSize/8 {
+		return nil, errors.New("invalid key size")
+	}
+
+	privKey := new(ecdsa.PrivateKey)
+	privKey.Curve = curve
+	privKey.D = new(big.Int).SetBytes(keyBytes)
+
+	// Calculate public key from private key
+	privKey.PublicKey.X, privKey.PublicKey.Y = curve.ScalarBaseMult(keyBytes)
+
+	return privKey, nil
+}
+
+func LoadPublicKeyFromString(keyStr string) (*ecdsa.PublicKey, error) {
+	keyBytes, err := hex.DecodeString(keyStr)
+	if err != nil {
+		return nil, err
+	}
+
+	curve := elliptic.P256() // secp256k1 curve
+	if len(keyBytes) != 2*curve.Params().BitSize/8+1 {
+		return nil, errors.New("invalid key size")
+	}
+
+	x := new(big.Int).SetBytes(keyBytes[1 : curve.Params().BitSize/8+1])
+	y := new(big.Int).SetBytes(keyBytes[curve.Params().BitSize/8+1:])
+
+	pubKey := new(ecdsa.PublicKey)
+	pubKey.Curve = curve
+	pubKey.X = x
+	pubKey.Y = y
+
+	return pubKey, nil
 }

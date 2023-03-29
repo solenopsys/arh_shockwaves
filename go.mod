@@ -5,7 +5,6 @@ go 1.19
 require (
 	github.com/cosmos/cosmos-sdk v0.46.8
 	github.com/cosmos/go-bip39 v1.0.0
-	github.com/golang-jwt/jwt/v4 v4.4.3
 	github.com/ipfs-cluster/ipfs-cluster v1.0.5
 	github.com/ipfs/go-ipfs-api v0.3.0
 	github.com/k3s-io/helm-controller v0.13.1

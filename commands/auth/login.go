@@ -1,9 +1,10 @@
-package user
+package auth
 
 import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/ssh/terminal"
+	"log"
 	"os"
 	"syscall"
 	"xs/utils"
@@ -33,17 +34,22 @@ var cmdLogin = &cobra.Command{
 		// hidden password read
 		regData := utils.UnMarshal(key)
 
-		secret, err := utils.DecryptKeyData(regData.EncryptedKey, password)
+		privateKey, err := utils.DecryptKeyData(regData.EncryptedKey, password)
 
-		jwt := utils.GenJwt(regData.PublicKey, "simple", secret)
-
-		dataBytes := []byte(jwt)
-		fileName, err := utils.WriteSessionToTempFile(dataBytes)
+		pk, err := utils.LoadPrivateKeyFromString(string(privateKey))
 		if err != nil {
-			println("Error saving session to file:", err)
+			log.Panic(err)
+		}
+
+		println(pk)
+
+		fileName, err := SOLENOPSYS_KEYS.WriteSessionToTempFile(key)
+
+		if err != nil {
+			println("Error saving keys to file:", err)
 			return
 		}
-		println("Session saved to file", fileName)
+		println("Key saved to file", fileName)
 
 	},
 }

@@ -5,12 +5,20 @@ import (
 	"path/filepath"
 )
 
-const pattern = "xs-session-"
+//const pattern = "xs-session-"
 
-func WriteSessionToTempFile(data []byte) (string, error) {
+type TempStorage struct {
+	FilePattern string
+}
+
+func NewSessionStorage(pattern string) *TempStorage {
+	return &TempStorage{FilePattern: pattern}
+}
+
+func (ts *TempStorage) WriteSessionToTempFile(data []byte) (string, error) {
 	dir := os.TempDir()
 
-	tempFile, err := os.CreateTemp(dir, pattern)
+	tempFile, err := os.CreateTemp(dir, ts.FilePattern)
 	if err != nil {
 		return "", err
 	}
@@ -24,7 +32,7 @@ func WriteSessionToTempFile(data []byte) (string, error) {
 	return tempFile.Name(), err
 }
 
-func findYongestFile(files []string) (string, error) {
+func (ts *TempStorage) findYongestFile(files []string) (string, error) {
 	var youngestFile string
 	var youngestFileTime int64
 
@@ -42,14 +50,38 @@ func findYongestFile(files []string) (string, error) {
 	return youngestFile, nil
 }
 
-func ReadSessionFromTempFile() ([]byte, error) {
+func (ts *TempStorage) findFiles() ([]string, error) {
 	dir := os.TempDir()
-	filePattern := filepath.Join(dir, pattern+"*")
-	files, err := filepath.Glob(filePattern)
+	filePattern := filepath.Join(dir, ts.FilePattern+"*")
+	return filepath.Glob(filePattern)
+}
+
+func (ts *TempStorage) DeleteSessionTempFiles() error {
+	files, err := ts.findFiles()
+	if err != nil {
+		return err
+	}
+
+	for _, file := range files {
+		err = os.Remove(file)
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+
+}
+
+func (ts *TempStorage) ReadSessionFromTempFile() ([]byte, error) {
+	files, err := ts.findFiles()
 	if err != nil {
 		return nil, err
 	}
-	fileName, err := findYongestFile(files)
+	if files == nil {
+		return nil, nil
+	}
+	fileName, err := ts.findYongestFile(files)
 
 	if err != nil {
 		return nil, err
