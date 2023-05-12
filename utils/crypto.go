@@ -76,7 +76,7 @@ func PrivateKeyFromSeed(seedPhrase string) *secp256k1.PrivKeySecp256k1 {
 	return &k1
 }
 
-func LoadPrivateKeyFromString(keyStr string) (*ecdsa.PrivateKey, error) {
+func LoadPrivateKeyFromString(keyStr string) (*secp256k1.PrivKeySecp256k1, error) {
 	keyBytes, err := hex.DecodeString(keyStr)
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func LoadPrivateKeyFromString(keyStr string) (*ecdsa.PrivateKey, error) {
 	copy(key[:], keyBytes)
 
 	k1 := secp256k1.PrivKeySecp256k1(key)
-	return k1, nil
+	return &k1, nil
 }
 
 func LoadPublicKeyFromString(keyStr string) (*ecdsa.PublicKey, error) {
