@@ -1,8 +1,8 @@
 package key
 
 import (
-	"fmt"
-	"github.com/cosmos/cosmos-sdk/client/keys"
+	//"fmt"
+	//	"github.com/cosmos/cosmos-sdk/client/keys"
 	"github.com/spf13/cobra"
 )
 
@@ -12,7 +12,7 @@ var cmdAccount = &cobra.Command{
 	Short: "Gen key",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		keyring := keys.NewDeleteKeyReq("bla")
-		fmt.Println("Private Key:", keyring)
+		//keyring := keys.NewDeleteKeyReq("bla")
+		//	fmt.Println("Private Key:", keyring)
 	},
 }

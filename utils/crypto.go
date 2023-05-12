@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/ecdsa"
@@ -10,9 +9,8 @@ import (
 	"encoding/hex"
 	"errors"
 	"github.com/cosmos/go-bip39"
-	"github.com/tendermint/tendermint/crypto/secp256k1"
+	"github.com/ethereum/go-ethereum/crypto"
 	"golang.org/x/crypto/pbkdf2"
-	"io"
 	"log"
 	"math/big"
 )
@@ -56,41 +54,29 @@ func GenMnemonic() string {
 	return mnemonic
 }
 
-func PrivateKeyFromSeed(seedPhrase string) *secp256k1.PrivKeySecp256k1 {
+func PrivateKeyFromSeed(seedPhrase string) **ecdsa.PrivateKey {
 	hash := sha256.Sum256([]byte(seedPhrase))
 	privateKey := make([]byte, 32)
 	copy(privateKey, hash[:])
 
-	println("HASH", hex.EncodeToString(privateKey))
+	hex := hex.EncodeToString(privateKey)
+	println("HASH", hex)
 
-	k1 := secp256k1.PrivKeySecp256k1([32]byte{})
-
-	r := bytes.NewReader(privateKey)
-	_, err := io.ReadFull(r, k1[:])
+	importedPrivKey, err := crypto.HexToECDSA(hex)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	hexPrivate := hex.EncodeToString(k1[:])
-	println("Private key:", hexPrivate)
-	return &k1
+	return &importedPrivKey
 }
 
-func LoadPrivateKeyFromString(keyStr string) (*secp256k1.PrivKeySecp256k1, error) {
-	keyBytes, err := hex.DecodeString(keyStr)
+func LoadPrivateKeyFromString(keyStr string) (**ecdsa.PrivateKey, error) {
+
+	importedPrivKey, err := crypto.HexToECDSA(keyStr)
 	if err != nil {
-		return nil, err
+		log.Fatal(err)
 	}
-
-	if len(keyBytes) != 32 {
-		return nil, errors.New("invalid key size")
-	}
-
-	var key [32]byte
-	copy(key[:], keyBytes)
-
-	k1 := secp256k1.PrivKeySecp256k1(key)
-	return &k1, nil
+	return &importedPrivKey, nil
 }
 
 func LoadPublicKeyFromString(keyStr string) (*ecdsa.PublicKey, error) {
