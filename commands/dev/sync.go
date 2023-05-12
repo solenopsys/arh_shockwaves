@@ -6,11 +6,6 @@ import (
 	"xs/services"
 )
 
-var fileTypeMapping = map[string]string{
-	"xs-fronts": "front",
-	"xs-backs":  "back",
-}
-
 var cmdSync = &cobra.Command{
 	Use:   "sync ",
 	Short: "Sync modules by configuration",
@@ -20,7 +15,7 @@ var cmdSync = &cobra.Command{
 		exists := os.FileExists(fileName)
 		if exists {
 			config := services.LoadConfigFile(fileName)
-			repoType := fileTypeMapping[config.Format.Name]
+			repoType := services.FileTypeMapping[config.Format.Name]
 
 			if repoType == "front" {
 				services.NewFrontLoader().SyncFunc()

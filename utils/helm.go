@@ -4,27 +4,47 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
+	"fmt"
 	"io"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 )
 
-func pushDir(archive []byte, name string) {
+func PushDir(archive []byte) {
+	buffer := bytes.NewBuffer(archive)
 
+	url := "http://helm.solenopsys.org/api/charts"
+	resp, err := http.Post(url, "application/octet-stream", buffer)
+	if err != nil {
+		fmt.Println("Error sending request:", err)
+		os.Exit(1)
+	}
+	defer resp.Body.Close()
+
+	// Read the response body
+	responseBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("Error reading response:", err)
+		os.Exit(1)
+	}
+
+	// Print the response body
+	fmt.Println(string(responseBody))
 }
 
-func ArchiveDir(dirName string) []byte {
-	bufferWrite := new(bytes.Buffer)
+func ArchiveDir(dirName string, parendDir string) []byte {
+	bufferWrite := bytes.NewBuffer([]byte{})
+
 	// Create a gzip writer
 	gzipWriter := gzip.NewWriter(bufferWrite)
-	defer gzipWriter.Close()
 
 	// Create a tar writer
 	tarWriter := tar.NewWriter(gzipWriter)
-	defer tarWriter.Close()
 
 	// Walk through the directory and add each file to the archive
-	filepath.Walk(dirName, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(dirName, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}
@@ -63,10 +83,17 @@ func ArchiveDir(dirName string) []byte {
 		return nil
 	})
 
+	if err != nil {
+		panic(err)
+	}
+
 	// Close the tar writer to flush any remaining data to the gzip writer
 	if err := tarWriter.Close(); err != nil {
 		panic(err)
 	}
+
+	gzipWriter.Close()
+	tarWriter.Close()
 
 	return bufferWrite.Bytes()
 }

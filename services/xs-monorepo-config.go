@@ -5,6 +5,11 @@ import (
 	"xs/utils"
 )
 
+var FileTypeMapping = map[string]string{
+	"xs-fronts": "front",
+	"xs-backs":  "back",
+}
+
 type XsMonorepoFormat struct {
 	Name    string `json:"name"`
 	Version string `json:"version"`
