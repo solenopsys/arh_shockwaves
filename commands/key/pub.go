@@ -1,9 +1,10 @@
 package key
 
 import (
+	"encoding/hex"
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/tyler-smith/go-bip32"
+	"xs/utils"
 )
 
 var cmdPubkey = &cobra.Command{
@@ -13,11 +14,11 @@ var cmdPubkey = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		seed := []byte(args[0])
-		masterKey, _ := bip32.NewMasterKey(seed)
-		publicKey := masterKey.PublicKey()
-		//fmt.Println("Private key:", masterKey.String())
-		fmt.Println("Public key\n", publicKey.String())
+		seed := args[0]
+		privateKey := utils.PrivateKeyFromSeed(seed)
+
+		fmt.Println("Private key:", hex.EncodeToString(privateKey.Bytes()))
+		fmt.Println("Public key:", hex.EncodeToString(privateKey.PubKey().Bytes()))
 
 	},
 }

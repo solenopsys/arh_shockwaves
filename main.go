@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/spf13/cobra"
 	"xs/commands/auth"
+	"xs/commands/build"
 	"xs/commands/chart"
 	"xs/commands/cluster"
 	"xs/commands/dev"
@@ -29,4 +30,5 @@ func initCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(net.Cmd)
 	rootCmd.AddCommand(dev.Cmd)
 	rootCmd.AddCommand(auth.Cmd)
+	rootCmd.AddCommand(build.Cmd)
 }

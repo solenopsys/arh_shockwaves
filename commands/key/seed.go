@@ -2,8 +2,8 @@ package key
 
 import (
 	"fmt"
-	"github.com/cosmos/go-bip39"
 	"github.com/spf13/cobra"
+	"xs/utils"
 )
 
 var cmdSeed = &cobra.Command{
@@ -12,8 +12,7 @@ var cmdSeed = &cobra.Command{
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 
-		entropy, _ := bip39.NewEntropy(256)
-		mnemonic, _ := bip39.NewMnemonic(entropy)
+		mnemonic := utils.GenMnemonic()
 		fmt.Println("Seed phrase\n", mnemonic)
 
 	},
