@@ -34,7 +34,7 @@ func PushDir(archive []byte) {
 	fmt.Println(string(responseBody))
 }
 
-func ArchiveDir(dirName string, parendDir string) []byte {
+func ArchiveDir(dirName string, parentDir string) []byte {
 	bufferWrite := bytes.NewBuffer([]byte{})
 
 	// Create a gzip writer
@@ -60,7 +60,7 @@ func ArchiveDir(dirName string, parendDir string) []byte {
 		if err != nil {
 			return err
 		}
-		header.Name = relPath
+		header.Name = filepath.Join(parentDir, relPath)
 
 		// Write the tar header
 		if err := tarWriter.WriteHeader(header); err != nil {
