@@ -12,7 +12,9 @@ var cmdList = &cobra.Command{
 	Short: "List chart",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := utils.GetConfig()
+		kuber := utils.Kuber{}
+
+		config, err := kuber.GetConfig()
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -12,7 +12,9 @@ var cmdRemove = &cobra.Command{
 	Short: "Module chart",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		config, err := utils.GetConfig()
+		kuber := utils.Kuber{}
+
+		config, err := kuber.GetConfig()
 		if err != nil {
 			log.Fatal(err)
 		}

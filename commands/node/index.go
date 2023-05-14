@@ -18,4 +18,5 @@ func init() {
 	Cmd.AddCommand(cmdNodeRemove)
 	Cmd.AddCommand(cmdNodeStatus)
 	Cmd.AddCommand(cmdNodeInstall)
+	Cmd.AddCommand(cmdNodeVars)
 }

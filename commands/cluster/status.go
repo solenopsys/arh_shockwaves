@@ -10,6 +10,8 @@ var cmdStatus = &cobra.Command{
 	Short: "Cluster status",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.ConnectToKubernets()
+		kuber := utils.Kuber{}
+
+		kuber.ConnectToKubernetes()
 	},
 }

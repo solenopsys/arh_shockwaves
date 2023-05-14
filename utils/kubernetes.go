@@ -9,11 +9,19 @@ import (
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	"log"
+	"os"
 )
 
-func ConnectToKubernets() {
+const K3S_ENV = "K3S_CONF"
+const LINUX_DEFAULT_K3S_CONF = "/etc/rancher/k3s/k3s.yaml"
+
+type Kuber struct {
+	clientset *kubernetes.Clientset
+}
+
+func (k *Kuber) ConnectToKubernetes() {
 	// Create a new Kubernetes client
-	clientset, err := GetClientSet()
+	clientset, err := k.GetClientSet()
 
 	if err != nil {
 		log.Fatal(err)
@@ -27,8 +35,8 @@ func ConnectToKubernets() {
 	fmt.Printf("There are %d pods in the default namespace\n", len(pods.Items))
 }
 
-func GetClientSet() (*kubernetes.Clientset, error) {
-	config, err := GetConfig()
+func (k *Kuber) GetClientSet() (*kubernetes.Clientset, error) {
+	config, err := k.GetConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -36,14 +44,21 @@ func GetClientSet() (*kubernetes.Clientset, error) {
 
 }
 
-func GetConfig() (*rest.Config, error) {
-	const configPath = "/etc/rancher/k3s/k3s.yaml"
+func (k *Kuber) GetConfig() (*rest.Config, error) {
+	configPath := os.Getenv(K3S_ENV)
+
+	println("K3S_ENV: ", configPath)
+
+	if configPath == "" {
+		configPath = LINUX_DEFAULT_K3S_CONF
+	}
+
 	config, err := clientcmd.BuildConfigFromFlags("", configPath)
 	return config, err
 }
 
-func CreateNamespace(name string) error {
-	clientset, err := GetClientSet()
+func (k *Kuber) CreateNamespace(name string) error {
+	clientset, err := k.GetClientSet()
 	if err != nil {
 		return err
 	}

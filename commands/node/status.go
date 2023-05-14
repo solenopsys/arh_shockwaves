@@ -10,6 +10,6 @@ var cmdNodeStatus = &cobra.Command{
 	Short: "Status of node",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Start removing ")
+		fmt.Println("NOT IMPLEMENTED")
 	},
 }
