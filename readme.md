@@ -2,6 +2,10 @@
 
 Point to start global infrastructure of Solenopsys network.
 
+### About Solenopsys project:
+https://solenopsys.org
+
+
 ### You may use it for: 
 - start own Converged cluster  
 - get source code for development
