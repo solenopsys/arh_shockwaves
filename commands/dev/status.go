@@ -12,12 +12,16 @@ var cmdStatus = &cobra.Command{
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		commands := map[string][]string{
-			"git": {"git", "version"},
-			"npm": {"npm", "-v"},
-			"go":  {"go", "version"},
+			"git":     {"git", "version"},
+			"npm":     {"npm", "-v"},
+			"go":      {"go", "version"},
+			"nx":      {"npm", "show @nrwl/cli version"},
+			"nerdctl": {"nerdctl", "version"},
 		}
 		for name, command := range commands {
-			var version, err = exec.Command(command[0], command[1]).Output()
+			arg := command[1]
+			splitArg := strings.Split(arg, " ")
+			var version, err = exec.Command(command[0], splitArg...).Output()
 			if err == nil {
 				verLine := string(version)
 				//replace ver
@@ -25,7 +29,10 @@ var cmdStatus = &cobra.Command{
 				verLine = strings.Replace(verLine, name, "", 1)
 				// trim
 				verLine = strings.TrimSpace(verLine)
-				println(name+":", verLine)
+				println("")
+				println(name)
+				println(" -------------------------------->")
+				println(verLine)
 			} else {
 				println(name+":", "not installed")
 			}
