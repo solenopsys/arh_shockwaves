@@ -13,7 +13,7 @@ var cmdHelm = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		m := args[0]
 		groupDir := "modules"
-		mod, extractError := services.ExtractModule(m, groupDir)
+		mod, extractError := services.ExtractModule(m, groupDir, "back")
 		if extractError != nil {
 			println("Error", extractError.Error())
 			return

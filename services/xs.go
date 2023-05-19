@@ -5,7 +5,7 @@ import (
 	"github.com/tendermint/tendermint/libs/os"
 )
 
-func ExtractModule(m string, groupDir string) (XsMonorepoModule, error) {
+func ExtractModule(m string, groupDir string, rType string) (XsMonorepoModule, error) {
 	var okModule XsMonorepoModule
 	var err error
 	fileName := "./xs.json"
@@ -14,9 +14,9 @@ func ExtractModule(m string, groupDir string) (XsMonorepoModule, error) {
 		config := LoadConfigFile(fileName)
 		repoType := FileTypeMapping[config.Format.Name]
 
-		if repoType == "front" {
-			err = errors.New("Not applicable for front monorepo")
-		} else if repoType == "back" {
+		if repoType != rType {
+			err = errors.New("Not applicable for " + rType + " monorepo")
+		} else if repoType == rType {
 
 			groups := config.Groups
 			modules := groups[groupDir]
