@@ -7,7 +7,6 @@ import (
 	"xs/commands/chart"
 	"xs/commands/cluster"
 	"xs/commands/dev"
-	"xs/commands/key"
 	"xs/commands/net"
 	"xs/commands/node"
 	"xs/commands/public"
@@ -23,7 +22,6 @@ func main() {
 
 func initCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(node.Cmd)
-	rootCmd.AddCommand(key.Cmd)
 	rootCmd.AddCommand(cluster.Cmd)
 	rootCmd.AddCommand(chart.Cmd)
 	rootCmd.AddCommand(public.Cmd)

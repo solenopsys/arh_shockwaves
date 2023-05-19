@@ -8,7 +8,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"errors"
-	"github.com/cosmos/go-bip39"
 	"github.com/ethereum/go-ethereum/crypto"
 	"golang.org/x/crypto/pbkdf2"
 	"log"
@@ -44,30 +43,6 @@ func DecryptKeyData(encryptedText string, password string) ([]byte, error) {
 	// Remove padding
 	paddingLen := int(encryptedData[len(encryptedData)-1])
 	return encryptedData[:len(encryptedData)-paddingLen], nil
-}
-
-// gen mnemonic
-func GenMnemonic() string {
-	entropy, _ := bip39.NewEntropy(256)
-	mnemonic, _ := bip39.NewMnemonic(entropy)
-
-	return mnemonic
-}
-
-func PrivateKeyFromSeed(seedPhrase string) **ecdsa.PrivateKey {
-	hash := sha256.Sum256([]byte(seedPhrase))
-	privateKey := make([]byte, 32)
-	copy(privateKey, hash[:])
-
-	hex := hex.EncodeToString(privateKey)
-	println("HASH", hex)
-
-	importedPrivKey, err := crypto.HexToECDSA(hex)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	return &importedPrivKey
 }
 
 func LoadPrivateKeyFromString(keyStr string) (**ecdsa.PrivateKey, error) {

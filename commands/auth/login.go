@@ -27,7 +27,7 @@ var cmdLogin = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		login := args[0]
 
-		println("Enter password:")
+		println("Enter token:")
 		password := readPassword()
 		println("Print password:", password)
 		key := utils.LoadKey(password, login)
