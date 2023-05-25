@@ -23,7 +23,7 @@ func ExtractModule(m string, groupDir string, rType string) (XsMonorepoModule, e
 
 			var ok = false
 			for _, module := range modules {
-				if module.Directory == m {
+				if module.Name == m {
 					okModule = module
 					ok = true
 				}

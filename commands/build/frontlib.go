@@ -1,18 +1,20 @@
 package build
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
+	"os"
 	"strings"
 	"xs/services"
 )
 
-var cmdFrontend = &cobra.Command{
-	Use:   "frontend [name]",
+var cmdFrontlib = &cobra.Command{
+	Use:   "frontlib [name]",
 	Short: "Frontend build",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		m := args[0]
-		groupDir := "fronts"
+		groupDir := "libraries"
 
 		mod, extractError := services.ExtractModule(m, groupDir, "front")
 		if extractError != nil {
@@ -20,10 +22,18 @@ var cmdFrontend = &cobra.Command{
 			return
 		}
 
-		arg := "run " + mod.Directory + ":build:production"
+		arg := "build"
 		argsSplit := strings.Split(arg, " ")
 
-		stdPrinter := services.StdPrinter{Out: make(chan string), Command: "nx", Args: argsSplit}
+		path := "./" + groupDir + "/" + mod.Directory
+
+		errDir := os.Chdir(path)
+		if errDir != nil {
+			fmt.Println(errDir)
+			return
+		}
+
+		stdPrinter := services.StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit}
 		go stdPrinter.Processing()
 		stdPrinter.Start()
 	},

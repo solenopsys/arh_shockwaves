@@ -8,15 +8,15 @@ import (
 
 var cmdStatus = &cobra.Command{
 	Use:   "status",
-	Short: "Show status of installed env programs (git,nx,npm,go,...)",
+	Short: "Show status of installed env programs (git,pnpm,go,...)",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		commands := map[string][]string{
-			"git":     {"git", "version"},
-			"npm":     {"npm", "-v"},
-			"go":      {"go", "version"},
-			"nx":      {"npm", "show @nrwl/cli version"},
-			"nerdctl": {"nerdctl", "version"},
+			"git":        {"git", "version"},
+			"pnpm":       {"pnpm", "-v"},
+			"go":         {"go", "version"},
+			"ng-packagr": {"ng-packagr", "-v"},
+			"nerdctl":    {"nerdctl", "version"},
 		}
 		for name, command := range commands {
 			arg := command[1]

@@ -17,6 +17,6 @@ var Cmd = &cobra.Command{
 func init() {
 	Cmd.AddCommand(cmdHelm)
 	Cmd.AddCommand(cmdContainer)
-	Cmd.AddCommand(cmdFrontend)
+	Cmd.AddCommand(cmdFrontlib)
 	Cmd.AddCommand(cmdMicroFrontend)
 }

@@ -26,6 +26,7 @@ type XsMonorepoModule struct {
 	Load      bool   `json:"load"`
 	Npm       string `json:"npm"`
 	Use       string `json:"use"`
+	Name      string `json:"name"`
 }
 
 type ConfLoader struct {
