@@ -76,7 +76,7 @@ func LoadBase(monorepoLink string) {
 func NewFrontLoader() *ConfLoader {
 	loader := ConfLoader{}
 	loader.configName = "./xs.json"
-	loader.targetDir = "./packages"
+	loader.targetDir = "."
 	loader.SyncFunc = syncFront
 	return &loader
 }
@@ -92,8 +92,8 @@ func NewBackLoader() *ConfLoader {
 func syncFront() {
 	loader := NewFrontLoader()
 	loader.LoadConfig()
-	loader.SyncModules()
-	InjectConfToJson(loader, "./tsconfig.base.json")
+	//loader.SyncModules()
+	InjectConfToJson(loader, "./package.json", "libraries")
 }
 
 func syncBack() {
