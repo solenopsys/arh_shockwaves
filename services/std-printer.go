@@ -7,9 +7,10 @@ import (
 )
 
 type StdPrinter struct {
-	Out     chan string
-	Command string
-	Args    []string
+	Out            chan string
+	Command        string
+	Args           []string
+	PrintToConsole bool
 }
 
 func (s *StdPrinter) Processing() {
@@ -18,12 +19,14 @@ func (s *StdPrinter) Processing() {
 		select {
 		case res := <-s.Out:
 			r := strings.Replace(res, "\n", "\r\n", -1)
-			fmt.Print(r)
+			if s.PrintToConsole {
+				fmt.Print(r)
+			}
 		}
 	}
 }
 
-func (s *StdPrinter) Start() {
+func (s *StdPrinter) Start() int {
 	cmd := exec.Command(s.Command, s.Args...)
 	stdout, err := cmd.StdoutPipe()
 	cmd.Stderr = cmd.Stdout
@@ -45,4 +48,8 @@ func (s *StdPrinter) Start() {
 			break
 		}
 	}
+
+	cmd.Wait()
+	resultCode := cmd.ProcessState.ExitCode()
+	return resultCode
 }

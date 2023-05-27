@@ -22,19 +22,26 @@ func (x *XsManager) load(fileName string) error {
 }
 
 func (x *XsManager) extract(group string, name string) *XsMonorepoModule {
+	//println("Scan modules")
 	groups := x.config.Groups
 	modules := groups[group]
 
 	for _, module := range modules {
-		if module.Name == name {
-			return &module
+		//println("Module name", module.Name)
+		if module.Name == name || module.Npm == name {
+			return module
 		}
 	}
 	return nil
 }
 
-func ExtractModule(m string, groupDir string, rType string) (XsMonorepoModule, error) {
-	var okModule XsMonorepoModule
+func (x *XsManager) extractGroup(group string) []*XsMonorepoModule {
+	groups := x.config.Groups
+	return groups[group]
+}
+
+func ExtractModule(m string, groupDir string, rType string) (*XsMonorepoModule, error) {
+	var okModule *XsMonorepoModule
 	var err error
 	fileName := "./xs.json"
 	xm := &XsManager{}
@@ -48,7 +55,8 @@ func ExtractModule(m string, groupDir string, rType string) (XsMonorepoModule, e
 		if repoType != rType {
 			err = errors.New("Not applicable for " + rType + " monorepo")
 		} else if repoType == rType {
-			okModule := xm.extract(groupDir, m)
+			okModule = xm.extract(groupDir, m)
+
 			if okModule == nil {
 				err = errors.New("Module not found")
 			} else {

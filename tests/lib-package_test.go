@@ -20,7 +20,7 @@ func PackCreateHelper(name string, depsNames []string) *utils.NpmLibPackage {
 }
 
 func TestNextList(t *testing.T) {
-	ord := services.NewNpmLibPackagesOrder()
+	ord := services.NewNpmLibPackagesOrder(false)
 	ord.AddPackage(PackCreateHelper("a", []string{"b", "c"}))
 	ord.AddPackage(PackCreateHelper("b", []string{"c"}))
 	ord.AddPackage(PackCreateHelper("c", []string{}))

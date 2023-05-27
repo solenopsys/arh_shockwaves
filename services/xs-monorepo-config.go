@@ -16,8 +16,8 @@ type XsMonorepoFormat struct {
 }
 
 type XsMonorepoConfig struct {
-	Format XsMonorepoFormat              `json:"format"`
-	Groups map[string][]XsMonorepoModule `json:"groups"`
+	Format XsMonorepoFormat               `json:"format"`
+	Groups map[string][]*XsMonorepoModule `json:"groups"`
 }
 
 type XsMonorepoModule struct {

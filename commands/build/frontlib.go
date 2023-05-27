@@ -2,31 +2,34 @@ package build
 
 import (
 	"github.com/spf13/cobra"
-	"os"
-	"strings"
 	"xs/services"
 )
 
 func processLib(m string) error {
 	groupDir := "libraries"
 
-	mod, extractError := services.ExtractModule(m, groupDir, "front")
-	if extractError != nil {
-		return extractError
+	if m == "*" {
+		println("Compile all libraries")
+		cc := services.NewLibCompileController("./xs.json", groupDir)
+		println("Scan directories")
+		cc.LoadPlan()
+		println("Start compile")
+		cc.CompileOnOneThread()
+	} else {
+		mod, extractError := services.ExtractModule(m, groupDir, "front")
+		if extractError != nil {
+			return extractError
+		}
+
+		compiler := services.NpmCompileExecutor{PrintConsole: true}
+		println("Compile library1", mod.Directory)
+
+		path := "./" + groupDir + "/" + mod.Directory
+		println("Compile library", path)
+		compiler.Compile(path)
+
 	}
-	arg := "build"
-	argsSplit := strings.Split(arg, " ")
 
-	path := "./" + groupDir + "/" + mod.Directory
-
-	errDir := os.Chdir(path)
-	if errDir != nil {
-		return extractError
-	}
-
-	stdPrinter := services.StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit}
-	go stdPrinter.Processing()
-	stdPrinter.Start()
 	return nil
 }
 
