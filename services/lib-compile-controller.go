@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"github.com/fatih/color"
 	"os/exec"
 	"strings"
 	"xs/utils"
@@ -51,23 +52,33 @@ func (n NpmCompileExecutor) Compile(path string) {
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 
+	destPath := n.loadDest()
+	destFixed := strings.Replace(destPath, "../../../", "./", -1)
+	pt.MoveToBasePath()
+
 	if result == 0 {
-		println("OK")
-		destPath := n.loadDest()
-		cmd := exec.Command("pnpm", "link", destPath)
+		c := color.New(color.BgHiGreen, color.Bold)
+		c.Print(" OK ")
+		println("")
+
+		println("Make link: ", destFixed)
+		cmd := exec.Command("pnpm", "link", destFixed)
+
 		if err := cmd.Start(); err != nil {
 			panic(err)
 		}
 		cmd.Wait()
 		linkRes := cmd.ProcessState.ExitCode()
 		if result != 0 {
-			println("ERROR PNPM LINK ", linkRes)
+			color.Red("ERROR PNPM LINK ", linkRes)
 		}
 	} else {
-		println("ERROR - ", result)
+		c := color.New(color.BgHiRed, color.Bold)
+		c.Print(" ERROR ")
+		println("")
+
 	}
 
-	pt.MoveToBasePath()
 }
 
 func NewLibCompileController(xsFile string, libGroup string) *LibCompileController {

@@ -22,7 +22,7 @@ func processLib(m string) error {
 		}
 
 		compiler := services.NpmCompileExecutor{PrintConsole: true}
-		println("Compile library1", mod.Directory)
+		println("Mod ", mod.Directory)
 
 		path := "./" + groupDir + "/" + mod.Directory
 		println("Compile library", path)
