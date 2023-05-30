@@ -6,7 +6,7 @@ import (
 )
 
 func processLib(m string) error {
-	groupDir := "libraries"
+	groupDir := "packages"
 
 	if m == "*" {
 		println("Compile all libraries")
