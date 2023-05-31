@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/ethereum/go-ethereum v1.11.6
 	github.com/fatih/color v1.13.0
+	github.com/gosimple/hashdir v1.0.1
 	github.com/ipfs-cluster/ipfs-cluster v1.0.6
 	github.com/ipfs/go-ipfs-api v0.6.0
 	github.com/k3s-io/helm-controller v0.14.0

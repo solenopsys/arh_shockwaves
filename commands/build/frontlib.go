@@ -3,18 +3,19 @@ package build
 import (
 	"github.com/spf13/cobra"
 	"xs/services"
+	"xs/utils"
 )
 
 func processLib(m string) error {
 	groupDir := "packages"
 
 	if m == "*" {
-		println("Compile all libraries")
+		println("SetCompiled all libraries")
 		cc := services.NewLibCompileController("./xs.json", groupDir)
 		println("Scan directories")
 		cc.LoadPlan()
 		println("Start compile")
-		cc.CompileOnOneThread()
+		cc.CompileOnOneThread(false)
 	} else {
 		mod, extractError := services.ExtractModule(m, groupDir, "front")
 		if extractError != nil {
@@ -25,8 +26,10 @@ func processLib(m string) error {
 		println("Mod ", mod.Directory)
 
 		path := "./" + groupDir + "/" + mod.Directory
-		println("Compile library", path)
-		compiler.Compile(path)
+		println("SetCompiled library", path)
+
+		dest := utils.LoadNgDest(path)
+		compiler.Compile(path, dest)
 
 	}
 

@@ -77,13 +77,13 @@ func (o *NpmLibPackagesOrder) NextList() []*utils.NpmLibPackage {
 	return result
 }
 
-func (o *NpmLibPackagesOrder) Compile(name string) {
+func (o *NpmLibPackagesOrder) SetCompiled(name string) {
 	o.compiled[name] = true
 }
 
 func (o *NpmLibPackagesOrder) CompileList(list []*utils.NpmLibPackage) {
 	for _, p := range list {
-		o.Compile(p.Name)
+		o.SetCompiled(p.Name)
 	}
 }
 

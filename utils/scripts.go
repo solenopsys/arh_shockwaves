@@ -20,13 +20,57 @@ func downloadScript(url string) ([]byte, error) {
 }
 
 func ReadFile(fileName string) ([]byte, error) {
-	data, err := ioutil.ReadFile(fileName)
+	data, err := os.ReadFile(fileName)
 	if err != nil {
-		fmt.Println(err)
 		return nil, err
 	}
 
 	return []byte(data), err
+}
+
+func WriteFile(fileName string, data []byte) error {
+	err := os.WriteFile(fileName, data, 0444)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func CreateDirs(dir string) error {
+	err := os.MkdirAll(dir, 0777)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
+}
+
+func DirExists(dir string) bool {
+	_, err := os.Stat(dir)
+	if err != nil {
+		return false
+	}
+
+	return true
+
+}
+
+func ClearDirectory(dir string) error {
+	err := os.RemoveAll(dir)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	err = os.MkdirAll(dir, 0777)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
 }
 
 func CommandApplyFromUrl(url string, command string) {

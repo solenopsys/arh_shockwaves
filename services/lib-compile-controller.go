@@ -1,16 +1,12 @@
 package services
 
 import (
-	"encoding/json"
+	"errors"
 	"github.com/fatih/color"
 	"os/exec"
 	"strings"
 	"xs/utils"
 )
-
-type BuildConfig struct {
-	Dest string `json:"dest"`
-}
 
 type CompileCommand struct {
 	LibName      string
@@ -18,42 +14,23 @@ type CompileCommand struct {
 }
 
 type CompileExecutor interface {
-	Compile(path string)
+	Compile(path string, dest string) error
 }
 
 type NpmCompileExecutor struct {
 	PrintConsole bool
 }
 
-func (n NpmCompileExecutor) loadDest() string {
-	bc := &BuildConfig{}
-	bytesFromFile, err := utils.ReadFile("ng-package.json")
-	if err != nil {
-		panic(err)
-	}
-	err = json.Unmarshal([]byte(bytesFromFile), bc)
-	if err != nil {
-		panic(err)
-	}
-
-	return bc.Dest
-}
-
-func (n NpmCompileExecutor) Compile(path string) {
+func (n NpmCompileExecutor) Compile(src string, dest string) error {
 	pt := utils.PathTools{}
 	pt.SetBasePathPwd()
-
-	//
-
-	pt.MoveTo(path)
+	pt.MoveTo(src)
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
 	stdPrinter := StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit, PrintToConsole: n.PrintConsole}
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 
-	destPath := n.loadDest()
-	destFixed := strings.Replace(destPath, "../../../", "./", -1)
 	pt.MoveToBasePath()
 
 	if result == 0 {
@@ -61,8 +38,8 @@ func (n NpmCompileExecutor) Compile(path string) {
 		c.Print(" OK ")
 		println("")
 
-		println("Make link: ", destFixed)
-		cmd := exec.Command("pnpm", "link", destFixed)
+		//println("Make link: ", dest)
+		cmd := exec.Command("pnpm", "link", dest)
 
 		if err := cmd.Start(); err != nil {
 			panic(err)
@@ -71,12 +48,16 @@ func (n NpmCompileExecutor) Compile(path string) {
 		linkRes := cmd.ProcessState.ExitCode()
 		if result != 0 {
 			color.Red("ERROR PNPM LINK ", linkRes)
+			return errors.New("ERROR PNPM LINK")
 		}
+		return nil
+
 	} else {
 		c := color.New(color.BgHiRed, color.Bold)
 		c.Print(" ERROR ")
 		println("")
 
+		return errors.New("ERROR PNPM BUILD")
 	}
 
 }
@@ -120,19 +101,22 @@ func (c *LibCompileController) LoadPlan() {
 	c.packagesOrder = ord
 }
 
-func (c *LibCompileController) CompileOnOneThread() {
+func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refactoring
+
+	cache := NewCompileCache(".xs/compiled")
 
 	println("Packages count: ", c.packagesOrder.count())
+	var n = 0
 	for {
 		list := c.packagesOrder.NextList()
 
 		if list == nil || len(list) == 0 {
 			break
 		}
-		println("COMPILE GROUP: ")
-		for _, pack := range list {
-			println("\t", pack.Name+" ")
-		}
+		//println("COMPILE GROUP: ")
+		//for _, pack := range list {
+		//	println("\t", pack.Name+" ")
+		//}
 
 		for _, pack := range list {
 			xsPackConf := c.xsManager.extract(c.libGroup, pack.Name)
@@ -142,11 +126,56 @@ func (c *LibCompileController) CompileOnOneThread() {
 			}
 
 			path := c.libGroup + "/" + xsPackConf.Directory
-			println("COMPILE: "+path, " --------->")
+			n++
+			print(n, " COMPILE: "+xsPackConf.Npm+" ")
 			c.compileNow[pack.Name] = true
-			c.compileExecutor.Compile(path)
-			c.compileNow[pack.Name] = false
-			c.packagesOrder.Compile(pack.Name)
+
+			dest := utils.LoadNgDest(path)
+
+			dirExists := utils.DirExists(dest)
+			excludeDirs := []string{"node_modules"}
+			var hashesOk = false
+			if dirExists { //todo refactor
+
+				srcHash, errHash := utils.HashOfDir(path, excludeDirs)
+				if errHash != nil {
+					panic(errHash)
+				}
+				dstHash, errHash := utils.HashOfDir(dest, excludeDirs)
+				if errHash != nil {
+					panic(errHash)
+				}
+				hashesOk = cache.checkHash(srcHash, dstHash)
+			}
+			if hashesOk && !force {
+				color := color.New(color.BgHiBlue, color.Bold)
+				color.Print(" SKIP ")
+				println("")
+
+				c.packagesOrder.SetCompiled(pack.Name)
+				c.compileNow[pack.Name] = false
+			} else {
+				err := c.compileExecutor.Compile(path, dest)
+				if err != nil {
+					panic(err)
+				} else {
+					srcHash, errHash := utils.HashOfDir(path, excludeDirs)
+					if errHash != nil {
+						panic(errHash)
+					}
+					dstHash, errHash := utils.HashOfDir(dest, excludeDirs)
+					if errHash != nil {
+						panic(errHash)
+					}
+					errHash = cache.saveHash(srcHash, dstHash)
+					if errHash != nil {
+						panic(errHash)
+					}
+					c.compileNow[pack.Name] = false
+					c.packagesOrder.SetCompiled(pack.Name)
+				}
+			}
+
 		}
 
 	}
