@@ -1,4 +1,4 @@
-package dev
+package env
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 )
 
 var Cmd = &cobra.Command{
-	Use:   "dev [command]",
-	Short: "Developer functions",
+	Use:   "env [command]",
+	Short: "Environment programms",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Print: " + args[0])
@@ -15,8 +15,6 @@ var Cmd = &cobra.Command{
 }
 
 func init() {
-	Cmd.AddCommand(cmdInit)
-	Cmd.AddCommand(cmdSync)
 	Cmd.AddCommand(cmdInstall)
 	Cmd.AddCommand(cmdStatus)
 }

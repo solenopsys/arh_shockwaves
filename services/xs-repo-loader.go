@@ -1,4 +1,4 @@
-package dev
+package services
 
 import (
 	"encoding/json"
@@ -16,11 +16,11 @@ type ModuleGroup struct {
 	Modules []Module `json:"modules"`
 }
 
-type ConfLoader struct {
+type XsConfLoader struct {
 	configName string
 }
 
-func (c *ConfLoader) loadConfig() *[]ModuleGroup {
+func (c *XsConfLoader) loadConfig() *[]ModuleGroup {
 
 	config := &[]ModuleGroup{}
 	fileName := c.configName
@@ -35,7 +35,7 @@ func (c *ConfLoader) loadConfig() *[]ModuleGroup {
 	return config
 }
 
-func (c *ConfLoader) syncModules() {
+func (c *XsConfLoader) syncModules() {
 	groups := *c.loadConfig()
 	for _, group := range groups {
 		for _, module := range group.Modules {
@@ -46,12 +46,12 @@ func (c *ConfLoader) syncModules() {
 	}
 }
 
-func NewLoader() *ConfLoader {
-	loader := ConfLoader{}
+func NewLoader() *XsConfLoader {
+	loader := XsConfLoader{}
 	loader.configName = "./config/front-modules.json"
 	return &loader
 }
 
-func (c *ConfLoader) injectConfiguration() {
+func (c *XsConfLoader) injectConfiguration() {
 	// c.loadModules()
 }

@@ -57,13 +57,18 @@ func DirExists(dir string) bool {
 
 }
 
-func ClearDirectory(dir string) error {
+func DeleteDir(dir string) error {
 	err := os.RemoveAll(dir)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
+	return err
+}
 
+func ClearDirectory(dir string) error {
+
+	err := DeleteDir(dir)
 	err = os.MkdirAll(dir, 0777)
 	if err != nil {
 		fmt.Println(err)

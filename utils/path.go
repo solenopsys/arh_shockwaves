@@ -27,3 +27,9 @@ func (p *PathTools) MoveToBasePath() {
 		panic(errDir)
 	}
 }
+
+func NewPathTools() *PathTools {
+	p := &PathTools{}
+	p.SetBasePathPwd()
+	return p
+}

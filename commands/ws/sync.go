@@ -1,9 +1,10 @@
-package dev
+package ws
 
 import (
 	"github.com/spf13/cobra"
 	"github.com/tendermint/tendermint/libs/os"
 	"xs/services"
+	"xs/utils"
 )
 
 var cmdSync = &cobra.Command{
@@ -17,12 +18,22 @@ var cmdSync = &cobra.Command{
 			config := services.LoadConfigFile(fileName)
 			repoType := services.FileTypeMapping[config.Format.Name]
 
-			if repoType == "front" {
-				services.NewFrontLoader().SyncFunc()
-			} else if repoType == "back" {
-				services.NewBackLoader().SyncFunc()
+			sectionName := args[0]
+
+			manager := utils.NewWsManager()
+
+			state := manager.GetSectionState(sectionName)
+			if state == "enabled" {
+				if repoType == "frontends" {
+					services.NewFrontLoader().SyncFunc()
+				} else if repoType == "backends" {
+					services.NewBackLoader().SyncFunc()
+				} else {
+					println("Invalid xs.json, config type only xs-fronts or xs-backs allowed")
+					return
+				}
 			} else {
-				println("Invalid xs.json, config type only xs-fronts or xs-backs allowed")
+				println("Invalid argument")
 				return
 			}
 

@@ -63,6 +63,21 @@ func (c *ConfLoader) SyncModules() {
 	}
 }
 
+func LoadWorkspace(monorepoLink string) {
+
+	path := "./"
+	err := utils.CloneGitRepository(monorepoLink, path, false, false)
+	if err != nil {
+		panic(err)
+	} else {
+		gitDir := path + "/.git"
+		err := utils.DeleteDir(gitDir)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 func LoadBase(monorepoLink string) {
 	println("Load base\n")
 
@@ -70,7 +85,6 @@ func LoadBase(monorepoLink string) {
 	if err != nil {
 		panic(err)
 	}
-
 }
 
 func NewFrontLoader() *ConfLoader {
