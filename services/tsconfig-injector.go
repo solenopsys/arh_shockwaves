@@ -6,7 +6,7 @@ import (
 	"xs/utils"
 )
 
-func InjectConfToJson(c *ConfLoader, fileName string, filter string) {
+func InjectToPackageJson(c *ConfLoader, fileName string, filter string) {
 
 	existingJSON, err := utils.ReadFile(fileName)
 	if err != nil {
@@ -31,6 +31,46 @@ func InjectConfToJson(c *ConfLoader, fileName string, filter string) {
 			}
 		}
 	}
+
+	newJSON, err := json.MarshalIndent(confData, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+
+	os.WriteFile(fileName, newJSON, 0644)
+}
+
+type Packages struct {
+}
+
+func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
+
+	existingJSON, err := utils.ReadFile(fileName)
+	if err != nil {
+		panic(err)
+	}
+	var confData map[string]any
+	err = json.Unmarshal([]byte(existingJSON), &confData)
+	if err != nil {
+		panic(err)
+	}
+
+	modulesConf := make(map[string][]string)
+
+	groups := c.data.Groups
+	for key, group := range groups {
+		for _, module := range group {
+
+			path := c.targetDir + "/" + key + "/" + module.Directory
+			tsFile := path + "/src/public_api.ts"
+
+			npm := module.Npm
+			println("Inject to config:", npm, tsFile)
+			modulesConf[npm] = []string{tsFile}
+		}
+	}
+
+	confData["compilerOptions"].(map[string]any)["paths"] = modulesConf
 
 	newJSON, err := json.MarshalIndent(confData, "", "  ")
 	if err != nil {

@@ -5,14 +5,15 @@ go 1.20
 require (
 	github.com/ethereum/go-ethereum v1.11.6
 	github.com/fatih/color v1.13.0
-	github.com/gosimple/hashdir v1.0.1
 	github.com/ipfs-cluster/ipfs-cluster v1.0.6
 	github.com/ipfs/go-ipfs-api v0.6.0
 	github.com/k3s-io/helm-controller v0.14.0
 	github.com/miekg/dns v1.1.54
+	github.com/rs/zerolog v1.27.0
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.2
 	github.com/tendermint/tendermint v0.35.9
+	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/crypto v0.9.0
 	k8s.io/api v0.27.1
 	k8s.io/apimachinery v0.27.1
@@ -130,6 +131,8 @@ require (
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tv42/httpunix v0.0.0-20191220191345-2ba4b9c3382c // indirect
 	github.com/whyrusleeping/tar-utils v0.0.0-20201201191210-20a61371de5b // indirect
+	github.com/xeipuuv/gojsonpointer v0.0.0-20190905194746-02993c407bfb // indirect
+	github.com/xeipuuv/gojsonreference v0.0.0-20180127040603-bd5ef7bd5415 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/atomic v1.11.0 // indirect
 	go.uber.org/dig v1.17.0 // indirect

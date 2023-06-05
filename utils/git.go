@@ -1,10 +1,11 @@
 package utils
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
-	"syscall"
+	"strings"
 )
 
 const GIT_DIR = ".git"
@@ -17,26 +18,32 @@ func CloneGitRepository(url string, path string, asModule bool, updateIfExists b
 		remote:   url,
 	}
 
+	var err error
+
 	if !gt.IsRepoExists() {
-		println("Clone repository: " + url)
 		if asModule {
-			return gt.GitAddSubmodule()
+			err = gt.GitAddSubmodule()
 		} else {
-			return gt.GitClone()
+			err = gt.GitClone()
 		}
+		println("Cloned repository: " + url)
+
+		return err
 	} else {
-		println("Repo exists: " + url)
+
 		if updateIfExists {
 			if asModule {
 				fullPath, _ := filepath.Abs(gitDir)
-				println("Repository already exists update: " + fullPath)
-				return gt.GitUpdateSubmodules()
+				err = gt.GitUpdateSubmodules()
+				println("Exists repo updated: " + fullPath)
 			} else {
-				return gt.GitUpdate()
+				err = gt.GitUpdate()
+				println("Exists repo updated: " + url)
 			}
-		} else {
-			return nil
 		}
+
+		return err
+
 	}
 
 }
@@ -47,18 +54,25 @@ type GitTools struct {
 }
 
 func (g *GitTools) RunGitCommand(args ...string) error {
+	println("RUN GIT git " + strings.Join(args, " "))
 	cmd := exec.Command("git", args...)
 	return cmd.Run()
 }
 
 func (g *GitTools) IsRepoExists() bool {
 	gitDir := g.basePath + "/" + GIT_DIR
-	_, err := syscall.Open(gitDir, syscall.O_RDONLY, 0)
 
-	if err != nil {
-		panic(err.Error())
+	_, err := os.Stat(gitDir)
+
+	if err == nil {
+		return true
 	}
-	return os.IsNotExist(err)
+	if os.IsNotExist(err) {
+		return false
+	}
+
+	fmt.Println("Error:", err)
+	return false
 }
 
 func (g *GitTools) GitClone() error {

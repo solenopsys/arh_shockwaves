@@ -47,7 +47,7 @@ func (m *WsManager) Save() {
 		panic(err)
 	} else {
 		err := WriteFile(m.file, bytes)
-		if err == nil {
+		if err != nil {
 			panic(err)
 		}
 	}

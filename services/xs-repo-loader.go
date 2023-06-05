@@ -35,17 +35,6 @@ func (c *XsConfLoader) loadConfig() *[]ModuleGroup {
 	return config
 }
 
-func (c *XsConfLoader) syncModules() {
-	groups := *c.loadConfig()
-	for _, group := range groups {
-		for _, module := range group.Modules {
-			println("Load repository: ", module.Name)
-			path := "./front/packages/" + group.Dir + "/" + module.Directory
-			utils.CloneGitRepository(module.Git, path, true, false)
-		}
-	}
-}
-
 func NewLoader() *XsConfLoader {
 	loader := XsConfLoader{}
 	loader.configName = "./config/front-modules.json"

@@ -2,6 +2,7 @@ package services
 
 import (
 	"encoding/json"
+	"sync"
 	"xs/utils"
 )
 
@@ -21,12 +22,11 @@ type XsMonorepoConfig struct {
 }
 
 type XsMonorepoModule struct {
-	Directory string `json:"directory"`
-	Git       string `json:"git"`
-	Load      bool   `json:"load"`
-	Npm       string `json:"npm"`
-	Use       string `json:"use"`
-	Name      string `json:"name"`
+	Directory string   `json:"directory"`
+	Git       string   `json:"repository"`
+	Load      []string `json:"scopes"`
+	Npm       string   `json:"package"`
+	Name      string   `json:"name"`
 }
 
 type ConfLoader struct {
@@ -65,7 +65,9 @@ func (c *ConfLoader) SyncModules() {
 
 func LoadWorkspace(monorepoLink string) {
 
-	path := "./"
+	path := "."
+	wg := sync.WaitGroup{}
+	wg.Add(1)
 	err := utils.CloneGitRepository(monorepoLink, path, false, false)
 	if err != nil {
 		panic(err)
@@ -81,37 +83,32 @@ func LoadWorkspace(monorepoLink string) {
 func LoadBase(monorepoLink string) {
 	println("Load base\n")
 
-	err := utils.CloneGitRepository(monorepoLink, "./", false, false)
+	err := utils.CloneGitRepository(monorepoLink, ".", false, false)
 	if err != nil {
 		panic(err)
 	}
 }
 
-func NewFrontLoader() *ConfLoader {
+func NewFrontLoader(path string) *ConfLoader {
 	loader := ConfLoader{}
-	loader.configName = "./xs.json"
-	loader.targetDir = "."
-	loader.SyncFunc = syncFront
-	return &loader
-}
-
-func NewBackLoader() *ConfLoader {
-	loader := ConfLoader{}
-	loader.configName = "./xs.json"
-	loader.targetDir = "./"
-	loader.SyncFunc = syncBack
-	return &loader
-}
-
-func syncFront() {
-	loader := NewFrontLoader()
+	loader.configName = path + "/xs.json"
+	loader.targetDir = path
 	loader.LoadConfig()
-	//loader.SyncModules()
-	InjectConfToJson(loader, "./package.json", "libraries")
+	loader.SyncFunc = func() {
+		loader.SyncModules()
+		//InjectToPackageJson(&loader, "./package.json", "libraries")
+		InjectConfToTsconfigJson(&loader, "./tsconfig.develop.json")
+	}
+	return &loader
 }
 
-func syncBack() {
-	backLoader := NewBackLoader()
-	backLoader.LoadConfig()
-	backLoader.SyncModules()
+func NewBackLoader(path string) *ConfLoader {
+	loader := ConfLoader{}
+	loader.configName = path + "/xs.json"
+	loader.targetDir = path
+	loader.LoadConfig()
+	loader.SyncFunc = func() {
+		loader.SyncModules()
+	}
+	return &loader
 }
