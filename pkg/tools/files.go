@@ -1,8 +1,8 @@
 package tools
 
 import (
-	"fmt"
 	"os"
+	"xs/pkg/io"
 )
 
 func ReadFile(fileName string) ([]byte, error) {
@@ -26,7 +26,7 @@ func WriteFile(fileName string, data []byte) error {
 func CreateDirs(dir string) error {
 	err := os.MkdirAll(dir, 0777)
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 		return err
 	}
 
@@ -46,7 +46,7 @@ func DirExists(dir string) bool {
 func DeleteDir(dir string) error {
 	err := os.RemoveAll(dir)
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 		return err
 	}
 	return err
@@ -57,7 +57,7 @@ func ClearDirectory(dir string) error {
 	err := DeleteDir(dir)
 	err = os.MkdirAll(dir, 0777)
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 		return err
 	}
 

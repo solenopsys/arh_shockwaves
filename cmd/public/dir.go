@@ -1,8 +1,8 @@
 package public
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -19,9 +19,9 @@ var cmdDir = &cobra.Command{
 			cid, err := wrappers.UploadDirToIpfsNode("0.0.0.0:5003", dir)
 
 			if err != nil {
-				fmt.Println(err)
+				io.Println(err)
 			} else {
-				fmt.Println("File cid: ", cid)
+				io.Println("File cid: ", cid)
 			}
 		} else {
 			d := make([]string, 1)
@@ -29,9 +29,9 @@ var cmdDir = &cobra.Command{
 			cid, err := wrappers.UploadFileToIpfsCluster("0.0.0.0:9094", d)
 
 			if err != nil {
-				fmt.Println(err)
+				io.Println(err)
 			} else {
-				fmt.Println("File cid: ", cid)
+				io.Println("File cid: ", cid)
 			}
 		}
 

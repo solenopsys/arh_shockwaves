@@ -6,6 +6,7 @@ import (
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"xs/pkg/io"
 
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -54,7 +55,7 @@ func (k *Kuber) ExportToFile(file string) error {
 
 	split := strings.Split(command, " ")
 
-	println("K3S_ENV: ", configPath)
+	io.Println("K3S_ENV: ", configPath)
 
 	err := exec.Command(split[0], split[1:]...).Run()
 	return err
@@ -67,7 +68,7 @@ func getTempDir() (string, error) {
 func (k *Kuber) GetConfig() (*rest.Config, error) {
 	configPath := os.Getenv(K3S_ENV)
 
-	println("K3S_ENV: ", configPath)
+	io.Println("K3S_ENV: ", configPath)
 
 	if configPath == "" {
 		configPath = LINUX_DEFAULT_K3S_CONF

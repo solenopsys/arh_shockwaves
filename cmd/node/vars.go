@@ -2,6 +2,7 @@ package node
 
 import (
 	"github.com/spf13/cobra"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -15,7 +16,7 @@ var cmdNodeVars = &cobra.Command{
 		if err != nil {
 			panic(err)
 		} else {
-			println("Namespace installers created")
+			io.Println("Namespace installers created")
 		}
 	},
 }

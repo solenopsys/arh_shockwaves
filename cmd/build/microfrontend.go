@@ -4,7 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"strings"
 	"xs/internal/configs"
-	services2 "xs/pkg/tools"
+	io "xs/pkg/io"
 )
 
 var cmdMicroFrontend = &cobra.Command{
@@ -17,14 +17,14 @@ var cmdMicroFrontend = &cobra.Command{
 
 		mod, extractError := configs.ExtractModule(m, groupDir, "front")
 		if extractError != nil {
-			println("Error", extractError.Error())
+			io.Println("Error", extractError.Error())
 			return
 		}
 
 		arg := "run " + mod.Directory + ":build:production"
 		argsSplit := strings.Split(arg, " ")
 
-		stdPrinter := services2.StdPrinter{Out: make(chan string), Command: "nx", Args: argsSplit}
+		stdPrinter := io.StdPrinter{Out: make(chan string), Command: "nx", Args: argsSplit}
 		go stdPrinter.Processing()
 		stdPrinter.Start()
 	},

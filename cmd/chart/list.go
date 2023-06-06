@@ -1,9 +1,8 @@
 package chart
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
-	"log"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -16,16 +15,16 @@ var cmdList = &cobra.Command{
 
 		config, err := kuber.GetConfig()
 		if err != nil {
-			log.Fatal(err)
+			io.Fatal(err)
 		}
 		api := wrappers.NewAPI(config)
 		charts, err := api.ListHelmCharts("")
 
 		if err != nil {
-			log.Fatal(err)
+			io.Fatal(err)
 		}
 		for _, item := range charts.Items {
-			fmt.Println(item.Name)
+			io.Println(item.Name)
 		}
 
 	},

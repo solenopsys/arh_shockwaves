@@ -2,8 +2,9 @@ package tools
 
 import (
 	"bytes"
-	"fmt"
-	"io"
+	sio "io"
+	"xs/pkg/io"
+
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -23,7 +24,7 @@ func CommandApplyFromUrl(url string, command string) {
 
 	httpBody, err := downloadScript(url)
 	if err != nil {
-		fmt.Println(err.Error())
+		io.Println(err.Error())
 		return
 	}
 
@@ -31,10 +32,10 @@ func CommandApplyFromUrl(url string, command string) {
 }
 
 func CommandApplyFromFile(file string, command string) {
-	fmt.Println("Start install")
+	io.Println("Start install")
 	httpBody, err := ReadFile(file)
 	if err != nil {
-		fmt.Println(err.Error())
+		io.Println(err.Error())
 		return
 	}
 
@@ -47,24 +48,24 @@ func execCommand(command string, httpBody []byte) {
 
 	stdout, err := cmdIn.StdoutPipe()
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 	}
 
 	// Start the command
 	err = cmdIn.Start()
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 	}
 
 	// Use io.Copy to print the command's output in real-time
-	_, err = io.Copy(os.Stdout, stdout)
+	_, err = sio.Copy(os.Stdout, stdout)
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 	}
 
 	// Wait for the command to finish
 	err = cmdIn.Wait()
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 	}
 }

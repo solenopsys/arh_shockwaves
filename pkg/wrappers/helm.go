@@ -4,12 +4,12 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
-	"fmt"
-	"io"
+	sio "io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
+	"xs/pkg/io"
 )
 
 func PushDir(archive []byte) {
@@ -18,7 +18,7 @@ func PushDir(archive []byte) {
 	url := "http://helm.solenopsys.org/api/charts"
 	resp, err := http.Post(url, "application/octet-stream", buffer)
 	if err != nil {
-		fmt.Println("Error sending request:", err)
+		io.Println("Error sending request:", err)
 		os.Exit(1)
 	}
 	defer resp.Body.Close()
@@ -26,12 +26,12 @@ func PushDir(archive []byte) {
 	// Read the response body
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error reading response:", err)
+		io.Println("Error reading response:", err)
 		os.Exit(1)
 	}
 
 	// Print the response body
-	fmt.Println(string(responseBody))
+	io.Println(string(responseBody))
 }
 
 func ArchiveDir(dirName string, parentDir string) []byte {
@@ -75,7 +75,7 @@ func ArchiveDir(dirName string, parentDir string) []byte {
 			}
 			defer file.Close()
 
-			if _, err := io.Copy(tarWriter, file); err != nil {
+			if _, err := sio.Copy(tarWriter, file); err != nil {
 				return err
 			}
 		}

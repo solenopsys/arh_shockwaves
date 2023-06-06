@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"xs/internal/configs"
 	"xs/internal/funcs"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -27,13 +28,13 @@ var cmdSync = &cobra.Command{
 				pt.MoveTo(sectionName)
 				configs.NewBackLoader("./").SyncFunc()
 			} else {
-				println("Invalid xs.json, config type only xs-fronts or xs-backs allowed")
+				io.Println("Invalid xs.json, config type only xs-fronts or xs-backs allowed")
 				return
 			}
 
 			pt.MoveToBasePath()
 		} else {
-			println("Invalid argument")
+			io.Println("Invalid argument")
 			return
 		}
 

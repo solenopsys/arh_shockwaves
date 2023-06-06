@@ -1,7 +1,6 @@
-package tools
+package io
 
 import (
-	"fmt"
 	"os/exec"
 	"strings"
 )
@@ -20,7 +19,7 @@ func (s *StdPrinter) Processing() {
 		case res := <-s.Out:
 			r := strings.Replace(res, "\n", "\r\n", -1)
 			if s.PrintToConsole {
-				fmt.Print(r)
+				Print(r)
 			}
 		}
 	}

@@ -1,9 +1,8 @@
 package chart
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
-	"log"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -16,7 +15,7 @@ var cmdInstall = &cobra.Command{
 
 		config, err := kuber.GetConfig()
 		if err != nil {
-			log.Fatal(err)
+			io.Fatal(err)
 		}
 		api := wrappers.NewAPI(config)
 		chart := args[0]
@@ -24,8 +23,8 @@ var cmdInstall = &cobra.Command{
 		version := args[1]
 		simple, err := api.CreateHelmChartSimple(chart, repoUrl, version, "default")
 		if err != nil {
-			log.Fatal(err)
+			io.Fatal(err)
 		}
-		fmt.Println("Installed: ", simple.Name)
+		io.Println("Installed: ", simple.Name)
 	},
 }

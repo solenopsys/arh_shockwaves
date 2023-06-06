@@ -1,12 +1,11 @@
 package build
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"os"
 	"strings"
 	"xs/internal/configs"
-	services2 "xs/pkg/tools"
+	"xs/pkg/io"
 )
 
 var cmdContainer = &cobra.Command{
@@ -20,7 +19,7 @@ var cmdContainer = &cobra.Command{
 
 		mod, extractError := configs.ExtractModule(m, groupDir, "back")
 		if extractError != nil {
-			println("Error", extractError.Error())
+			io.Println("Error", extractError.Error())
 			return
 		}
 		path := "./" + groupDir + "/" + mod.Directory
@@ -30,21 +29,21 @@ var cmdContainer = &cobra.Command{
 
 		errDir := os.Chdir(path)
 		if errDir != nil {
-			fmt.Println(errDir)
+			io.Println(errDir)
 			return
 		}
 
 		command := "nerdctl"
-		println("command:" + command)
+		io.Println("command:" + command)
 
 		arg := "build --platform=" + platform + " --output type=image,name=" + reg + "/" + mod.Directory + ":latest,push=true ."
 		argsSplit := strings.Split(arg, " ")
 		if errDir != nil {
-			fmt.Println(errDir)
+			io.Println(errDir)
 			return
 		}
 
-		stdPrinter := services2.StdPrinter{Out: make(chan string), Command: "nerdctl", Args: argsSplit}
+		stdPrinter := io.StdPrinter{Out: make(chan string), Command: "nerdctl", Args: argsSplit}
 		go stdPrinter.Processing()
 		stdPrinter.Start()
 	},

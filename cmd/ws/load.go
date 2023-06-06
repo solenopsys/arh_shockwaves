@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"xs/internal/configs"
 	"xs/internal/funcs"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -18,7 +19,7 @@ var cmdLoad = &cobra.Command{
 
 		state := manager.GetSectionState(sectionName)
 		if state == "enabled" {
-			println(sectionName + " already loaded")
+			io.Println(sectionName + " already loaded")
 			return
 		} else if state == "disabled" {
 			repository := manager.GetSectionRepository(sectionName)
@@ -33,7 +34,7 @@ var cmdLoad = &cobra.Command{
 			manager.SetSectionState(sectionName, "enabled")
 			manager.Save()
 		} else {
-			println("Invalid argument")
+			io.Println("Invalid argument")
 			return
 		}
 	},

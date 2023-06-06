@@ -1,9 +1,9 @@
 package funcs
 
 import (
-	"fmt"
 	"github.com/miekg/dns"
 	"strings"
+	"xs/pkg/io"
 )
 
 func extractValues(prefix string, strs []string) []string {
@@ -32,7 +32,7 @@ func GetTxtRecords(domain string) ([]string, error) {
 	m.SetQuestion(domain+".", dns.TypeTXT)
 	r, _, err := c.Exchange(&m, "8.8.8.8:53")
 	if err != nil {
-		fmt.Println(err)
+		io.Println(err)
 		return nil, err
 	}
 	strings := make([]string, 0)

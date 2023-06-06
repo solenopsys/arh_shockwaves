@@ -3,6 +3,7 @@ package configs
 import (
 	"errors"
 	"github.com/tendermint/tendermint/libs/os"
+	"xs/pkg/io"
 )
 
 type XsManager struct {
@@ -22,12 +23,12 @@ func (x *XsManager) Load(fileName string) error {
 }
 
 func (x *XsManager) Extract(group string, name string) *XsMonorepoModule {
-	//println("Scan modules")
+	//io.Println("Scan modules")
 	groups := x.config.Groups
 	modules := groups[group]
 
 	for _, module := range modules {
-		//println("Module name", module.Name)
+		//io.Println("Module name", module.Name)
 		if module.Name == name || module.Npm == name {
 			return module
 		}
@@ -60,7 +61,7 @@ func ExtractModule(m string, groupDir string, rType string) (*XsMonorepoModule, 
 			if okModule == nil {
 				err = errors.New("Module not found")
 			} else {
-				println("Ok module found")
+				io.Println("Ok module found")
 			}
 		} else {
 			err = errors.New("Invalid xs.json, config type only xs-fronts or xs-backs allowed")

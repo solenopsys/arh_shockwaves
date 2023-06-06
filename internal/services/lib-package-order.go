@@ -2,6 +2,7 @@ package services
 
 import (
 	"xs/internal/configs"
+	"xs/pkg/io"
 )
 
 type NpmLibPackagesOrder struct {
@@ -42,21 +43,21 @@ func (o *NpmLibPackagesOrder) NextList() []*configs.NpmLibPackage {
 	for _, p := range o.packages {
 		if !o.compiled[p.Name] {
 			if o.verbose {
-				println("pack name", p.Name)
+				io.Println("pack name", p.Name)
 			}
 
 			filtered := o.filterDeps(p)
 
 			needCompiledCount := len(filtered)
 			if o.verbose {
-				println("need compile", needCompiledCount)
+				io.Println("need compile", needCompiledCount)
 			}
 
 			var actualCompiledCount = 0
 			if needCompiledCount > 0 {
 				for _, dep := range filtered {
 					if o.verbose {
-						println("\t", dep, " - ", o.compiled[dep])
+						io.Println("\t", dep, " - ", o.compiled[dep])
 					}
 					if o.compiled[dep] {
 

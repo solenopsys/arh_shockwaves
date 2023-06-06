@@ -3,6 +3,7 @@ package build
 import (
 	"github.com/spf13/cobra"
 	"xs/internal/configs"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -15,16 +16,16 @@ var cmdHelm = &cobra.Command{
 		groupDir := "modules"
 		mod, extractError := configs.ExtractModule(m, groupDir, "back")
 		if extractError != nil {
-			println("Error", extractError.Error())
+			io.Println("Error", extractError.Error())
 			return
 		}
 		path := "./" + groupDir + "/" + mod.Directory + "/install"
 
-		println("path", path)
+		io.Println("path", path)
 		arch := wrappers.ArchiveDir(path, m)
 
 		// write archive to file
-		println("archive size", len(arch))
+		io.Println("archive size", len(arch))
 
 		wrappers.PushDir(arch)
 	},

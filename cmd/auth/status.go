@@ -2,8 +2,8 @@ package auth
 
 import (
 	"github.com/spf13/cobra"
-	"log"
 	"xs/internal/funcs"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -15,27 +15,27 @@ var cmdStatus = &cobra.Command{
 
 		jwtSessionBytes, err := JWT_SESSIONS.ReadSessionFromTempFile()
 		if err != nil {
-			log.Panic(err)
+			io.Panic(err)
 		}
 
 		if jwtSessionBytes == nil {
-			println("User not auth")
+			io.Println("User not auth")
 			return
 		}
 
 		keySaved, err := SOLENOPSYS_KEYS.ReadSessionFromTempFile()
 		if err != nil {
-			log.Panic(err)
+			io.Panic(err)
 		}
 
 		regData := funcs.UnMarshal(keySaved)
 
 		pk, err := tools.LoadPublicKeyFromString(regData.PublicKey)
 		if err != nil {
-			log.Panic(err)
+			io.Panic(err)
 		}
-		println(pk)
+		io.Println(pk)
 		//utils.JwtVerify(string(jwtSessionBytes), pk)
-		println("SESSION", string(jwtSessionBytes))
+		io.Println("SESSION", string(jwtSessionBytes))
 	},
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"xs/internal/configs"
 	services2 "xs/internal/services"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -11,11 +12,11 @@ func processLib(m string) error {
 	groupDir := "packages"
 
 	if m == "*" {
-		println("SetCompiled all libraries")
+		io.Println("SetCompiled all libraries")
 		cc := services2.NewLibCompileController("./xs.json", groupDir)
-		println("Scan directories")
+		io.Println("Scan directories")
 		cc.LoadPlan()
-		println("Start compile")
+		io.Println("Start compile")
 		cc.CompileOnOneThread(false)
 	} else {
 		mod, extractError := configs.ExtractModule(m, groupDir, "front")
@@ -24,10 +25,10 @@ func processLib(m string) error {
 		}
 
 		compiler := services2.NpmCompileExecutor{PrintConsole: true}
-		println("Mod ", mod.Directory)
+		io.Println("Mod ", mod.Directory)
 
 		path := "./" + groupDir + "/" + mod.Directory
-		println("SetCompiled library", path)
+		io.Println("SetCompiled library", path)
 
 		dest := wrappers.LoadNgDest(path)
 		compiler.Compile(path, dest)
@@ -44,7 +45,7 @@ var cmdFrontlib = &cobra.Command{
 		m := args[0]
 		err := processLib(m)
 		if err != nil {
-			println("Error", err.Error())
+			io.Println("Error", err.Error())
 			return
 		}
 	},

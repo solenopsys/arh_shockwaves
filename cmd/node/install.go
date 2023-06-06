@@ -1,8 +1,8 @@
 package node
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -11,7 +11,7 @@ var cmdNodeInstall = &cobra.Command{
 	Short: "Install node",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Start install")
+		io.Println("Start install")
 		tools.CommandApplyFromUrl("https://get.k3s.io", "sh")
 	},
 }

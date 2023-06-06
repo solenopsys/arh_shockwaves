@@ -3,6 +3,7 @@ package ws
 import (
 	"github.com/spf13/cobra"
 	"xs/internal/funcs"
+	"xs/pkg/io"
 )
 
 var cmdState = &cobra.Command{
@@ -13,7 +14,7 @@ var cmdState = &cobra.Command{
 		manager := funcs.NewWsManager()
 		sections := manager.GetSections()
 		for name, section := range sections {
-			println(name + ": " + section.State)
+			io.Println(name + ": " + section.State)
 		}
 	},
 }

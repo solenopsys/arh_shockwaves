@@ -1,23 +1,22 @@
 package auth
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"golang.org/x/crypto/ssh/terminal"
-	"log"
 	"os"
 	"syscall"
 	"xs/internal/funcs"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
 func readPassword() string {
 	bytePassword, err := terminal.ReadPassword(int(syscall.Stdin))
 	if err != nil {
-		fmt.Println("Error reading password:", err)
+		io.Println("Error reading password:", err)
 		os.Exit(1)
 	}
-	fmt.Println()
+	io.Println()
 	return string(bytePassword)
 }
 
@@ -28,9 +27,9 @@ var cmdLogin = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		login := args[0]
 
-		println("Enter token:")
+		io.Println("Enter token:")
 		password := readPassword()
-		println("Print password:", password)
+		io.Println("Print password:", password)
 		key := funcs.LoadKey(password, login)
 		// hidden password read
 		regData := funcs.UnMarshal(key)
@@ -39,18 +38,18 @@ var cmdLogin = &cobra.Command{
 
 		pk, err := tools.LoadPrivateKeyFromString(string(privateKey))
 		if err != nil {
-			log.Panic(err)
+			io.Panic(err)
 		}
 
-		println(pk)
+		io.Println(pk)
 
 		fileName, err := SOLENOPSYS_KEYS.WriteSessionToTempFile(key)
 
 		if err != nil {
-			println("Error saving keys to file:", err)
+			io.Println("Error saving keys to file:", err)
 			return
 		}
-		println("Key saved to file", fileName)
+		io.Println("Key saved to file", fileName)
 
 	},
 }

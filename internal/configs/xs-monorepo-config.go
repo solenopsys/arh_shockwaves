@@ -3,6 +3,7 @@ package configs
 import (
 	"encoding/json"
 	"sync"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 	"xs/pkg/wrappers"
 )
@@ -82,7 +83,7 @@ func LoadWorkspace(monorepoLink string) {
 }
 
 func LoadBase(monorepoLink string) {
-	println("Load base\n")
+	io.Println("Load base\n")
 
 	err := wrappers.CloneGitRepository(monorepoLink, ".", false, false)
 	if err != nil {

@@ -1,9 +1,9 @@
 package net
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"xs/internal/funcs"
+	"xs/pkg/io"
 )
 
 var cmdList = &cobra.Command{
@@ -13,10 +13,10 @@ var cmdList = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		records, err := funcs.GetSnRecords("solenopsys.org")
 		if err != nil {
-			fmt.Println(err)
+			io.Println(err)
 		}
 		for _, record := range records {
-			fmt.Println(record)
+			io.Println(record)
 		}
 	},
 }

@@ -3,6 +3,7 @@ package configs
 import (
 	"encoding/json"
 	"os"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -25,7 +26,7 @@ func InjectToPackageJson(c *ConfLoader, fileName string, filter string) {
 			for _, module := range group {
 				path := "file:" + c.targetDir + "/" + section + "/" + module.Directory + "/dist"
 
-				println("Inject to package.json:", module.Npm, path)
+				io.Println("Inject to package.json:", module.Npm, path)
 
 				confData["dependencies"].(map[string]any)[module.Npm] = path
 			}
@@ -65,7 +66,7 @@ func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
 			tsFile := path + "/src/public_api.ts"
 
 			npm := module.Npm
-			println("Inject to config:", npm, tsFile)
+			io.Println("Inject to config:", npm, tsFile)
 			modulesConf[npm] = []string{tsFile}
 		}
 	}

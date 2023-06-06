@@ -2,6 +2,7 @@ package auth
 
 import (
 	"github.com/spf13/cobra"
+	"xs/pkg/io"
 )
 
 var cmdLogout = &cobra.Command{
@@ -12,6 +13,6 @@ var cmdLogout = &cobra.Command{
 		JWT_SESSIONS.DeleteSessionTempFiles()
 		SOLENOPSYS_KEYS.DeleteSessionTempFiles()
 
-		println("Successful logout")
+		io.Println("Successful logout")
 	},
 }

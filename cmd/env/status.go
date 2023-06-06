@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"os/exec"
 	"strings"
+	"xs/pkg/io"
 )
 
 var cmdStatus = &cobra.Command{
@@ -29,12 +30,12 @@ var cmdStatus = &cobra.Command{
 				verLine = strings.Replace(verLine, name, "", 1)
 				// trim
 				verLine = strings.TrimSpace(verLine)
-				println("")
-				println(name)
-				println(" -------------------------------->")
-				println(verLine)
+				io.Println("")
+				io.Println(name)
+				io.Println(" -------------------------------->")
+				io.Println(verLine)
 			} else {
-				println(name+":", "not installed")
+				io.Println(name+":", "not installed")
 			}
 
 		}

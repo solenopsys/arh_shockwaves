@@ -3,7 +3,7 @@ package tools
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"xs/pkg/io"
 )
 
 import "github.com/xeipuuv/gojsonschema"
@@ -20,14 +20,14 @@ func jsonLoadAndValidate(data string, schema string) {
 	// Perform validation
 	result, err := gojsonschema.Validate(schemaLoader, dataLoader)
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 
 	// Check if the data is valid
 	if result.Valid() {
-		fmt.Println("The JSON data is valid.")
+		io.Println("The JSON data is valid.")
 	} else {
-		fmt.Println("The JSON data is not valid. Validation errors:")
+		io.Println("The JSON data is not valid. Validation errors:")
 		for _, err := range result.Errors() {
 			fmt.Printf("- %s\n", err)
 		}

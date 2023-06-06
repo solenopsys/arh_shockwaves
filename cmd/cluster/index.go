@@ -1,8 +1,8 @@
 package cluster
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
+	"xs/pkg/io"
 )
 
 var Cmd = &cobra.Command{
@@ -10,7 +10,7 @@ var Cmd = &cobra.Command{
 	Short: "Cluster manipulation functions",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Print: " + args[0])
+		io.Println("Print: " + args[0])
 	},
 }
 

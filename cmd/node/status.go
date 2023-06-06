@@ -1,8 +1,8 @@
 package node
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
+	"xs/pkg/io"
 )
 
 var cmdNodeStatus = &cobra.Command{
@@ -10,6 +10,6 @@ var cmdNodeStatus = &cobra.Command{
 	Short: "Status of node",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("NOT IMPLEMENTED")
+		io.Println("NOT IMPLEMENTED")
 	},
 }

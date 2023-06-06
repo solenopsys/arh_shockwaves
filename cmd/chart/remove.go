@@ -1,9 +1,8 @@
 package chart
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
-	"log"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -16,11 +15,11 @@ var cmdRemove = &cobra.Command{
 
 		config, err := kuber.GetConfig()
 		if err != nil {
-			log.Fatal(err)
+			io.Fatal(err)
 		}
 		api := wrappers.NewAPI(config)
 		api.DeleteHelmChart(args[0])
 
-		fmt.Println("Removed: ", args[0])
+		io.Println("Removed: ", args[0])
 	},
 }

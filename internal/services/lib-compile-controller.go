@@ -2,10 +2,10 @@ package services
 
 import (
 	"errors"
-	"github.com/fatih/color"
 	"os/exec"
 	"strings"
 	"xs/internal/configs"
+	"xs/pkg/io"
 	tools2 "xs/pkg/tools"
 	"xs/pkg/wrappers"
 )
@@ -29,18 +29,16 @@ func (n NpmCompileExecutor) Compile(src string, dest string) error {
 	pt.MoveTo(src)
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
-	stdPrinter := tools2.StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit, PrintToConsole: n.PrintConsole}
+	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit, PrintToConsole: n.PrintConsole}
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 
 	pt.MoveToBasePath()
 
 	if result == 0 {
-		c := color.New(color.BgHiGreen, color.Bold)
-		c.Print(" OK ")
-		println("")
+		io.PrintColor("OK", io.Green)
 
-		//println("Make link: ", dest)
+		//io.Println("Make link: ", dest)
 		cmd := exec.Command("pnpm", "link", dest)
 
 		if err := cmd.Start(); err != nil {
@@ -49,15 +47,13 @@ func (n NpmCompileExecutor) Compile(src string, dest string) error {
 		cmd.Wait()
 		linkRes := cmd.ProcessState.ExitCode()
 		if result != 0 {
-			color.Red("ERROR PNPM LINK ", linkRes)
+			io.PrintColor("ERROR PNPM LINK:"+string(rune(linkRes)), io.Red)
 			return errors.New("ERROR PNPM LINK")
 		}
 		return nil
 
 	} else {
-		c := color.New(color.BgHiRed, color.Bold)
-		c.Print(" ERROR ")
-		println("")
+		io.PrintColor("ERROR", io.Red)
 
 		return errors.New("ERROR PNPM BUILD")
 	}
@@ -107,7 +103,7 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 
 	cache := NewCompileCache(".xs/compiled")
 
-	println("Packages count: ", c.packagesOrder.count())
+	io.Println("Packages count: ", c.packagesOrder.count())
 	var n = 0
 	for {
 		list := c.packagesOrder.NextList()
@@ -115,9 +111,9 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 		if list == nil || len(list) == 0 {
 			break
 		}
-		//println("COMPILE GROUP: ")
+		//io.Println("COMPILE GROUP: ")
 		//for _, pack := range list {
-		//	println("\t", pack.Name+" ")
+		//	io.Println("\t", pack.Name+" ")
 		//}
 
 		for _, pack := range list {
@@ -129,7 +125,7 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 
 			path := c.libGroup + "/" + xsPackConf.Directory
 			n++
-			print(n, " COMPILE: "+xsPackConf.Npm+" ")
+			io.PrintColor(string(rune(n))+" : "+xsPackConf.Npm+" ", io.Blue)
 			c.compileNow[pack.Name] = true
 
 			dest := wrappers.LoadNgDest(path)
@@ -150,9 +146,7 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 				hashesOk = cache.checkHash(srcHash, dstHash)
 			}
 			if hashesOk && !force {
-				color := color.New(color.BgHiBlue, color.Bold)
-				color.Print(" SKIP ")
-				println("")
+				io.PrintColor("SKIP", io.Blue)
 
 				c.packagesOrder.SetCompiled(pack.Name)
 				c.compileNow[pack.Name] = false
