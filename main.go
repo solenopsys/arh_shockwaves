@@ -2,15 +2,15 @@ package main
 
 import (
 	"github.com/spf13/cobra"
-	"xs/commands/auth"
-	"xs/commands/build"
-	"xs/commands/chart"
-	"xs/commands/cluster"
-	"xs/commands/env"
-	"xs/commands/net"
-	"xs/commands/node"
-	"xs/commands/public"
-	"xs/commands/ws"
+	"xs/cmd/auth"
+	"xs/cmd/build"
+	"xs/cmd/chart"
+	"xs/cmd/cluster"
+	"xs/cmd/env"
+	"xs/cmd/net"
+	"xs/cmd/node"
+	"xs/cmd/public"
+	"xs/cmd/ws"
 )
 
 func main() {

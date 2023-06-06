@@ -3,17 +3,17 @@ package tests
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
-	"xs/services"
-	"xs/utils"
+	"xs/internal/configs"
+	"xs/internal/services"
 )
 
-func PackCreateHelper(name string, depsNames []string) *utils.NpmLibPackage {
+func PackCreateHelper(name string, depsNames []string) *configs.NpmLibPackage {
 	deps := map[string]string{}
 	for _, depName := range depsNames {
 		deps[depName] = "file:" + depName
 	}
 
-	return &utils.NpmLibPackage{
+	return &configs.NpmLibPackage{
 		Name:                       name,
 		AllowedNonPeerDependencies: deps,
 	}
