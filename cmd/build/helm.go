@@ -2,9 +2,8 @@ package build
 
 import (
 	"github.com/spf13/cobra"
-	"xs/internal/configs"
+	"xs/internal/compilers"
 	"xs/pkg/io"
-	"xs/pkg/wrappers"
 )
 
 var cmdHelm = &cobra.Command{
@@ -12,21 +11,16 @@ var cmdHelm = &cobra.Command{
 	Short: "Helm build and push to registry",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		m := args[0]
-		groupDir := "modules"
-		mod, extractError := configs.ExtractModule(m, groupDir, "back")
-		if extractError != nil {
-			io.Println("Error", extractError.Error())
-			return
+		name := args[0]
+
+		hce := compilers.HelmCompileExecutor{PrintConsole: true}
+
+		err := hce.Compile(map[string]string{
+			"name": name,
+		})
+
+		if err != nil {
+			io.Println("Error", err.Error())
 		}
-		path := "./" + groupDir + "/" + mod.Directory + "/install"
-
-		io.Println("path", path)
-		arch := wrappers.ArchiveDir(path, m)
-
-		// write archive to file
-		io.Println("archive size", len(arch))
-
-		wrappers.PushDir(arch)
 	},
 }
