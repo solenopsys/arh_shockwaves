@@ -8,18 +8,19 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"math/big"
+	"xs/pkg/io"
 )
 
 func CreateToken(payload map[string]string, privateKey *ecdsa.PrivateKey) string {
 	body, err := json.Marshal(payload)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	hash := sha256.Sum256(body)
 	signature, err := privateKey.Sign(rand.Reader, hash[:], crypto.SHA256)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	token := make([]byte, hex.EncodedLen(len(signature))+hex.EncodedLen(len(body)))
@@ -43,7 +44,7 @@ func ReadToken(token string, publicKey *ecdsa.PublicKey) (bool, map[string]strin
 		var payload map[string]string
 		err := json.Unmarshal(fromHexBody, &payload)
 		if err != nil {
-			panic(err)
+			io.Panic(err)
 		}
 		return true, payload
 	} else {

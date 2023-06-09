@@ -2,6 +2,7 @@ package configs
 
 import (
 	"encoding/json"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -16,11 +17,11 @@ func LoadNpmLibPackage(packageJsonPath string) (lp *NpmLibPackage) {
 	lp = &NpmLibPackage{}
 	bytesFromFile, err := tools.ReadFile(packageJsonPath)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 	err = json.Unmarshal([]byte(bytesFromFile), lp)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 	return lp
 }

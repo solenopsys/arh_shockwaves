@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"xs/pkg/io"
 )
 
 type RegisterData struct {
@@ -52,7 +53,7 @@ func LoadKey(password string, login string) []byte {
 
 	bodyBytes, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	return bodyBytes

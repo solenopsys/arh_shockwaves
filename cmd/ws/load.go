@@ -25,7 +25,7 @@ var cmdLoad = &cobra.Command{
 			repository := manager.GetSectionRepository(sectionName)
 			err := tools.CreateDirs(sectionName)
 			if err != nil {
-				panic(err.Error())
+				io.Panic(err)
 			}
 			pt := tools.NewPathTools()
 			pt.MoveTo(sectionName)

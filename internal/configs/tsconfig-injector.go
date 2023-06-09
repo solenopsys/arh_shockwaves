@@ -11,12 +11,12 @@ func InjectToPackageJson(c *ConfLoader, fileName string, filter string) {
 
 	existingJSON, err := tools.ReadFile(fileName)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 	var confData map[string]any
 	err = json.Unmarshal([]byte(existingJSON), &confData)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	groups := *c.data
@@ -35,7 +35,7 @@ func InjectToPackageJson(c *ConfLoader, fileName string, filter string) {
 
 	newJSON, err := json.MarshalIndent(confData, "", "  ")
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	os.WriteFile(fileName, newJSON, 0644)
@@ -48,12 +48,12 @@ func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
 
 	existingJSON, err := tools.ReadFile(fileName)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 	var confData map[string]any
 	err = json.Unmarshal([]byte(existingJSON), &confData)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	modulesConf := make(map[string][]string)
@@ -75,7 +75,7 @@ func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
 
 	newJSON, err := json.MarshalIndent(confData, "", "  ")
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	os.WriteFile(fileName, newJSON, 0644)

@@ -33,7 +33,7 @@ func (c *LibCompileController) LoadPlan() {
 	c.xsManager = xm
 	err := xm.Load(fileName)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	libs := xm.ExtractGroup(c.libGroup)
@@ -68,7 +68,7 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 			xsPackConf := c.xsManager.Extract(c.libGroup, pack.Name)
 
 			if xsPackConf == nil {
-				panic(pack.Name + " not found in " + c.xsFile + " group " + c.libGroup)
+				io.Panic(pack.Name + " not found in " + c.xsFile + " group " + c.libGroup)
 			}
 
 			path := c.libGroup + "/" + xsPackConf.Directory
@@ -85,11 +85,11 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 
 				srcHash, errHash := xstool.HashOfDir(path, excludeDirs)
 				if errHash != nil {
-					panic(errHash)
+					io.Panic(errHash)
 				}
 				dstHash, errHash := xstool.HashOfDir(dest, excludeDirs)
 				if errHash != nil {
-					panic(errHash)
+					io.Panic(errHash)
 				}
 				hashesOk = cache.checkHash(srcHash, dstHash)
 			}
@@ -105,19 +105,19 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 				}
 				err := c.compileExecutor.Compile(params)
 				if err != nil {
-					panic(err)
+					io.Panic(err)
 				} else {
 					srcHash, errHash := xstool.HashOfDir(path, excludeDirs)
 					if errHash != nil {
-						panic(errHash)
+						io.Panic(errHash)
 					}
 					dstHash, errHash := xstool.HashOfDir(dest, excludeDirs)
 					if errHash != nil {
-						panic(errHash)
+						io.Panic(errHash)
 					}
 					errHash = cache.saveHash(srcHash, dstHash)
 					if errHash != nil {
-						panic(errHash)
+						io.Panic(errHash)
 					}
 					c.compileNow[pack.Name] = false
 					c.packagesOrder.SetCompiled(pack.Name)

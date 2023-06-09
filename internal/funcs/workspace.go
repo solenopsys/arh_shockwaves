@@ -2,6 +2,7 @@ package funcs
 
 import (
 	"encoding/json"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -27,7 +28,7 @@ func (m *WsManager) Load() {
 		err = json.Unmarshal([]byte(fileData), m.workspace)
 	}
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 }
 
@@ -47,11 +48,11 @@ func (m *WsManager) GetSectionState(section string) string {
 func (m *WsManager) Save() {
 	bytes, err := json.MarshalIndent(m.workspace, "", "  ")
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	} else {
 		err := tools.WriteFile(m.file, bytes)
 		if err != nil {
-			panic(err)
+			io.Panic(err)
 		}
 	}
 }

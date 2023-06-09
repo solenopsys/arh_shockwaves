@@ -14,7 +14,7 @@ var cmdNodeVars = &cobra.Command{
 		kuber := wrappers.Kuber{}
 		err := kuber.CreateNamespace("installers")
 		if err != nil {
-			panic(err)
+			io.Panic(err)
 		} else {
 			io.Println("Namespace installers created")
 		}

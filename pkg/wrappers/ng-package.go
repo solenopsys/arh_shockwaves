@@ -3,6 +3,7 @@ package wrappers
 import (
 	"encoding/json"
 	"strings"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -14,11 +15,11 @@ func LoadNgConfig(confFile string) *BuildConfig {
 	bc := &BuildConfig{}
 	bytesFromFile, err := tools.ReadFile(confFile)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 	err = json.Unmarshal([]byte(bytesFromFile), bc)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	return bc

@@ -1,6 +1,7 @@
 package services
 
 import (
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -12,7 +13,7 @@ func NewCompileCache(cacheIndexDir string) *CompileCache {
 	if !tools.DirExists(cacheIndexDir) {
 		err := tools.CreateDirs(cacheIndexDir)
 		if err != nil {
-			panic(err)
+			io.Panic(err)
 		}
 	}
 	return &CompileCache{cacheIndexDir}

@@ -37,10 +37,10 @@ func jsonLoadAndValidate(data string, schema string) {
 func ValidateJson(jsonFile string, st any) {
 	bytesFromFile, err := ReadFile(jsonFile)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 	err = json.Unmarshal([]byte(bytesFromFile), st)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 }

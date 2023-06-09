@@ -84,12 +84,12 @@ func ArchiveDir(dirName string, parentDir string) []byte {
 	})
 
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	// Close the tar writer to flush any remaining data to the gzip writer
 	if err := tarWriter.Close(); err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	gzipWriter.Close()

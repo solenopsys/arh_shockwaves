@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"xs/pkg/io"
 )
 
 const GIT_DIR = ".git"
@@ -26,7 +27,12 @@ func CloneGitRepository(url string, path string, asModule bool, updateIfExists b
 		} else {
 			err = gt.GitClone()
 		}
-		println("Cloned repository: " + url)
+
+		if err != nil {
+			io.Panic(err)
+		} else {
+			io.Println("Cloned repository: " + url)
+		}
 
 		return err
 	} else {
@@ -35,10 +41,10 @@ func CloneGitRepository(url string, path string, asModule bool, updateIfExists b
 			if asModule {
 				fullPath, _ := filepath.Abs(gitDir)
 				err = gt.GitUpdateSubmodules()
-				println("Exists repo updated: " + fullPath)
+				io.Println("Exists repo updated: " + fullPath)
 			} else {
 				err = gt.GitUpdate()
-				println("Exists repo updated: " + url)
+				io.Println("Exists repo updated: " + url)
 			}
 		}
 

@@ -35,7 +35,7 @@ func (n AngularPackageCompileExecutor) Compile(params map[string]string) error {
 		cmd := exec.Command(NPM_APPLICATION, "link", dest)
 
 		if err := cmd.Start(); err != nil {
-			panic(err)
+			io.Panic(err)
 		}
 		cmd.Wait()
 		linkRes := cmd.ProcessState.ExitCode()

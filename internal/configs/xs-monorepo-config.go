@@ -46,7 +46,7 @@ func LoadConfigFile(fileName string) *XsMonorepoConfig {
 		err = json.Unmarshal([]byte(fileData), config)
 	}
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 	return config
 }
@@ -72,12 +72,12 @@ func LoadWorkspace(monorepoLink string) {
 	wg.Add(1)
 	err := wrappers.CloneGitRepository(monorepoLink, path, false, false)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	} else {
 		gitDir := path + "/.git"
 		err := tools.DeleteDir(gitDir)
 		if err != nil {
-			panic(err)
+			io.Panic(err)
 		}
 	}
 }
@@ -87,19 +87,24 @@ func LoadBase(monorepoLink string) {
 
 	err := wrappers.CloneGitRepository(monorepoLink, ".", false, false)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
+	} else {
+		io.Println("Base loaded\n")
 	}
 }
 
-func NewFrontLoader(path string) *ConfLoader {
+func NewFrontLoader(path string, tsConfig bool) *ConfLoader {
 	loader := ConfLoader{}
 	loader.configName = path + "/xs.json"
 	loader.targetDir = path
 	loader.LoadConfig()
 	loader.SyncFunc = func() {
 		loader.SyncModules()
-		//InjectToPackageJson(&loader, "./package.json", "libraries")
-		InjectConfToTsconfigJson(&loader, "./tsconfig.develop.json")
+		if tsConfig {
+			InjectConfToTsconfigJson(&loader, "./tsconfig.develop.json")
+		} else {
+			InjectToPackageJson(&loader, "./package.json", "packages")
+		}
 	}
 	return &loader
 }

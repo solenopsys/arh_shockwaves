@@ -31,10 +31,10 @@ func (s *StdPrinter) Start() int {
 	cmd.Stderr = cmd.Stdout
 
 	if err != nil {
-		panic(err)
+		Panic(err)
 	}
 	if err = cmd.Start(); err != nil {
-		panic(err)
+		Panic(err)
 	}
 	for {
 		tmp := make([]byte, 2048)

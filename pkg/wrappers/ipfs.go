@@ -7,6 +7,7 @@ import (
 	"github.com/ipfs-cluster/ipfs-cluster/api/rest/client"
 	ipfs "github.com/ipfs/go-ipfs-api"
 	"strings"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -35,14 +36,14 @@ func UploadFileToIpfsCluster(nodeAddr string, files []string) (chan api.AddedOut
 	}
 	clusterClient, err := client.NewDefaultClient(&config)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	outChain := make(chan api.AddedOutput, 1)
 	// Add the files to IPFS Cluster
 	err = clusterClient.Add(context.Background(), files, api.DefaultAddParams(), outChain)
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	return outChain, nil

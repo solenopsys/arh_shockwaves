@@ -2,6 +2,7 @@ package configs
 
 import (
 	"encoding/json"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -29,7 +30,7 @@ func (c *XsConfLoader) loadConfig() *[]ModuleGroup {
 		err = json.Unmarshal([]byte(fileData), config)
 	}
 	if err != nil {
-		panic(err)
+		io.Panic(err)
 	}
 
 	return config

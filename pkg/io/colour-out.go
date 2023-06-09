@@ -1,6 +1,9 @@
 package io
 
-import "github.com/fatih/color"
+import (
+	"fmt"
+	"github.com/fatih/color"
+)
 
 type PrintStyle int
 
@@ -23,27 +26,28 @@ func GetStyle(code PrintStyle) *color.Color {
 	}
 }
 
-func Panic(err error) {
+func Panic(err ...interface{}) {
 	c := GetStyle(Red)
 	c.Print("PANIC")
-	println("")
+	fmt.Println(err)
 }
-func Fatal(err error) {
+func Fatal(err ...interface{}) {
 	c := GetStyle(Red)
 	c.Print("FATAL")
 	Fatal(err)
 }
 
-func Println(message ...any) {
-	println(message)
+func Println(message ...interface{}) {
+
+	fmt.Println(message)
 }
 
-func Print(message string) {
-	print(message)
+func Print(message ...interface{}) {
+	fmt.Println(message)
 }
 
 func PrintColor(message string, st PrintStyle) {
 	c := GetStyle(st)
 	c.Print(" " + message + " ")
-	println("")
+	fmt.Println("")
 }

@@ -23,10 +23,10 @@ var cmdSync = &cobra.Command{
 			//todo refactor
 			if sectionName == "frontends" {
 				pt.MoveTo(sectionName)
-				configs.NewFrontLoader("./").SyncFunc()
+				configs.NewFrontLoader(".", true).SyncFunc()
 			} else if sectionName == "backends" {
 				pt.MoveTo(sectionName)
-				configs.NewBackLoader("./").SyncFunc()
+				configs.NewBackLoader(".").SyncFunc()
 			} else {
 				io.Println("Invalid xs.json, config type only xs-fronts or xs-backs allowed")
 				return
