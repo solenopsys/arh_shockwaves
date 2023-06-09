@@ -21,7 +21,7 @@ var cmdFrontlib = &cobra.Command{
 
 		if name == "*" {
 			io.Println("SetCompiled all libraries")
-			cc := services2.NewLibCompileController("./xs.json", groupDir)
+			cc := services2.NewLibCompileController("./xs-treerepo.json", groupDir)
 			io.Println("Scan directories")
 			cc.LoadPlan()
 			io.Println("Start compile")

@@ -28,7 +28,8 @@ var cmdSync = &cobra.Command{
 				pt.MoveTo(sectionName)
 				configs.NewBackLoader(".").SyncFunc()
 			} else {
-				io.Println("Invalid xs.json, config type only xs-fronts or xs-backs allowed")
+				var name = "xs-treerepo.json" // todo move to const
+				io.Println("Invalid " + name + ", config type only xs-fronts or xs-backs allowed")
 				return
 			}
 

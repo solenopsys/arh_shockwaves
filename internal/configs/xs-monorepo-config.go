@@ -95,7 +95,7 @@ func LoadBase(monorepoLink string) {
 
 func NewFrontLoader(path string, tsConfig bool) *ConfLoader {
 	loader := ConfLoader{}
-	loader.configName = path + "/xs.json"
+	loader.configName = path + "/xs-treerepo.json" // todo move to const
 	loader.targetDir = path
 	loader.LoadConfig()
 	loader.SyncFunc = func() {
@@ -111,7 +111,7 @@ func NewFrontLoader(path string, tsConfig bool) *ConfLoader {
 
 func NewBackLoader(path string) *ConfLoader {
 	loader := ConfLoader{}
-	loader.configName = path + "/xs.json"
+	loader.configName = path + "/xs-treerepo.json" // todo move to const
 	loader.targetDir = path
 	loader.LoadConfig()
 	loader.SyncFunc = func() {

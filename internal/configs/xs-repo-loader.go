@@ -36,12 +36,6 @@ func (c *XsConfLoader) loadConfig() *[]ModuleGroup {
 	return config
 }
 
-func NewLoader() *XsConfLoader {
-	loader := XsConfLoader{}
-	loader.configName = "./config/front-modules.json"
-	return &loader
-}
-
 func (c *XsConfLoader) injectConfiguration() {
 	// c.loadModules()
 }

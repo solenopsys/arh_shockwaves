@@ -63,7 +63,7 @@ func (m *WsManager) GetSections() map[string]*Section {
 
 func NewWsManager() *WsManager {
 	manager := WsManager{}
-	manager.file = "./workspace.json"
+	manager.file = "./xs-workspace.json" //todo move to const
 	manager.workspace = &Workspace{}
 	manager.Load()
 	return &manager
