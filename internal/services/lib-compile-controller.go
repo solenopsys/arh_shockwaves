@@ -1,6 +1,7 @@
 package services
 
 import (
+	"strconv"
 	"xs/internal/compilers"
 	"xs/internal/configs"
 	"xs/pkg/io"
@@ -8,46 +9,34 @@ import (
 	"xs/pkg/wrappers"
 )
 
-func NewLibCompileController(xsFile string, libGroup string) *LibCompileController {
-	c := &LibCompileController{}
-	c.xsFile = xsFile
-	c.libGroup = libGroup
-	c.compileNow = map[string]bool{}
-	c.compileExecutor = compilers.AngularPackageCompileExecutor{PrintConsole: false}
-	c.LoadPlan()
-	return c
-}
-
 type LibCompileController struct {
-	xsFile          string
-	libGroup        string
 	compileNow      map[string]bool
 	packagesOrder   *NpmLibPackagesOrder
 	compileExecutor compilers.CompileExecutor
 	xsManager       *configs.XsManager
 }
 
-func (c *LibCompileController) LoadPlan() {
-	fileName := c.xsFile
-	xm := &configs.XsManager{}
+func NewLibCompileController(xm *configs.XsManager) *LibCompileController {
+	c := &LibCompileController{}
+	c.compileNow = map[string]bool{}
+	c.compileExecutor = compilers.AngularPackageCompileExecutor{PrintConsole: false}
 	c.xsManager = xm
-	err := xm.Load(fileName)
-	if err != nil {
-		io.Panic(err)
-	}
+	return c
+}
 
-	libs := xm.ExtractGroup(c.libGroup)
+func (c *LibCompileController) LoadPlan(libGroup string, libs []*configs.XsMonorepoModule) {
+
 	ord := NewNpmLibPackagesOrder(false)
 
 	for _, lib := range libs {
-		lp := configs.LoadNpmLibPackage("./" + c.libGroup + "/" + lib.Directory + "/package.json")
+		lp := configs.LoadNpmLibPackage("./" + libGroup + "/" + lib.Directory + "/package.json")
 		ord.AddPackage(lp)
 	}
 
 	c.packagesOrder = ord
 }
 
-func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refactoring
+func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string) { // todo need refactoring
 
 	cache := NewCompileCache(".xs/compiled")
 
@@ -65,15 +54,12 @@ func (c *LibCompileController) CompileOnOneThread(force bool) { //todo need refa
 		//}
 
 		for _, pack := range list {
-			xsPackConf := c.xsManager.Extract(c.libGroup, pack.Name)
+			xsPackConf := c.xsManager.Extract(libGroup, pack.Name)
 
-			if xsPackConf == nil {
-				io.Panic(pack.Name + " not found in " + c.xsFile + " group " + c.libGroup)
-			}
-
-			path := c.libGroup + "/" + xsPackConf.Directory
+			path := libGroup + "/" + xsPackConf.Directory
 			n++
-			io.PrintColor(string(rune(n))+" : "+xsPackConf.Npm+" ", io.Blue)
+			strN := strconv.Itoa(n)
+			io.Print(strN + " : " + xsPackConf.Npm)
 			c.compileNow[pack.Name] = true
 
 			dest := wrappers.LoadNgDest(path)

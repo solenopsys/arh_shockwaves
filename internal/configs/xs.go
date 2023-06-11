@@ -2,7 +2,10 @@ package configs
 
 import (
 	"errors"
+	"fmt"
 	"github.com/tendermint/tendermint/libs/os"
+	"regexp"
+	"strings"
 	"xs/pkg/io"
 )
 
@@ -39,6 +42,27 @@ func (x *XsManager) Extract(group string, name string) *XsMonorepoModule {
 func (x *XsManager) ExtractGroup(group string) []*XsMonorepoModule {
 	groups := x.config.Groups
 	return groups[group]
+}
+
+func (x *XsManager) FilterLibs(filter string, group string) []*XsMonorepoModule {
+	groups := x.ExtractGroup(group)
+	var filtered []*XsMonorepoModule = []*XsMonorepoModule{}
+	for _, module := range groups {
+		name := module.Name
+		pattern := strings.Replace(filter, "*", ".*", -1)
+		matched, err := regexp.MatchString(pattern, name)
+		if err != nil {
+			fmt.Println("Error:", err)
+			continue
+		}
+
+		if matched {
+			filtered = append(filtered, module)
+		}
+	}
+
+	io.Println("Found  lib count:", len(filtered))
+	return filtered
 }
 
 func ExtractModule(m string, groupDir string, rType string) (*XsMonorepoModule, error) {

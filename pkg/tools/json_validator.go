@@ -11,10 +11,10 @@ import "github.com/xeipuuv/gojsonschema"
 // go get -u github.com/go-bindata/go-bindata/...
 
 func jsonLoadAndValidate(data string, schema string) {
-	// Load the schema
+	// Tags the schema
 	schemaLoader := gojsonschema.NewStringLoader(schema)
 
-	// Load the data
+	// Tags the data
 	dataLoader := gojsonschema.NewStringLoader(data)
 
 	// Perform validation

@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/spf13/cobra"
+	"log"
 	"xs/cmd/auth"
 	"xs/cmd/build"
 	"xs/cmd/chart"
@@ -14,6 +15,7 @@ import (
 )
 
 func main() {
+	log.SetFlags(log.Lmicroseconds)
 	var rootCmd = &cobra.Command{Use: "xs"}
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true

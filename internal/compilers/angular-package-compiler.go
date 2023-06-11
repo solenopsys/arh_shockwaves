@@ -15,7 +15,7 @@ type AngularPackageCompileExecutor struct {
 }
 
 func (n AngularPackageCompileExecutor) Compile(params map[string]string) error {
-	src := params["src"]
+	src := params["path"]
 	dest := params["dest"]
 	pt := xstool.PathTools{}
 	pt.SetBasePathPwd()

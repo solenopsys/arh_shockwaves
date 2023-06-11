@@ -12,7 +12,7 @@ type PathTools struct {
 func (p *PathTools) SetBasePathPwd() {
 	currentDir, errDir := os.Getwd()
 	if errDir != nil {
-		io.Panic(errDir)
+		io.Fatal(errDir)
 	}
 	p.basePath = currentDir
 }
@@ -20,14 +20,14 @@ func (p *PathTools) SetBasePathPwd() {
 func (p *PathTools) MoveTo(path string) {
 	errDir := os.Chdir(path)
 	if errDir != nil {
-		io.Panic(errDir)
+		io.Fatal(errDir, path)
 	}
 }
 
 func (p *PathTools) MoveToBasePath() {
 	errDir := os.Chdir(p.basePath)
 	if errDir != nil {
-		io.Panic(errDir)
+		io.Fatal(errDir)
 	}
 }
 

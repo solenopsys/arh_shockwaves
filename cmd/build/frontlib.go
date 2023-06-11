@@ -17,16 +17,20 @@ var cmdFrontlib = &cobra.Command{
 		name := args[0]
 		groupDir := "packages"
 
-		var err error
+		xm := &configs.XsManager{}
 
-		if name == "*" {
-			io.Println("SetCompiled all libraries")
-			cc := services2.NewLibCompileController("./xs-treerepo.json", groupDir)
-			io.Println("Scan directories")
-			cc.LoadPlan()
-			io.Println("Start compile")
-			cc.CompileOnOneThread(false)
-		} else {
+		err := xm.Load("./xs-treerepo.json")
+		if err != nil {
+			io.Panic(err)
+		}
+
+		libs := xm.FilterLibs(name, groupDir)
+
+		for _, lib := range libs {
+			io.Print(lib.Name, " ")
+		}
+
+		if len(libs) == 1 {
 			mod, extractError := configs.ExtractModule(name, groupDir, "front")
 			if extractError != nil {
 				err = extractError
@@ -44,6 +48,15 @@ var cmdFrontlib = &cobra.Command{
 				"dest": dest,
 			}
 			compiler.Compile(params)
+
+		} else if len(libs) > 1 {
+			io.Println("SetCompiled all libraries")
+
+			cc := services2.NewLibCompileController(xm)
+			io.Println("Scan directories")
+			cc.LoadPlan(groupDir, libs)
+			io.Println("Start compile")
+			cc.CompileOnOneThread(false, groupDir)
 		}
 
 		if err != nil {

@@ -10,13 +10,15 @@ import (
 
 var cmdLoad = &cobra.Command{
 	Use:   "load",
-	Short: "Load section monorepo",
+	Short: "Tags section monorepo",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		sectionName := args[0]
 
-		manager := funcs.NewWsManager()
-
+		manager, err := funcs.NewWsManager()
+		if err != nil {
+			io.Fatal(err)
+		}
 		state := manager.GetSectionState(sectionName)
 		if state == "enabled" {
 			io.Println(sectionName + " already loaded")

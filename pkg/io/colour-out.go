@@ -3,6 +3,7 @@ package io
 import (
 	"fmt"
 	"github.com/fatih/color"
+	"log"
 )
 
 type PrintStyle int
@@ -29,24 +30,28 @@ func GetStyle(code PrintStyle) *color.Color {
 func Panic(err ...interface{}) {
 	c := GetStyle(Red)
 	c.Print("PANIC")
-	fmt.Println(err)
+	print(" ")
+	log.Panic(err)
 }
 func Fatal(err ...interface{}) {
 	c := GetStyle(Red)
 	c.Print("FATAL")
-	Fatal(err)
+	print(" ")
+
+	log.Fatal(err)
+
 }
 
 func Println(message ...interface{}) {
-
 	fmt.Println(message)
 }
 
 func Print(message ...interface{}) {
-	fmt.Println(message)
+	fmt.Print(message)
 }
 
 func PrintColor(message string, st PrintStyle) {
+
 	c := GetStyle(st)
 	c.Print(" " + message + " ")
 	fmt.Println("")

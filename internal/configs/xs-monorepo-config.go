@@ -26,7 +26,7 @@ type XsMonorepoConfig struct {
 type XsMonorepoModule struct {
 	Directory string   `json:"directory"`
 	Git       string   `json:"repository"`
-	Load      []string `json:"scopes"`
+	Tags      []string `json:"tags"`
 	Npm       string   `json:"package"`
 	Name      string   `json:"name"`
 }
@@ -44,9 +44,8 @@ func LoadConfigFile(fileName string) *XsMonorepoConfig {
 	fileData, err := tools.ReadFile(fileName)
 	if err == nil {
 		err = json.Unmarshal([]byte(fileData), config)
-	}
-	if err != nil {
-		io.Panic(err)
+	} else {
+		io.Fatal(err)
 	}
 	return config
 }
@@ -83,7 +82,7 @@ func LoadWorkspace(monorepoLink string) {
 }
 
 func LoadBase(monorepoLink string) {
-	io.Println("Load base\n")
+	io.Println("Tags base\n")
 
 	err := wrappers.CloneGitRepository(monorepoLink, ".", false, false)
 	if err != nil {
