@@ -47,10 +47,6 @@ func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string, e
 		if list == nil || len(list) == 0 {
 			break
 		}
-		//io.Println("COMPILE GROUP: ")
-		//for _, pack := range list {
-		//	io.Println("\t", pack.Name+" ")
-		//}
 
 		for _, pack := range list {
 			xsPackConf := c.xsManager.ExtractModule(libGroup, pack.Name)

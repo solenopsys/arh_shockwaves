@@ -18,6 +18,5 @@ func init() {
 	Cmd.AddCommand(cmdHelm)
 	Cmd.AddCommand(cmdContainer)
 	Cmd.AddCommand(cmdFrontlib)
-	Cmd.AddCommand(cmdMicroFrontend)
 	Cmd.AddCommand(cmdFrontend)
 }

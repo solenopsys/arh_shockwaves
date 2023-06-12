@@ -12,12 +12,12 @@ const FRONT = "front"
 const BACK = "back"
 
 var FileTypeMapping = map[string]string{
-	"xs-fronts": FRONT,
-	"xs-backs":  BACK,
+	"treerepo-frontends": FRONT,
+	"treerepo-backends":  BACK,
 }
 
 type XsMonorepoFormat struct {
-	Name    string `json:"name"`
+	Name    string `json:"type"`
 	Version string `json:"version"`
 }
 
