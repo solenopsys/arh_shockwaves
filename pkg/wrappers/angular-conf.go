@@ -45,6 +45,6 @@ func LoadAngularDest(projectName string, dir string) string {
 	confFile := dir + "/angular.json"
 	config := LoadAngConfig(confFile)
 	destPath := config.Projects[projectName].Architect.Build.Options.OutputPath
-	destFixed := strings.Replace(destPath, "../../../../", "./", -1)
+	destFixed := strings.Replace(destPath, "../../../", "./", -1)
 	return destFixed
 }

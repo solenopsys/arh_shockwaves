@@ -8,9 +8,12 @@ import (
 	"xs/pkg/wrappers"
 )
 
+const FRONT = "front"
+const BACK = "back"
+
 var FileTypeMapping = map[string]string{
-	"xs-fronts": "front",
-	"xs-backs":  "back",
+	"xs-fronts": FRONT,
+	"xs-backs":  BACK,
 }
 
 type XsMonorepoFormat struct {

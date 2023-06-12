@@ -53,7 +53,7 @@ func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string, e
 		//}
 
 		for _, pack := range list {
-			xsPackConf := c.xsManager.Extract(libGroup, pack.Name)
+			xsPackConf := c.xsManager.ExtractModule(libGroup, pack.Name)
 
 			path := libGroup + "/" + xsPackConf.Directory
 			n++

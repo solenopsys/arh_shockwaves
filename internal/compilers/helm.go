@@ -13,7 +13,7 @@ type Helm struct {
 func (n Helm) Compile(params map[string]string) error {
 	m := params["name"]
 	groupDir := "modules"
-	mod, extractError := configs.ExtractModule(m, groupDir, "back")
+	mod, extractError := configs.ExtractModule(m, groupDir, configs.BACK)
 	if extractError != nil {
 
 		return extractError

@@ -16,7 +16,7 @@ func (n Container) Compile(params map[string]string) error {
 
 	m := params["name"]
 
-	mod, extractError := configs.ExtractModule(m, groupDir, "back")
+	mod, extractError := configs.ExtractModule(m, groupDir, configs.BACK)
 	if extractError != nil {
 		return extractError
 	}

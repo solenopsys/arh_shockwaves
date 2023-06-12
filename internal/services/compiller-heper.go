@@ -22,12 +22,15 @@ func CompileGroup(name string, groupDir string, executor internal.CompileExecuto
 	}
 
 	if len(libs) == 1 {
-		mod, extractError := configs.ExtractModule(name, groupDir, "front")
+		mod, extractError := configs.ExtractModule(name, groupDir, configs.FRONT)
 		if extractError != nil {
 			err = extractError
 		}
 
 		compiler := executor
+		if mod == nil {
+			io.Panic("Module not found")
+		}
 		io.Println("Mod ", mod.Directory)
 
 		path := "./" + groupDir + "/" + mod.Directory
