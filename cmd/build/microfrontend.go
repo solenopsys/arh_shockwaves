@@ -13,7 +13,7 @@ var cmdMicroFrontend = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		name := args[0]
 
-		hce := compilers.AngularFrontendCompileExecutor{PrintConsole: true}
+		hce := compilers.Frontend{PrintConsole: true}
 
 		err := hce.Compile(map[string]string{
 			"name": name,

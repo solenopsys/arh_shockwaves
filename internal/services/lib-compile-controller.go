@@ -2,24 +2,23 @@ package services
 
 import (
 	"strconv"
-	"xs/internal/compilers"
+	"xs/internal"
 	"xs/internal/configs"
 	"xs/pkg/io"
 	xstool "xs/pkg/tools"
-	"xs/pkg/wrappers"
 )
 
 type LibCompileController struct {
 	compileNow      map[string]bool
 	packagesOrder   *NpmLibPackagesOrder
-	compileExecutor compilers.CompileExecutor
+	compileExecutor internal.CompileExecutor
 	xsManager       *configs.XsManager
 }
 
-func NewLibCompileController(xm *configs.XsManager) *LibCompileController {
+func NewLibCompileController(xm *configs.XsManager, executor internal.CompileExecutor) *LibCompileController {
 	c := &LibCompileController{}
 	c.compileNow = map[string]bool{}
-	c.compileExecutor = compilers.AngularPackageCompileExecutor{PrintConsole: false}
+	c.compileExecutor = executor
 	c.xsManager = xm
 	return c
 }
@@ -36,7 +35,7 @@ func (c *LibCompileController) LoadPlan(libGroup string, libs []*configs.XsMonor
 	c.packagesOrder = ord
 }
 
-func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string) { // todo need refactoring
+func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string, extractor internal.CompileParamsExtractor) { // todo need refactoring
 
 	cache := NewCompileCache(".xs/compiled")
 
@@ -62,8 +61,13 @@ func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string) {
 			io.Print(strN + " : " + xsPackConf.Npm)
 			c.compileNow[pack.Name] = true
 
-			dest := wrappers.LoadNgDest(path)
+			var params = map[string]string{}
 
+			if extractor != nil {
+				params = extractor.Extract(pack.Name, path)
+			}
+
+			dest := params["dest"]
 			dirExists := xstool.DirExists(dest)
 			excludeDirs := []string{"node_modules"}
 			var hashesOk = false
@@ -85,10 +89,7 @@ func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string) {
 				c.packagesOrder.SetCompiled(pack.Name)
 				c.compileNow[pack.Name] = false
 			} else {
-				params := map[string]string{
-					"path": path,
-					"dest": dest,
-				}
+
 				err := c.compileExecutor.Compile(params)
 				if err != nil {
 					io.Panic(err)

@@ -6,21 +6,21 @@ import (
 	"xs/pkg/io"
 )
 
-type AngularFrontendCompileExecutor struct {
+type Frontend struct {
 	PrintConsole bool
 }
 
-func (n AngularFrontendCompileExecutor) Compile(params map[string]string) error {
+func (n Frontend) Compile(params map[string]string) error {
 	groupDir := "modules"
 
 	m := params["name"]
 
-	mod, extractError := configs.ExtractModule(m, groupDir, "entrances")
+	_, extractError := configs.ExtractModule(m, groupDir, "entrances")
 	if extractError != nil {
 		return extractError
 	}
 
-	arg := mod.Directory + "build:production"
+	arg := "build:production"
 	argsSplit := strings.Split(arg, " ")
 
 	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "ng", Args: argsSplit}

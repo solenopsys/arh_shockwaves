@@ -7,11 +7,11 @@ import (
 	"xs/pkg/io"
 )
 
-type ContainerCompileExecutor struct {
+type Container struct {
 	PrintConsole bool
 }
 
-func (n ContainerCompileExecutor) Compile(params map[string]string) error {
+func (n Container) Compile(params map[string]string) error {
 	groupDir := "modules"
 
 	m := params["name"]

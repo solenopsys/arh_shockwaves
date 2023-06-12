@@ -13,7 +13,7 @@ var cmdHelm = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		name := args[0]
 
-		hce := compilers.HelmCompileExecutor{PrintConsole: true}
+		hce := compilers.Helm{PrintConsole: true}
 
 		err := hce.Compile(map[string]string{
 			"name": name,

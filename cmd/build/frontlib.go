@@ -3,10 +3,8 @@ package build
 import (
 	"github.com/spf13/cobra"
 	"xs/internal/compilers"
-	"xs/internal/configs"
-	services2 "xs/internal/services"
-	"xs/pkg/io"
-	"xs/pkg/wrappers"
+	"xs/internal/extractors"
+	"xs/internal/services"
 )
 
 var cmdFrontlib = &cobra.Command{
@@ -14,54 +12,8 @@ var cmdFrontlib = &cobra.Command{
 	Short: "Frontend build",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		name := args[0]
-		groupDir := "packages"
-
-		xm := &configs.XsManager{}
-
-		err := xm.Load("./xs-treerepo.json")
-		if err != nil {
-			io.Panic(err)
-		}
-
-		libs := xm.FilterLibs(name, groupDir)
-
-		for _, lib := range libs {
-			io.Print(lib.Name, " ")
-		}
-
-		if len(libs) == 1 {
-			mod, extractError := configs.ExtractModule(name, groupDir, "front")
-			if extractError != nil {
-				err = extractError
-			}
-
-			compiler := compilers.AngularPackageCompileExecutor{PrintConsole: true}
-			io.Println("Mod ", mod.Directory)
-
-			path := "./" + groupDir + "/" + mod.Directory
-			io.Println("SetCompiled library", path)
-
-			dest := wrappers.LoadNgDest(path)
-			params := map[string]string{
-				"path": path,
-				"dest": dest,
-			}
-			compiler.Compile(params)
-
-		} else if len(libs) > 1 {
-			io.Println("SetCompiled all libraries")
-
-			cc := services2.NewLibCompileController(xm)
-			io.Println("Scan directories")
-			cc.LoadPlan(groupDir, libs)
-			io.Println("Start compile")
-			cc.CompileOnOneThread(false, groupDir)
-		}
-
-		if err != nil {
-			io.Println("Error", err.Error())
-			return
-		}
+		executor := compilers.Frontlib{PrintConsole: true}
+		extractor := extractors.Frontlib{}
+		services.CompileGroup(args[0], "packages", executor, extractor)
 	},
 }

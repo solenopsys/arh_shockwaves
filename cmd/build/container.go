@@ -14,7 +14,7 @@ var cmdContainer = &cobra.Command{
 
 		name := args[0]
 
-		hce := compilers.ContainerCompileExecutor{PrintConsole: true}
+		hce := compilers.Container{PrintConsole: true}
 
 		err := hce.Compile(map[string]string{
 			"name": name,

@@ -6,11 +6,11 @@ import (
 	"xs/pkg/wrappers"
 )
 
-type HelmCompileExecutor struct {
+type Helm struct {
 	PrintConsole bool
 }
 
-func (n HelmCompileExecutor) Compile(params map[string]string) error {
+func (n Helm) Compile(params map[string]string) error {
 	m := params["name"]
 	groupDir := "modules"
 	mod, extractError := configs.ExtractModule(m, groupDir, "back")

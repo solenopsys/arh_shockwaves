@@ -10,11 +10,11 @@ import (
 
 const NPM_APPLICATION = "pnpm"
 
-type AngularPackageCompileExecutor struct {
+type Frontlib struct {
 	PrintConsole bool
 }
 
-func (n AngularPackageCompileExecutor) Compile(params map[string]string) error {
+func (n Frontlib) Compile(params map[string]string) error {
 	src := params["path"]
 	dest := params["dest"]
 	pt := xstool.PathTools{}
