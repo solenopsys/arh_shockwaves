@@ -49,8 +49,9 @@ func (x *XsManager) FilterLibs(filter string, group string) []*XsMonorepoModule 
 	var filtered []*XsMonorepoModule = []*XsMonorepoModule{}
 	for _, module := range groups {
 		name := module.Name
+
 		pattern := strings.Replace(filter, "*", ".*", -1)
-		matched, err := regexp.MatchString(pattern, name)
+		matched, err := regexp.MatchString("^"+pattern+"$", name)
 		if err != nil {
 			fmt.Println("Error:", err)
 			continue
