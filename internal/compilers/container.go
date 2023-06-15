@@ -33,15 +33,22 @@ func (n Container) Compile(params map[string]string) error {
 	command := "nerdctl"
 	io.Println("command:" + command)
 
-	arg := "build --platform=" + platform + " --output type=image,name=" + reg + "/" + mod.Directory + ":latest,push=true ."
+	arg := "build --platform=" + platform + "  --progress=plain --output type=image,name=" + reg + "/" + mod.Directory + ":latest,push=true ."
+	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 	if errDir != nil {
 		return errDir
 	}
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "nerdctl", Args: argsSplit}
+	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "nerdctl", Args: argsSplit, PrintToConsole: n.PrintConsole}
 	go stdPrinter.Processing()
-	stdPrinter.Start()
+	result := stdPrinter.Start()
+
+	if result == 0 {
+		io.PrintColor("OK", io.Green)
+	} else {
+		io.PrintColor("ERROR", io.Red)
+	}
 
 	return nil
 }

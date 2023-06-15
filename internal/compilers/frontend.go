@@ -28,7 +28,7 @@ func (n Frontend) Compile(params map[string]string) error {
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "ng", Args: argsSplit}
+	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "ng", Args: argsSplit, PrintToConsole: n.PrintConsole}
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 

@@ -15,7 +15,7 @@ import (
 func PushDir(archive []byte) {
 	buffer := bytes.NewBuffer(archive)
 
-	url := "http://helm.solenopsys.org/api/charts"
+	url := "http://helm.solenopsys.org/api/charts" // todo move to config
 	resp, err := http.Post(url, "application/octet-stream", buffer)
 	if err != nil {
 		io.Println("Error sending request:", err)
