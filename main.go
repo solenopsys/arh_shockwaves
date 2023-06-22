@@ -11,6 +11,7 @@ import (
 	"xs/cmd/net"
 	"xs/cmd/node"
 	"xs/cmd/public"
+	"xs/cmd/serve"
 	"xs/cmd/ws"
 )
 
@@ -33,4 +34,5 @@ func initCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(auth.Cmd)
 	rootCmd.AddCommand(build.Cmd)
 	rootCmd.AddCommand(ws.Cmd)
+	rootCmd.AddCommand(serve.Cmd)
 }
