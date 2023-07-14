@@ -11,7 +11,7 @@ import (
 var cmdSync = &cobra.Command{
 	Use:   "sync ",
 	Short: "Sync modules by configuration",
-	Args:  cobra.MinimumNArgs(0),
+	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		sectionName := args[0]
 
