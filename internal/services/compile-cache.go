@@ -10,7 +10,7 @@ type CompileCache struct {
 }
 
 func NewCompileCache(cacheIndexDir string) *CompileCache {
-	if !tools.DirExists(cacheIndexDir) {
+	if !tools.Exists(cacheIndexDir) {
 		err := tools.CreateDirs(cacheIndexDir)
 		if err != nil {
 			io.Panic(err)

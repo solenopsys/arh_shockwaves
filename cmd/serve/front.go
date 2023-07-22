@@ -24,7 +24,7 @@ var cmdFront = &cobra.Command{
 			strPort := strconv.Itoa(port)
 
 			io.Println("Print: " + name + ": " + strPort)
-			go io.StartProxy(".\\dist\\fronts\\"+name, strPort)
+			go io.StartProxy("./dist/fronts/"+name, strPort)
 			port++
 			wg.Add(1)
 		}

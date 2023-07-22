@@ -66,5 +66,8 @@ func NewWsManager() (*WsManager, error) {
 	manager.file = "./xs-workspace.json" //todo move to const
 	manager.workspace = &Workspace{}
 	err := manager.Load()
+	if err != nil {
+		io.Panic("Workspace file corrupted: ", manager.file, err)
+	}
 	return &manager, err
 }

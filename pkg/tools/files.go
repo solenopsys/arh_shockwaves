@@ -33,7 +33,7 @@ func CreateDirs(dir string) error {
 	return nil
 }
 
-func DirExists(dir string) bool {
+func Exists(dir string) bool {
 	_, err := os.Stat(dir)
 	if err != nil {
 		return false

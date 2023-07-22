@@ -64,7 +64,7 @@ func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string, e
 			}
 
 			dest := params["dest"]
-			dirExists := xstool.DirExists(dest)
+			dirExists := xstool.Exists(dest)
 			excludeDirs := []string{"node_modules"}
 			var hashesOk = false
 			if dirExists { //todo refactor
