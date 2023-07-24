@@ -6,6 +6,8 @@ import (
 	"xs/pkg/io"
 )
 
+const NPM_APPLICATION = "pnpm"
+
 type UniversalCompileController struct {
 	Executor  internal.CompileExecutor
 	Extractor internal.CompileParamsExtractor

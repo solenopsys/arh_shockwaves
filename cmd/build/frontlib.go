@@ -14,13 +14,24 @@ var cmdFrontlib = &cobra.Command{
 	Short: "Frontend build",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
+
+		filter := args[0]
+
+		const PUBLISH = "publish"
+
+		publish := len(args) > 1 && args[1] == PUBLISH
+
+		base := map[string]string{}
+		if publish {
+			base["publish"] = "true"
+		}
 		contr := services.UniversalCompileController{
 			Executor:  compilers.Frontlib{PrintConsole: false},
-			Extractor: extractors.Frontlib{},
+			Extractor: extractors.Frontlib{Base: base},
 			GroupDir:  "packages",
 			RepoType:  configs.FRONT,
 		}
-		filter := args[0]
+
 		err := contr.SelectLibs(filter)
 		if err == nil {
 			contr.CompileSelectedLibs()

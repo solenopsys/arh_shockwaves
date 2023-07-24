@@ -63,7 +63,7 @@ func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
 		for _, module := range group {
 
 			path := c.targetDir + "/" + key + "/" + module.Directory
-			tsFile := path + "/src/public_api.ts"
+			tsFile := path + "/src/index.ts"
 
 			npm := module.Npm
 			io.Println("Inject to config:", npm, tsFile)

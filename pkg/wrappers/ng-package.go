@@ -26,7 +26,7 @@ func LoadNgConfig(confFile string) *BuildConfig {
 }
 
 func LoadNgDest(dir string) string {
-	confFile := dir + "/ng-package.json"
+	confFile := dir + "/xs-package.json"
 	config := LoadNgConfig(confFile)
 	destPath := config.Dest
 	destFixed := strings.Replace(destPath, "../../../../", "./", -1)

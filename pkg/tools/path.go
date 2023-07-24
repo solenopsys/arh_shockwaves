@@ -31,6 +31,12 @@ func (p *PathTools) MoveToBasePath() {
 	}
 }
 
+func (p *PathTools) GetPwd() string {
+	currentDir, _ := os.Getwd()
+
+	return currentDir
+}
+
 func NewPathTools() *PathTools {
 	p := &PathTools{}
 	p.SetBasePathPwd()
