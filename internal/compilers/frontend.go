@@ -12,7 +12,7 @@ type Frontend struct {
 }
 
 func (n Frontend) Compile(params map[string]string) error {
-	groupDir := "entrances"
+	groupDir := "endpoints"
 
 	pt := xstool.PathTools{}
 	src := params["path"]

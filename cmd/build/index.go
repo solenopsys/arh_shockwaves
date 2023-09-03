@@ -7,7 +7,7 @@ import (
 
 var Cmd = &cobra.Command{
 	Use:   "build [command]",
-	Short: "Build modules (frontend ,container, helm,...)",
+	Short: "Build modules (frontend, module ,container, helm,...)",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		io.Println("Print: " + args[0])
@@ -19,4 +19,5 @@ func init() {
 	Cmd.AddCommand(cmdContainer)
 	Cmd.AddCommand(cmdFrontlib)
 	Cmd.AddCommand(cmdFrontend)
+	Cmd.AddCommand(cmdModule)
 }
