@@ -13,10 +13,10 @@ var cmdDir = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		dir := args[0]
 
-		ipfs := false
+		ipfs := true
 
 		if ipfs {
-			cid, err := wrappers.UploadDirToIpfsNode("0.0.0.0:5003", dir)
+			cid, err := wrappers.UploadDirToIpfsNode(IpfsHost, dir)
 
 			if err != nil {
 				io.Println(err)
@@ -26,7 +26,7 @@ var cmdDir = &cobra.Command{
 		} else {
 			d := make([]string, 1)
 			d[0] = dir
-			cid, err := wrappers.UploadFileToIpfsCluster("0.0.0.0:9094", d)
+			cid, err := wrappers.UploadFileToIpfsCluster(IpfsClusterHost, d)
 
 			if err != nil {
 				io.Println(err)

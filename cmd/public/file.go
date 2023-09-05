@@ -16,7 +16,7 @@ var cmdFile = &cobra.Command{
 		ipfs := false
 
 		if ipfs {
-			cid, err := wrappers.UploadFileToIpfsNode("0.0.0.0:5003", file)
+			cid, err := wrappers.UploadFileToIpfsNode(IpfsHost, file)
 
 			if err != nil {
 				io.Println(err)
@@ -26,7 +26,7 @@ var cmdFile = &cobra.Command{
 		} else {
 			d := make([]string, 1)
 			d[0] = file
-			outChain, err := wrappers.UploadFileToIpfsCluster("0.0.0.0:9094", d)
+			outChain, err := wrappers.UploadFileToIpfsCluster(IpfsClusterHost, d)
 
 			if err != nil {
 				io.Println(err)

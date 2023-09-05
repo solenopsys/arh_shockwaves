@@ -95,3 +95,22 @@ func (g *GitTools) GitUpdateSubmodules() error {
 func (g *GitTools) GitUpdate() error {
 	return g.RunGitCommand("update", "--init", "--recursive")
 }
+
+func (g *GitTools) UpdateServerInfo() error {
+	return g.RunGitCommand("update-server-info")
+}
+
+//func (g *GitTools) UnpackObjects() error
+///*
+//mv objects/pack/*.pack .
+//git unpack-objects < *.pack
+//rm -f *.pack objects/pack/*
+// */
+//	return g.RunGitCommand("unpack-objects")
+//}
+
+//func unpack(pack string) {
+//
+//	git unpack-objects < SAMPLE/*.pack
+//
+//	}
