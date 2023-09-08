@@ -1,4 +1,4 @@
-package ws
+package code
 
 import (
 	"github.com/spf13/cobra"

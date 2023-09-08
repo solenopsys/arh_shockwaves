@@ -129,10 +129,11 @@ func (pg *PublicGit) PublicGitRepo(repoName string, nickname string, moduleType 
 	pinning.UserKey = "alexstorm" // todo remove it
 
 	labels := make(map[string]string)
-	labels["source.url"] = pg.config.Remote + repoName
 
 	namePack := "@" + nickname + "/" + repoName
-	labels["code."+moduleType] = namePack
+	labels["source.url"] = pg.config.Remote + repoName
+	labels["code.source"] = namePack
+	labels["code.type"] = moduleType
 	labels["clone.to"] = pg.config.Paths[moduleType]
 	labels["commit.hash"] = commitHash
 

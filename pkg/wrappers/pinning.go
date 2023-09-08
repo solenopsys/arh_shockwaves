@@ -38,7 +38,11 @@ func (p *Pinning) SmartPin(cid string, labels map[string]string, ipnsName string
 	}
 
 	if hasPin {
-		println("pin exists skip this step", cid)
+		_, err := p.SimpleUpdateLabels(cid, labels)
+		if err != nil {
+			return err
+		}
+		println("pin exists label updated", cid)
 	} else {
 		pin, err := p.SimplePin(cid, labels)
 		if err != nil {
@@ -46,8 +50,6 @@ func (p *Pinning) SmartPin(cid string, labels map[string]string, ipnsName string
 		}
 		println("pin", pin)
 	}
-
-	//ipnsName:=strings.ReplaceAll(name,"/","_")
 
 	hasName, err := p.CheckName(ipnsName)
 	if err != nil {
@@ -64,32 +66,44 @@ func (p *Pinning) SmartPin(cid string, labels map[string]string, ipnsName string
 }
 
 func (p *Pinning) CheckName(name string) (bool, error) {
-	return p.Check(name, "name", "name")
+	return p.Check(name, "name", "value")
 }
 
 func (p *Pinning) CheckPin(name string) (bool, error) {
 	return p.Check(name, "pin", "cid")
 }
 
-func (p *Pinning) Check(cid string, sub string, paramName string) (bool, error) {
-
-	req, err := http.NewRequest("GET", p.Host+"/check/"+sub+"?"+paramName+"="+cid, nil)
-
-	// set header Authorization
+func (p *Pinning) execRequestBytes(req *http.Request) ([]byte, error) {
 	req.Header.Set("Authorization", p.UserKey)
-	if err != nil {
-		return false, err
-	}
+
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	return io.ReadAll(resp.Body)
+}
+
+func (p *Pinning) execRequest(req *http.Request, resp interface{}) error {
+	req.Header.Set("Content-Type", "application/json")
+	body, err := p.execRequestBytes(req)
+	if err != nil {
+		return err
+	}
+	println(string(body))
+	return json.Unmarshal(body, &resp)
+}
+
+func (p *Pinning) Check(cid string, sub string, paramName string) (bool, error) {
+	url := p.Host + "/check/" + sub + "?" + paramName + "=" + cid
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
 		return false, err
 	}
-
-	body, err := io.ReadAll(resp.Body)
-
 	var boolResponse BoolResponse
-	err = json.Unmarshal(body, &boolResponse)
+	err = p.execRequest(req, &boolResponse)
+
 	if err != nil {
 		return false, err
 	} else {
@@ -114,6 +128,21 @@ func (p *Pinning) SimplePin(cid string, labels map[string]string) (string, error
 
 }
 
+func (p *Pinning) SimpleUpdateLabels(cid string, labels map[string]string) (string, error) {
+
+	pin := Pin{
+		CID:    cid,
+		Labels: labels,
+	}
+
+	conf := Configuration{
+		Pins: []Pin{pin},
+	}
+
+	return p.UpdateLabels(&conf)
+
+}
+
 func (p *Pinning) SetName(cid string, name string, new bool) (string, error) {
 	var method string = "create"
 	if !new {
@@ -122,45 +151,74 @@ func (p *Pinning) SetName(cid string, name string, new bool) (string, error) {
 
 	url := p.Host + "/name/" + method + "?cid=" + cid + "&name=" + name
 	req, err := http.NewRequest("GET", url, nil)
-	req.Header.Set("Authorization", p.UserKey)
-	if err != nil {
-		return "", err
-	}
-	client := &http.Client{}
-	resp, err := client.Do(req)
 	if err != nil {
 		return "", err
 	}
 
-	body, err := io.ReadAll(resp.Body)
+	body, err := p.execRequestBytes(req)
+
+	if err != nil {
+		return "", err
+	}
 
 	return string(body), nil
 }
 
 func (p *Pinning) Pin(conf *Configuration) (string, error) {
-
 	jsonData, err := json.Marshal(conf)
 	if err != nil {
 		return "", err
 	}
 
 	req, err := http.NewRequest("POST", p.Host+"/pin", bytes.NewBuffer(jsonData))
-	req.Header.Set("Authorization", p.UserKey)
-	if err != nil {
-		return "", err
-	}
 
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		return "", err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
+	body, err := p.execRequestBytes(req)
 
 	return string(body), nil
+}
 
+func (p *Pinning) UpdateLabels(conf *Configuration) (string, error) {
+	jsonData, err := json.Marshal(conf)
+	if err != nil {
+		return "", err
+	}
+
+	req, err := http.NewRequest("PUT", p.Host+"/labels", bytes.NewBuffer(jsonData))
+
+	body, err := p.execRequestBytes(req)
+
+	return string(body), nil
+}
+
+type PackInfo struct {
+	Cid string
+	To  string
+}
+
+func (p *Pinning) FindRepo(repoName string) (map[string]PackInfo, error) {
+	//namePattern := "code*"
+	//url := p.Host + "/select/names?name=" + namePattern + "&value=" + repoName
+	//req, err := http.NewRequest("GET", url, nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//body, err := p.execRequestBytes(req)
+	//
+	//var resp map[string]map[string]string
+	//
+	//err = json.Unmarshal(body, &resp)
+	//
+	//mapping := make(map[string]PackInfo)
+	//
+	//if err != nil {
+	//	log.Fatal(err)
+	//}
+	//for ipnsCid, mp := range resp {
+	//	mapping[ipnsCid] = PackInfo{Cid: value, To: key}
+	//
+	//	for key, value := range mp {
+	//		return v2, nil
+	//	}
+	//}
+	return nil, nil
 }
