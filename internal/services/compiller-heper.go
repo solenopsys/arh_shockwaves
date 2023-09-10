@@ -13,12 +13,12 @@ type UniversalCompileController struct {
 	Extractor internal.CompileParamsExtractor
 	GroupDir  string
 	libs      []*configs.XsMonorepoModule
-	xm        *configs.XsManager
+	xm        *configs.TreeRepoManager
 	RepoType  string
 }
 
 func (u *UniversalCompileController) SelectLibs(name string) error {
-	u.xm = &configs.XsManager{}
+	u.xm = &configs.TreeRepoManager{}
 	err := u.xm.Load("./xs-treerepo.json")
 	if err != nil {
 		io.Panic(err)

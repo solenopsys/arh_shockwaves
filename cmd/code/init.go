@@ -3,7 +3,7 @@ package code
 import (
 	"github.com/spf13/cobra"
 	"log"
-	"xs/cmd/public"
+	"xs/internal/configs"
 	"xs/pkg/wrappers"
 )
 
@@ -12,18 +12,12 @@ var cmdInit = &cobra.Command{
 	Short: "Workspace initialization",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		pinning := wrappers.Pinning{}
-		pinning.Host = "http://" + public.PinningHost // todo remove it
-		pinning.UserKey = "alexstorm"                 // todo remove it
-
-		repo, err := pinning.FindRepo("@solenopsys/tp-workspace")
-
+		pinning := wrappers.NewPinning()
+		repo, err := pinning.FindOne("@solenopsys/tp-workspace")
 		if err != nil {
 			log.Fatal(err)
 		}
-
-		println(repo)
-
-		//	configs.LoadWorkspace("https://github.com/solenopsys/tp-workspace.git")
+		tl := configs.NewSourceLoader()
+		tl.Load(repo.Cid, ".") // todo random from config
 	},
 }

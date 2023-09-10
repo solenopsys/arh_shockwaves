@@ -12,10 +12,10 @@ type LibCompileController struct {
 	compileNow      map[string]bool
 	packagesOrder   *NpmLibPackagesOrder
 	compileExecutor internal.CompileExecutor
-	xsManager       *configs.XsManager
+	xsManager       *configs.TreeRepoManager
 }
 
-func NewLibCompileController(xm *configs.XsManager, executor internal.CompileExecutor) *LibCompileController {
+func NewLibCompileController(xm *configs.TreeRepoManager, executor internal.CompileExecutor) *LibCompileController {
 	c := &LibCompileController{}
 	c.compileNow = map[string]bool{}
 	c.compileExecutor = executor

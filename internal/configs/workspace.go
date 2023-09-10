@@ -1,4 +1,4 @@
-package funcs
+package configs
 
 import (
 	"encoding/json"
@@ -6,15 +6,15 @@ import (
 	"xs/pkg/tools"
 )
 
-type Workspace struct {
-	Type     string              `json:"type"`
-	Version  int                 `json:"version"`
-	Sections map[string]*Section `json:"sections"`
+type Format struct {
+	Type    string `json:"type"`
+	Version int    `json:"version"`
 }
 
-type Section struct {
-	State    string `json:"state"`
-	Template string `json:"template"`
+type Workspace struct {
+	Format    Format
+	Templates map[string]map[string]string `json:"templates"`
+	Code      map[string]map[string]string `json:"code"`
 }
 
 type WsManager struct {
@@ -32,19 +32,6 @@ func (m *WsManager) Load() error {
 	}
 }
 
-func (m *WsManager) GetSectionRepository(section string) string {
-	return m.workspace.Sections[section].Template
-}
-
-func (m *WsManager) SetSectionState(section string, state string) {
-	v := m.workspace.Sections[section]
-	v.State = state
-}
-
-func (m *WsManager) GetSectionState(section string) string {
-	return m.workspace.Sections[section].State
-}
-
 func (m *WsManager) Save() {
 	bytes, err := json.MarshalIndent(m.workspace, "", "  ")
 	if err != nil {
@@ -57,8 +44,8 @@ func (m *WsManager) Save() {
 	}
 }
 
-func (m *WsManager) GetSections() map[string]*Section {
-	return m.workspace.Sections
+func (m *WsManager) GetTemplateDirectory(dir string) string {
+	return m.workspace.Templates["sections"][dir]
 }
 
 func NewWsManager() (*WsManager, error) {

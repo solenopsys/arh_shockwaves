@@ -9,23 +9,27 @@ import (
 	"xs/pkg/io"
 )
 
-type XsManager struct {
+type TreeRepoManager struct {
 	config *XsMonorepoConfig
 }
 
-func (x *XsManager) Load(fileName string) error {
+func NewXsManager() *TreeRepoManager {
+	manager := TreeRepoManager{}
+	manager.Load("xs-treerepo.json")
+	return &manager
+}
+func (x *TreeRepoManager) Load(fileName string) error {
 	var err error
 	exists := os.FileExists(fileName)
 	if exists {
 		x.config = LoadConfigFile(fileName)
 	} else {
-		var name = "xs-treerepo.json" // todo move to global const
-		err = errors.New(name + " not found, directory not initialized")
+		err = errors.New(fileName + " not found, directory not initialized")
 	}
 	return err
 }
 
-func (x *XsManager) ExtractModule(group string, name string) *XsMonorepoModule {
+func (x *TreeRepoManager) ExtractModule(group string, name string) *XsMonorepoModule {
 	//io.Println("Scan modules")
 	groups := x.config.Groups
 	modules := groups[group]
@@ -39,12 +43,12 @@ func (x *XsManager) ExtractModule(group string, name string) *XsMonorepoModule {
 	return nil
 }
 
-func (x *XsManager) ExtractGroup(group string) []*XsMonorepoModule {
+func (x *TreeRepoManager) ExtractGroup(group string) []*XsMonorepoModule {
 	groups := x.config.Groups
 	return groups[group]
 }
 
-func (x *XsManager) FilterLibs(filter string, group string) []*XsMonorepoModule {
+func (x *TreeRepoManager) FilterLibs(filter string, group string) []*XsMonorepoModule {
 	groups := x.ExtractGroup(group)
 	var filtered []*XsMonorepoModule = []*XsMonorepoModule{}
 	for _, module := range groups {
@@ -70,7 +74,7 @@ func ExtractModule(m string, groupDir string, rType string) (*XsMonorepoModule, 
 	var okModule *XsMonorepoModule
 	var err error
 	fileName := "./xs-treerepo.json" //todo move to const
-	xm := &XsManager{}
+	xm := &TreeRepoManager{}
 	err = xm.Load(fileName)
 	if err != nil {
 		err = errors.New(fileName + " not found, directory not initialized")

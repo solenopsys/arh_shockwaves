@@ -7,46 +7,8 @@ import (
 	"xs/pkg/tools"
 )
 
-func InjectToPackageJson(c *ConfLoader, fileName string, filter string) {
-
-	existingJSON, err := tools.ReadFile(fileName)
-	if err != nil {
-		io.Panic(err)
-	}
-	var confData map[string]any
-	err = json.Unmarshal([]byte(existingJSON), &confData)
-	if err != nil {
-		io.Panic(err)
-	}
-
-	groups := *c.data
-
-	for section, group := range groups.Groups {
-		if section == filter {
-			for _, module := range group {
-				path := "file:" + c.targetDir + "/" + section + "/" + module.Directory + "/dist"
-
-				io.Println("Inject to package.json:", module.Npm, path)
-
-				confData["dependencies"].(map[string]any)[module.Npm] = path
-			}
-		}
-	}
-
-	newJSON, err := json.MarshalIndent(confData, "", "  ")
-	if err != nil {
-		io.Panic(err)
-	}
-
-	os.WriteFile(fileName, newJSON, 0644)
-}
-
-type Packages struct {
-}
-
-func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
-
-	existingJSON, err := tools.ReadFile(fileName)
+func InjectConfToTsconfigJson(packages map[string]string, packageJsonFileName string) {
+	existingJSON, err := tools.ReadFile(packageJsonFileName)
 	if err != nil {
 		io.Panic(err)
 	}
@@ -58,17 +20,12 @@ func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
 
 	modulesConf := make(map[string][]string)
 
-	groups := c.data.Groups
-	for key, group := range groups {
-		for _, module := range group {
+	for modName, path := range packages {
+		tsFile := path + "/src/index.ts"
 
-			path := c.targetDir + "/" + key + "/" + module.Directory
-			tsFile := path + "/src/index.ts"
-
-			npm := module.Npm
-			io.Println("Inject to config:", npm, tsFile)
-			modulesConf[npm] = []string{tsFile}
-		}
+		npm := modName
+		io.Println("Inject to config:", npm, tsFile)
+		modulesConf[npm] = []string{tsFile}
 	}
 
 	confData["compilerOptions"].(map[string]any)["paths"] = modulesConf
@@ -78,5 +35,5 @@ func InjectConfToTsconfigJson(c *ConfLoader, fileName string) {
 		io.Panic(err)
 	}
 
-	os.WriteFile(fileName, newJSON, 0644)
+	os.WriteFile(packageJsonFileName, newJSON, 0644)
 }

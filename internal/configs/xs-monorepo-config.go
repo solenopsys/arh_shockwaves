@@ -2,7 +2,6 @@ package configs
 
 import (
 	"encoding/json"
-	"sync"
 	"xs/pkg/io"
 	"xs/pkg/tools"
 	"xs/pkg/wrappers"
@@ -35,7 +34,6 @@ type XsMonorepoModule struct {
 }
 
 type ConfLoader struct {
-	repoType   string
 	configName string
 	targetDir  string
 	data       *XsMonorepoConfig
@@ -67,23 +65,6 @@ func (c *ConfLoader) SyncModules() {
 	}
 }
 
-func LoadWorkspace(monorepoLink string) {
-
-	path := "."
-	wg := sync.WaitGroup{}
-	wg.Add(1)
-	err := wrappers.CloneGitRepository(monorepoLink, path, false, false)
-	if err != nil {
-		io.Panic(err)
-	} else {
-		gitDir := path + "/.git"
-		err := tools.DeleteDir(gitDir)
-		if err != nil {
-			io.Panic(err)
-		}
-	}
-}
-
 func LoadBase(monorepoLink string) {
 	io.Println("Tags base\n")
 
@@ -102,11 +83,11 @@ func NewFrontLoader(path string, tsConfig bool) *ConfLoader {
 	loader.LoadConfig()
 	loader.SyncFunc = func() {
 		loader.SyncModules()
-		if tsConfig {
-			InjectConfToTsconfigJson(&loader, "./tsconfig.develop.json")
-		} else {
-			InjectToPackageJson(&loader, "./package.json", "packages")
-		}
+		//if tsConfig {
+		//	configs.InjectConfToTsconfigJson(&loader, "./tsconfig.develop.json")
+		//} else {
+		//	configs.InjectToPackageJson(&loader, "./package.json", "packages")
+		//}
 	}
 	return &loader
 }
