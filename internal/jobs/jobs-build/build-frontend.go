@@ -1,27 +1,22 @@
-package compilers
+package jobs_build
 
 import (
 	"strings"
-	"xs/internal/configs"
+	"xs/internal/jobs"
 	"xs/pkg/io"
 	xstool "xs/pkg/tools"
 )
 
-type Frontend struct {
+type BuildFrontend struct {
 	PrintConsole bool
+	params       map[string]string
 }
 
-func (n Frontend) Compile(params map[string]string) error {
-	groupDir := "endpoints"
+func (n *BuildFrontend) Execute() *jobs.Result {
 
 	pt := xstool.PathTools{}
-	src := params["path"]
-	m := params["name"]
+	src := n.params["path"]
 
-	_, extractError := configs.ExtractModule(m, groupDir, configs.FRONT)
-	if extractError != nil {
-		return extractError
-	}
 	pt.SetBasePathPwd()
 	pt.MoveTo(src)
 

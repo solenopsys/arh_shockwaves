@@ -12,10 +12,10 @@ type LibCompileController struct {
 	compileNow      map[string]bool
 	packagesOrder   *NpmLibPackagesOrder
 	compileExecutor internal.CompileExecutor
-	xsManager       *configs.TreeRepoManager
+	xsManager       *configs.WorkspaceManager
 }
 
-func NewLibCompileController(xm *configs.TreeRepoManager, executor internal.CompileExecutor) *LibCompileController {
+func NewLibCompileController(xm *configs.WorkspaceManager, executor internal.CompileExecutor) *LibCompileController {
 	c := &LibCompileController{}
 	c.compileNow = map[string]bool{}
 	c.compileExecutor = executor
@@ -23,7 +23,7 @@ func NewLibCompileController(xm *configs.TreeRepoManager, executor internal.Comp
 	return c
 }
 
-func (c *LibCompileController) LoadPlan(libGroup string, libs []*configs.XsMonorepoModule) {
+func (c *LibCompileController) LoadPlan(libGroup string, libs []*configs.XsModule) {
 
 	ord := NewNpmLibPackagesOrder(false)
 
@@ -49,12 +49,12 @@ func (c *LibCompileController) CompileOnOneThread(force bool, libGroup string, e
 		}
 
 		for _, pack := range list {
-			xsPackConf := c.xsManager.ExtractModule(libGroup, pack.Name)
+			xsPackConf := c.xsManager.ExtractModule(pack.Name)
 
 			path := libGroup + "/" + xsPackConf.Directory
 			n++
 			strN := strconv.Itoa(n)
-			io.Print(strN + " : " + xsPackConf.Npm)
+			io.Print(strN + " : " + xsPackConf.Name)
 			c.compileNow[pack.Name] = true
 
 			var params = map[string]string{}

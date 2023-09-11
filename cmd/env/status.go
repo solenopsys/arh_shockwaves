@@ -2,9 +2,8 @@ package env
 
 import (
 	"github.com/spf13/cobra"
-	"os/exec"
-	"strings"
-	"xs/pkg/io"
+	"xs/internal/jobs"
+	jobs_env "xs/internal/jobs/jobs-env"
 )
 
 var cmdStatus = &cobra.Command{
@@ -12,33 +11,13 @@ var cmdStatus = &cobra.Command{
 	Short: "Show status of installed env programs (git,pnpm,go,...)",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		commands := map[string][]string{
-			"git":        {"git", "version"},
-			"pnpm":       {"pnpm", "-v"},
-			"go":         {"go", "version"},
-			"ng-packagr": {"ng-packagr", "-v"},
-			"nerdctl":    {"nerdctl", "version"},
-		}
-		for name, command := range commands {
-			arg := command[1]
-			splitArg := strings.Split(arg, " ")
-			var version, err = exec.Command(command[0], splitArg...).Output()
-			if err == nil {
-				verLine := string(version)
-				//replace ver
-				verLine = strings.Replace(verLine, "version", "", 1)
-				verLine = strings.Replace(verLine, name, "", 1)
-				// trim
-				verLine = strings.TrimSpace(verLine)
-				io.Println("")
-				io.Println(name)
-				io.Println(" -------------------------------->")
-				io.Println(verLine)
-			} else {
-				io.Println(name+":", "not installed")
-			}
+		var commands []jobs.Jobs
+		commands = append(commands, jobs_env.NewAppCheck("git", []string{"git", "version"}))
+		commands = append(commands, jobs_env.NewAppCheck("pnpm", []string{"pnpm", "-v"}))
+		commands = append(commands, jobs_env.NewAppCheck("go", []string{"go", "version"}))
+		commands = append(commands, jobs_env.NewAppCheck("ng-packagr", []string{"ng-packagr", "-v"}))
+		commands = append(commands, jobs_env.NewAppCheck("nerdctl", []string{"nerdctl", "version"}))
 
-		}
-
+		jobs.ExecuteJobsSync(commands)
 	},
 }

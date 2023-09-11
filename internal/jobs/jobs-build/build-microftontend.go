@@ -1,4 +1,4 @@
-package compilers
+package jobs_build
 
 import (
 	"strings"

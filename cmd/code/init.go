@@ -2,9 +2,8 @@ package code
 
 import (
 	"github.com/spf13/cobra"
-	"log"
-	"xs/internal/configs"
-	"xs/pkg/wrappers"
+	"xs/internal/jobs"
+	jobs_fetch "xs/internal/jobs/jobs-fetch"
 )
 
 var cmdInit = &cobra.Command{
@@ -12,12 +11,6 @@ var cmdInit = &cobra.Command{
 	Short: "Workspace initialization",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		pinning := wrappers.NewPinning()
-		repo, err := pinning.FindOne("@solenopsys/tp-workspace")
-		if err != nil {
-			log.Fatal(err)
-		}
-		tl := configs.NewSourceLoader()
-		tl.Load(repo.Cid, ".") // todo random from config
+		jobs.ExecuteOneSync(jobs_fetch.NewTemplateLoad("@solenopsys/tp-workspace", ".")) // todo random from config
 	},
 }

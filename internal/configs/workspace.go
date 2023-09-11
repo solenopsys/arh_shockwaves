@@ -2,6 +2,9 @@ package configs
 
 import (
 	"encoding/json"
+	"fmt"
+	"regexp"
+	"strings"
 	"xs/pkg/io"
 	"xs/pkg/tools"
 )
@@ -11,18 +14,23 @@ type Format struct {
 	Version int    `json:"version"`
 }
 
+type XsModule struct {
+	Directory string
+	Name      string
+}
+
 type Workspace struct {
 	Format    Format
 	Templates map[string]map[string]string `json:"templates"`
 	Code      map[string]map[string]string `json:"code"`
 }
 
-type WsManager struct {
+type WorkspaceManager struct {
 	workspace *Workspace
 	file      string
 }
 
-func (m *WsManager) Load() error {
+func (m *WorkspaceManager) Load() error {
 	fileData, err := tools.ReadFile(m.file)
 	if err == nil {
 		err = json.Unmarshal([]byte(fileData), m.workspace)
@@ -32,7 +40,7 @@ func (m *WsManager) Load() error {
 	}
 }
 
-func (m *WsManager) Save() {
+func (m *WorkspaceManager) Save() {
 	bytes, err := json.MarshalIndent(m.workspace, "", "  ")
 	if err != nil {
 		io.Panic(err)
@@ -44,12 +52,46 @@ func (m *WsManager) Save() {
 	}
 }
 
-func (m *WsManager) GetTemplateDirectory(dir string) string {
+func (m *WorkspaceManager) GetTemplateDirectory(dir string) string {
 	return m.workspace.Templates["sections"][dir]
 }
 
-func NewWsManager() (*WsManager, error) {
-	manager := WsManager{}
+func (m *WorkspaceManager) FilterLibs(filter string) []*XsModule {
+
+	var filtered []*XsModule = []*XsModule{}
+	for _, modules := range m.workspace.Code {
+		for packageName, path := range modules {
+
+			pattern := strings.Replace(filter, "*", ".*", -1)
+			matched, err := regexp.MatchString("^"+pattern+"$", packageName)
+			if err != nil {
+				fmt.Println("Error:", err)
+				continue
+			}
+
+			if matched {
+				filtered = append(filtered, &XsModule{Name: packageName, Directory: path})
+			}
+		}
+	}
+
+	io.Println("Found  lib count:", len(filtered))
+	return filtered
+}
+
+func (m *WorkspaceManager) ExtractModule(name string) *XsModule {
+	for _, modules := range m.workspace.Code {
+		for packageName, path := range modules {
+			if packageName == name {
+				return &XsModule{Name: packageName, Directory: path}
+			}
+		}
+	}
+	return nil
+}
+
+func NewWsManager() (*WorkspaceManager, error) {
+	manager := WorkspaceManager{}
 	manager.file = "./xs-workspace.json" //todo move to const
 	manager.workspace = &Workspace{}
 	err := manager.Load()
