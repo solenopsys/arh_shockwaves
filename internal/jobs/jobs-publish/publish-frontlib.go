@@ -2,20 +2,25 @@ package jobs_publish
 
 import (
 	"bytes"
+	"errors"
+	"os/exec"
 	"xs/internal/jobs"
 	"xs/pkg/io"
 	xstool "xs/pkg/tools"
 )
 
+const NPM_APPLICATION = "pnpm"
+
 type PublishFrontLib struct {
+	dist string
 }
 
 func (t *PublishFrontLib) Execute() *jobs.Result {
 
-	io.Println("Publish library", dist)
+	io.Println("Publish library", t.dist)
 	pt := xstool.PathTools{}
 	pt.SetBasePathPwd()
-	pt.MoveTo(dist)
+	pt.MoveTo(t.dist)
 
 	println("CURRENT DIR", pt.GetPwd())
 
@@ -36,11 +41,14 @@ func (t *PublishFrontLib) Execute() *jobs.Result {
 	if linkRes != 0 {
 		o := stdout.String()
 
-		io.Println("ERROR PNPM PUBLISH: " + o)
-		return errors.New("ERROR PNPM PUBLISH")
+		return &jobs.Result{
+			Success:     false,
+			Err:         errors.New("ERROR PNPM PUBLISH"),
+			Description: o,
+		}
+
 	}
 
-	return nil
 	return &jobs.Result{
 		Success:     true,
 		Err:         nil,

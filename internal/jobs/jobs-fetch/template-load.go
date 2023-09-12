@@ -29,6 +29,10 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 	}
 }
 
+func (t *TemplateLoad) Description() string {
+	return "Template load " + t.packageName + " to " + t.targetDir
+}
+
 func NewTemplateLoad(packageName string, targetDir string) *TemplateLoad {
 	return &TemplateLoad{packageName: packageName, targetDir: targetDir}
 }

@@ -6,6 +6,8 @@ import (
 	"log"
 	"strings"
 	"xs/internal/configs"
+	"xs/internal/jobs"
+	jobs_fetch "xs/internal/jobs/jobs-fetch"
 	"xs/pkg/tools"
 	"xs/pkg/wrappers"
 )
@@ -15,24 +17,27 @@ var cmdLoad = &cobra.Command{
 	Short: "Tags section monorepo",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		packet := args[0]
-		pinning := wrappers.NewPinning()
+		pattern := args[0]
 
-		repo, err := pinning.FindRepo(packet)
-		if err != nil {
-			log.Fatal(err)
+		jobsPlan := makePlan(pattern)
+
+		for _, job := range jobsPlan {
+			fmt.Println((*job).Description())
 		}
-		for name, _ := range *repo {
-			println(name)
-		}
+
 		confirm := tools.ConfirmDialog("Load packets?")
 
 		if confirm {
 			fmt.Println("Proceeding with the action.")
-			for name, val := range *repo {
-				exec(val.Cid, val.To, name, pinning)
-				//configs.LoadWorkspace() // todo random from config
+
+			var ex []jobs.Job
+
+			for _, printableJob := range jobsPlan {
+				var job jobs.Job = *printableJob
+				ex = append(ex, job)
 			}
+			jobs.ExecuteJobsSync(ex)
+
 		} else {
 			fmt.Println("Canceled.")
 		}
@@ -40,54 +45,51 @@ var cmdLoad = &cobra.Command{
 	},
 }
 
-func exec(cid string, directory string, packageName string, pinning *wrappers.Pinning) {
+func makePlan(pattern string) []*jobs.PrintableJob {
+	templatesJobs := make(map[string]*jobs.PrintableJob)
+	codeJobs := make([]*jobs.PrintableJob, 0)
+	pinning := wrappers.NewPinning()
+	repos, err := pinning.FindRepo(pattern)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for packageName, val := range *repos {
+		directory := val.To
+		packPath := strings.Replace(packageName, "@", "/", -1)
+		moduleSubDir := directory + packPath
+		moduleSubDirExists := tools.Exists(moduleSubDir)
+		subDir := strings.Split(directory, "/")[0]
+		templateJob := checkTemplateExists(subDir)
+		templatesJobs[subDir] = &templateJob
 
-	subDir := strings.Split(directory, "/")[0]
+		if !moduleSubDirExists {
+			var loadJob jobs.PrintableJob
+			loadJob = jobs_fetch.NewCodeLoad(val.Cid, packageName, moduleSubDir)
+			codeJobs = append(codeJobs, &loadJob)
+		} else {
+			println("Already loaded ", moduleSubDir)
+		}
+	}
 
-	subDirExists := tools.Exists(subDir)
+	for _, val := range templatesJobs {
+		if *val != nil {
+			codeJobs = append([]*jobs.PrintableJob{val}, codeJobs...)
+		}
+	}
 
+	return codeJobs
+}
+
+func checkTemplateExists(subDir string) jobs.PrintableJob {
 	wsManager, err := configs.NewWsManager()
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	sourceLoader := configs.NewSourceLoader()
-
+	subDirExists := tools.Exists(subDir)
 	if !subDirExists {
-
 		templateModule := wsManager.GetTemplateDirectory(subDir)
-		println("templateModule", templateModule)
-
-		repo, err := pinning.FindOne(templateModule)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		sourceLoader.Load(repo.Cid, subDir) // todo random from config
-	}
-
-	packPath := strings.Replace(packageName, "@", "/", -1)
-	moduleSubDir := directory + packPath
-	moduleSubDirExists := tools.Exists(moduleSubDir)
-	if !moduleSubDirExists {
-		sourceLoader.Load(cid, moduleSubDir)
+		return jobs_fetch.NewTemplateLoad(templateModule, subDir)
 	} else {
-		println("already loaded", moduleSubDir)
+		return nil
 	}
-
-	// load package
-	// add package
-	// save ws file
-	//repository := manager.GetSectionRepository(sectionName)
-	//err := tools.CreateDirs(sectionName)
-	//if err != nil {
-	//	io.Panic(err)
-	//}
-	//pt := tools.NewPathTools()
-	//pt.MoveTo(sectionName)
-	//configs.LoadBase(repository)
-	//pt.MoveToBasePath()
-	//manager.SetSectionState(sectionName, "enabled")
-	//manager.Save()
-
 }

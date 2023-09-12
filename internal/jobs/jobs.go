@@ -8,8 +8,17 @@ type Result struct {
 	Description string
 }
 
-type Jobs interface {
+type Job interface {
 	Execute() *Result
+}
+
+type JobInfo interface {
+	Description() string
+}
+
+type PrintableJob interface {
+	Job
+	JobInfo
 }
 
 func PrintResult(result *Result) {
@@ -22,12 +31,12 @@ func PrintResult(result *Result) {
 	}
 }
 
-func ExecuteOneSync(job Jobs) {
-	result := job.Execute()
+func ExecuteOneSync(job Job) {
+	result := (job).Execute()
 	PrintResult(result)
 }
 
-func ExecuteJobsSync(jobs []Jobs) {
+func ExecuteJobsSync(jobs []Job) {
 	for _, job := range jobs {
 		result := job.Execute()
 		PrintResult(result)
