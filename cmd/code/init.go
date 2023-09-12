@@ -11,6 +11,6 @@ var cmdInit = &cobra.Command{
 	Short: "Workspace initialization",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		jobs.ExecuteOneSync(jobs_fetch.NewTemplateLoad("@solenopsys/tp-workspace", ".")) // todo random from config
+		jobs.ExecuteOneSync(jobs_fetch.NewTemplateLoad("@solenopsys/tp-workspace", "."))
 	},
 }

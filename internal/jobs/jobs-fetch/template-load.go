@@ -20,8 +20,14 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 			Err:     err,
 		}
 	}
-	tl := configs.NewSourceLoader()
-	tl.Load(repo.Cid, t.targetDir)
+	templateLoader := configs.NewSourceLoader()
+	err = templateLoader.Load(repo.Cid, t.targetDir)
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Err:     err,
+		}
+	}
 	return &jobs.Result{
 		Success:     true,
 		Err:         nil,

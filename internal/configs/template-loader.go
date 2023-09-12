@@ -4,7 +4,6 @@ import (
 	"math/rand"
 	"sync"
 	"time"
-	"xs/pkg/io"
 	"xs/pkg/tools"
 	"xs/pkg/wrappers"
 )
@@ -29,7 +28,7 @@ func (t *ModuleSourceLoader) RandomServer() string {
 	return t.servers[randomIndex]
 }
 
-func (t *ModuleSourceLoader) Load(cid string, path string) {
+func (t *ModuleSourceLoader) Load(cid string, path string) error {
 	url := "https://" + t.RandomServer() + "/ipns/" + cid
 
 	wg := sync.WaitGroup{} // todo may be it not needed now
@@ -38,12 +37,8 @@ func (t *ModuleSourceLoader) Load(cid string, path string) {
 
 	defer wg.Done()
 	if err != nil {
-		io.Panic(err)
-	} else {
-		gitDir := path + "/.git"
-		err := tools.DeleteDir(gitDir)
-		if err != nil {
-			io.Panic(err)
-		}
+		return err
 	}
+	gitDir := path + "/.git"
+	return tools.DeleteDir(gitDir)
 }

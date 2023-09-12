@@ -12,8 +12,27 @@ type CodeLoad struct {
 }
 
 func (t *CodeLoad) Execute() *jobs.Result {
-	tl := configs.NewSourceLoader()
-	tl.Load(t.cid, t.targetDir)
+	source := configs.NewSourceLoader()
+	err := source.Load(t.cid, t.targetDir)
+
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Err:     err,
+		}
+	}
+
+	ws, err := configs.NewWsManager()
+
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Err:     err,
+		}
+	}
+
+	ws.AddModule(t.packageName, t.targetDir)
+
 	return &jobs.Result{
 		Success:     true,
 		Err:         nil,

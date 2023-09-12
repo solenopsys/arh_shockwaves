@@ -90,6 +90,21 @@ func (m *WorkspaceManager) ExtractModule(name string) *XsModule {
 	return nil
 }
 
+func (m *WorkspaceManager) AddModule(name string, dir string) {
+	subdir := strings.Split(dir, "/")[0]
+	if m.workspace.Code == nil {
+		m.workspace.Code = make(map[string]map[string]string)
+	}
+	if m.workspace.Code[subdir] == nil {
+		m.workspace.Code[subdir] = make(map[string]string)
+	}
+
+	m.workspace.Code[subdir][name] = dir
+
+	m.Save()
+
+}
+
 func NewWsManager() (*WorkspaceManager, error) {
 	manager := WorkspaceManager{}
 	manager.file = "./xs-workspace.json" //todo move to const
