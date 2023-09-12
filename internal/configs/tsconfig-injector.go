@@ -7,7 +7,7 @@ import (
 	"xs/pkg/tools"
 )
 
-func InjectConfToTsconfigJson(packages map[string]string, packageJsonFileName string) {
+func InjectPackagesLinksTsconfigJson(packages map[string]string, packageJsonFileName string) {
 	existingJSON, err := tools.ReadFile(packageJsonFileName)
 	if err != nil {
 		io.Panic(err)
@@ -18,7 +18,11 @@ func InjectConfToTsconfigJson(packages map[string]string, packageJsonFileName st
 		io.Panic(err)
 	}
 
-	modulesConf := make(map[string][]string)
+	compillerOptions := confData["compilerOptions"].(map[string]any)
+	var modulesConf map[string]interface{} = compillerOptions["paths"].(map[string]interface{})
+	if modulesConf == nil {
+		modulesConf = make(map[string]interface{})
+	}
 
 	for modName, path := range packages {
 		tsFile := path + "/src/index.ts"
@@ -28,7 +32,7 @@ func InjectConfToTsconfigJson(packages map[string]string, packageJsonFileName st
 		modulesConf[npm] = []string{tsFile}
 	}
 
-	confData["compilerOptions"].(map[string]any)["paths"] = modulesConf
+	compillerOptions["paths"] = modulesConf
 
 	newJSON, err := json.MarshalIndent(confData, "", "  ")
 	if err != nil {

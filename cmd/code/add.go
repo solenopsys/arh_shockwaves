@@ -12,8 +12,8 @@ import (
 	"xs/pkg/wrappers"
 )
 
-var cmdLoad = &cobra.Command{
-	Use:   "load",
+var cmdAdd = &cobra.Command{
+	Use:   "add",
 	Short: "Tags section monorepo",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -29,14 +29,7 @@ var cmdLoad = &cobra.Command{
 
 		if confirm {
 			fmt.Println("Proceeding with the action.")
-
-			var ex []jobs.Job
-
-			for _, printableJob := range jobsPlan {
-				var job jobs.Job = *printableJob
-				ex = append(ex, job)
-			}
-			jobs.ExecuteJobsSync(ex)
+			jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
 
 		} else {
 			fmt.Println("Canceled.")
@@ -46,6 +39,8 @@ var cmdLoad = &cobra.Command{
 }
 
 func makePlan(pattern string) []*jobs.PrintableJob {
+	confManager := configs.NewConfigurationManager()
+
 	templatesJobs := make(map[string]*jobs.PrintableJob)
 	codeJobs := make([]*jobs.PrintableJob, 0)
 	pinning := wrappers.NewPinning()
@@ -54,18 +49,27 @@ func makePlan(pattern string) []*jobs.PrintableJob {
 		log.Fatal(err)
 	}
 	for packageName, val := range *repos {
+
 		directory := val.To
 		packPath := strings.Replace(packageName, "@", "/", -1)
 		moduleSubDir := directory + packPath
 		moduleSubDirExists := tools.Exists(moduleSubDir)
 		subDir := strings.Split(directory, "/")[0]
 		templateJob := checkTemplateExists(subDir)
+
+		processorsMapping := make(map[string]jobs.PrintableJob) // todo export to global constant
+		processorsMapping["ts_injector"] = jobs_fetch.NewTsConfigModuleInject(packageName, moduleSubDir)
+
 		templatesJobs[subDir] = &templateJob
 
 		if !moduleSubDirExists {
 			var loadJob jobs.PrintableJob
 			loadJob = jobs_fetch.NewCodeLoad(val.Cid, packageName, moduleSubDir)
+			preJobs := processingJobs(*confManager, configs.PreProcessor, subDir, processorsMapping)
+			postJobs := processingJobs(*confManager, configs.PostProcessor, subDir, processorsMapping)
+			codeJobs = append(codeJobs, preJobs...)
 			codeJobs = append(codeJobs, &loadJob)
+			codeJobs = append(codeJobs, postJobs...)
 		} else {
 			println("Already loaded ", moduleSubDir)
 		}
@@ -92,4 +96,21 @@ func checkTemplateExists(subDir string) jobs.PrintableJob {
 	} else {
 		return nil
 	}
+}
+
+func processingJobs(
+	confManager configs.ConfigurationManager,
+	processorType configs.ProcessorType,
+	subDir string,
+	processorsMapping map[string]jobs.PrintableJob) []*jobs.PrintableJob {
+
+	processorsJobs := make([]*jobs.PrintableJob, 0)
+
+	processorsNames := confManager.GetProcessors(subDir, processorType, []string{"code", "add"})
+
+	for _, processorName := range processorsNames {
+		job := processorsMapping[processorName]
+		processorsJobs = append(processorsJobs, &job)
+	}
+	return processorsJobs
 }

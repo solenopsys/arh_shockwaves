@@ -91,15 +91,15 @@ func (m *WorkspaceManager) ExtractModule(name string) *XsModule {
 }
 
 func (m *WorkspaceManager) AddModule(name string, dir string) {
-	subdir := strings.Split(dir, "/")[0]
+	subDir := strings.Split(dir, "/")[0]
 	if m.workspace.Code == nil {
 		m.workspace.Code = make(map[string]map[string]string)
 	}
-	if m.workspace.Code[subdir] == nil {
-		m.workspace.Code[subdir] = make(map[string]string)
+	if m.workspace.Code[subDir] == nil {
+		m.workspace.Code[subDir] = make(map[string]string)
 	}
 
-	m.workspace.Code[subdir][name] = dir
+	m.workspace.Code[subDir][name] = dir
 
 	m.Save()
 

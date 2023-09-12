@@ -42,3 +42,13 @@ func ExecuteJobsSync(jobs []Job) {
 		PrintResult(result)
 	}
 }
+
+func ConvertJobs(jobsList []*PrintableJob) []Job {
+	var ex []Job
+
+	for _, printableJob := range jobsList {
+		var job Job = *printableJob
+		ex = append(ex, job)
+	}
+	return ex
+}
