@@ -22,7 +22,7 @@ func (t *PublishFrontLib) Execute() *jobs.Result {
 	pt.SetBasePathPwd()
 	pt.MoveTo(t.dist)
 
-	println("CURRENT DIR", pt.GetPwd())
+	io.Println("CURRENT DIR", pt.GetPwd())
 
 	args := []string{"publish", "--no-git-checks", "--access", "public"}
 

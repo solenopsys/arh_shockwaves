@@ -17,15 +17,17 @@ type PublishGitRepo struct {
 	pinningHost string
 	steps       []func() error
 	dist        string
-	remote      string
 	gitTempDir  string
 	gitDir      string
 	commitHash  string
 	cid         string
+	repoUrl     string
 }
 
-func NewPublishGitRepo(ipfsHost string, pinningHost string, nickname string, moduleType string, repoName string, cloneTo string) *PublishGitRepo {
+func NewPublishGitRepo(ipfsHost string, pinningHost string, nickname string, moduleType string, repoName string, cloneTo string, repoUrl string) *PublishGitRepo {
+
 	return &PublishGitRepo{
+		repoUrl:     repoUrl,
 		nickname:    nickname,
 		moduleType:  moduleType,
 		repoName:    repoName,
@@ -42,8 +44,7 @@ func (t *PublishGitRepo) makeTempDir() error {
 }
 
 func (t *PublishGitRepo) cloneRepository() error {
-	repoFullPath := t.remote + t.repoName
-	err := wrappers.CloneGitRepository(repoFullPath, t.gitTempDir, false, false)
+	err := wrappers.CloneGitRepository(t.repoUrl, t.gitTempDir, false, false)
 	t.gitDir = t.gitTempDir + "/" + ".git"
 	return err
 }
@@ -136,7 +137,7 @@ func (t *PublishGitRepo) pinCidInPinningService() error {
 	labels := make(map[string]string)
 
 	namePack := "@" + t.nickname + "/" + t.repoName
-	labels["source.url"] = t.remote + t.repoName
+	labels["source.url"] = t.repoUrl
 	labels["code.source"] = namePack
 	labels["code.type"] = t.moduleType
 	labels["clone.to"] = t.cloneTo

@@ -4,7 +4,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 	"xs/pkg/io"
 )
 
@@ -59,7 +58,6 @@ type GitTools struct {
 }
 
 func (g *GitTools) RunGitCommand(args ...string) error {
-	println("RUN GIT git " + strings.Join(args, " "))
 	cmd := exec.Command("git", args...)
 	return cmd.Run()
 }

@@ -70,7 +70,7 @@ func makePlan(pattern string) []jobs.PrintableJob {
 			codeJobs = append(codeJobs, loadJob)
 			codeJobs = append(codeJobs, postJobs...)
 		} else {
-			println("Already loaded ", moduleSubDir)
+			io.Println("Already loaded ", moduleSubDir)
 		}
 	}
 

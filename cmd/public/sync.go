@@ -81,8 +81,8 @@ func (pg *PublicGit) ManeJobsPlan(nickname string) []jobs.PrintableJob {
 		for _, repoName := range repoNames {
 			io.Println("Processing repo ", repoName)
 			cloneTo := PATHS[group]
-
-			job := jobs_publish.NewPublishGitRepo(pg.IpfsHost, pg.PinningHost, nickname, group, repoName, cloneTo)
+			repoFullPath := pg.Config.Remote + repoName
+			job := jobs_publish.NewPublishGitRepo(pg.IpfsHost, pg.PinningHost, nickname, group, repoName, cloneTo, repoFullPath)
 			jobsPlan = append(jobsPlan, job)
 		}
 	}

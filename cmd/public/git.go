@@ -15,13 +15,16 @@ var cmdGit = &cobra.Command{
 		gitRepoUrl := args[0]
 
 		split := strings.Split(gitRepoUrl, "/")
-		gitRepoName := strings.Replace(".git", split[len(split)-1], "", 1)
-		prefix := strings.Split(gitRepoUrl, "_")[0]
+		lastSection := split[len(split)-1]
+		gitRepoName := strings.Replace(lastSection, ".git", "", 1)
+		prefix := strings.Split(gitRepoName, "-")[0]
 		group := PREFIXES[prefix]
-		cloneTo := PATHS[group]
-		nickname := "solenopsys" // todo get from login
+		groupDir := PATHS[group]
 
-		job := jobs_publish.NewPublishGitRepo(IpfsHost, PinningHost, nickname, group, gitRepoName, cloneTo)
+		nickname := "solenopsys" // todo get from login
+		cloneTo := groupDir + "/" + nickname + "/" + gitRepoName
+
+		job := jobs_publish.NewPublishGitRepo(IpfsHost, PinningHost, nickname, group, gitRepoName, cloneTo, gitRepoUrl)
 		result := job.Execute()
 		if result.Error != nil {
 			io.Fatal(result.Error)
