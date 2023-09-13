@@ -18,7 +18,7 @@ func (t *CodeLoad) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 
@@ -27,7 +27,7 @@ func (t *CodeLoad) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 
@@ -35,7 +35,7 @@ func (t *CodeLoad) Execute() *jobs.Result {
 
 	return &jobs.Result{
 		Success:     true,
-		Err:         nil,
+		Error:       nil,
 		Description: "Code loaded" + t.packageName + " to " + t.targetDir,
 	}
 }

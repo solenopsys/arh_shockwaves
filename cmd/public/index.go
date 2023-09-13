@@ -16,4 +16,5 @@ func init() {
 	Cmd.AddCommand(cmdFile)
 	Cmd.AddCommand(cmdDir)
 	Cmd.AddCommand(cmdGit)
+	Cmd.AddCommand(cmdSyncGit)
 }

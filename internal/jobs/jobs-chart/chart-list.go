@@ -17,7 +17,7 @@ func (c *ChartList) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 	api := wrappers.NewAPI(config)
@@ -26,7 +26,7 @@ func (c *ChartList) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 	for _, item := range charts.Items {
@@ -35,7 +35,7 @@ func (c *ChartList) Execute() *jobs.Result {
 
 	return &jobs.Result{
 		Success:     true,
-		Err:         nil,
+		Error:       nil,
 		Description: "Charts count: " + string(len(charts.Items)),
 	}
 }

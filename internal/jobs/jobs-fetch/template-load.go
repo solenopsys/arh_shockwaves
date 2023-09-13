@@ -17,7 +17,7 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 	templateLoader := configs.NewSourceLoader()
@@ -25,12 +25,12 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 	return &jobs.Result{
 		Success:     true,
-		Err:         nil,
+		Error:       nil,
 		Description: "Template loaded" + t.packageName + " to " + t.targetDir,
 	}
 }

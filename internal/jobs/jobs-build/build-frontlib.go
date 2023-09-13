@@ -44,13 +44,13 @@ func (b *BuildFrontLib) Execute() *jobs.Result {
 		if linkRes != 0 {
 			return &jobs.Result{
 				Success: false,
-				Err:     errors.New("ERROR PNPM LINK"),
+				Error:   errors.New("ERROR PNPM LINK"),
 			}
 		}
 
 		return &jobs.Result{
 			Success:     true,
-			Err:         nil,
+			Error:       nil,
 			Description: "BuildLib executed",
 		}
 
@@ -58,7 +58,7 @@ func (b *BuildFrontLib) Execute() *jobs.Result {
 
 		return &jobs.Result{
 			Success: false,
-			Err:     errors.New("ERROR PNPM BUILD"),
+			Error:   errors.New("ERROR PNPM BUILD"),
 		}
 
 	}

@@ -18,7 +18,7 @@ func (c *ChartInstall) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 	api := wrappers.NewAPI(config)
@@ -27,13 +27,13 @@ func (c *ChartInstall) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 
 	return &jobs.Result{
 		Success:     true,
-		Err:         nil,
+		Error:       nil,
 		Description: "Installed: " + simple.Name,
 	}
 }

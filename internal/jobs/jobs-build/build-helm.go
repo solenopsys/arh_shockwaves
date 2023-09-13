@@ -22,7 +22,7 @@ func (b *BuildHelm) Execute() *jobs.Result {
 
 	return &jobs.Result{
 		Success:     true,
-		Err:         nil,
+		Error:       nil,
 		Description: "BuildHelm executed",
 	}
 }

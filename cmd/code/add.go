@@ -21,7 +21,7 @@ var cmdAdd = &cobra.Command{
 		jobsPlan := makePlan(pattern)
 
 		for _, job := range jobsPlan {
-			io.Println((*job).Description())
+			io.Println(job.Description())
 		}
 
 		confirm := tools.ConfirmDialog("Load packets?")
@@ -37,11 +37,11 @@ var cmdAdd = &cobra.Command{
 	},
 }
 
-func makePlan(pattern string) []*jobs.PrintableJob {
+func makePlan(pattern string) []jobs.PrintableJob {
 	confManager := configs.NewConfigurationManager()
 
 	templatesJobs := make(map[string]*jobs.PrintableJob)
-	codeJobs := make([]*jobs.PrintableJob, 0)
+	codeJobs := make([]jobs.PrintableJob, 0)
 	pinning := wrappers.NewPinning()
 	repos, err := pinning.FindRepo(pattern)
 	if err != nil {
@@ -67,7 +67,7 @@ func makePlan(pattern string) []*jobs.PrintableJob {
 			preJobs := processingJobs(*confManager, configs.PreProcessor, subDir, processorsMapping)
 			postJobs := processingJobs(*confManager, configs.PostProcessor, subDir, processorsMapping)
 			codeJobs = append(codeJobs, preJobs...)
-			codeJobs = append(codeJobs, &loadJob)
+			codeJobs = append(codeJobs, loadJob)
 			codeJobs = append(codeJobs, postJobs...)
 		} else {
 			println("Already loaded ", moduleSubDir)
@@ -76,7 +76,7 @@ func makePlan(pattern string) []*jobs.PrintableJob {
 
 	for _, val := range templatesJobs {
 		if *val != nil {
-			codeJobs = append([]*jobs.PrintableJob{val}, codeJobs...)
+			codeJobs = append([]jobs.PrintableJob{*val}, codeJobs...)
 		}
 	}
 
@@ -101,15 +101,15 @@ func processingJobs(
 	confManager configs.ConfigurationManager,
 	processorType configs.ProcessorType,
 	subDir string,
-	processorsMapping map[string]jobs.PrintableJob) []*jobs.PrintableJob {
+	processorsMapping map[string]jobs.PrintableJob) []jobs.PrintableJob {
 
-	processorsJobs := make([]*jobs.PrintableJob, 0)
+	processorsJobs := make([]jobs.PrintableJob, 0)
 
 	processorsNames := confManager.GetProcessors(subDir, processorType, []string{"code", "add"})
 
 	for _, processorName := range processorsNames {
 		job := processorsMapping[processorName]
-		processorsJobs = append(processorsJobs, &job)
+		processorsJobs = append(processorsJobs, job)
 	}
 	return processorsJobs
 }

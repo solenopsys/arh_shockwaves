@@ -4,7 +4,7 @@ import "xs/pkg/io"
 
 type Result struct {
 	Success     bool
-	Err         error
+	Error       error
 	Description string
 }
 
@@ -27,7 +27,7 @@ func PrintResult(result *Result) {
 		io.Println(result.Description)
 	} else {
 		io.PrintColor("ERROR", io.Red)
-		io.Println(result.Err.Error())
+		io.Println(result.Error.Error())
 	}
 }
 
@@ -43,11 +43,11 @@ func ExecuteJobsSync(jobs []Job) {
 	}
 }
 
-func ConvertJobs(jobsList []*PrintableJob) []Job {
+func ConvertJobs(jobsList []PrintableJob) []Job {
 	var ex []Job
 
 	for _, printableJob := range jobsList {
-		var job Job = *printableJob
+		var job Job = printableJob
 		ex = append(ex, job)
 	}
 	return ex

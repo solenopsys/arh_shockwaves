@@ -29,11 +29,13 @@ func (t *PublishFrontLib) Execute() *jobs.Result {
 	cmd := exec.Command(NPM_APPLICATION, args...)
 	var stdout bytes.Buffer
 	cmd.Stdout = &stdout
-	if err := cmd.Run(); err != nil {
-		io.Println(err)
+	err := cmd.Run()
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
 	}
-
-	// Set the Stdout of the command to our buffer
 
 	linkRes := cmd.ProcessState.ExitCode()
 
@@ -43,7 +45,7 @@ func (t *PublishFrontLib) Execute() *jobs.Result {
 
 		return &jobs.Result{
 			Success:     false,
-			Err:         errors.New("ERROR PNPM PUBLISH"),
+			Error:       errors.New("ERROR PNPM PUBLISH"),
 			Description: o,
 		}
 
@@ -51,7 +53,7 @@ func (t *PublishFrontLib) Execute() *jobs.Result {
 
 	return &jobs.Result{
 		Success:     true,
-		Err:         nil,
+		Error:       nil,
 		Description: "PublishFrontLib executed",
 	}
 }

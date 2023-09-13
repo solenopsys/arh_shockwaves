@@ -19,7 +19,7 @@ func (t *TsConfigModuleInject) Execute() *jobs.Result {
 
 	return &jobs.Result{
 		Success:     true,
-		Err:         nil,
+		Error:       nil,
 		Description: "Code loaded" + t.packageName + " to " + t.targetDir,
 	}
 }

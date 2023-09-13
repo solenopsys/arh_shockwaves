@@ -22,7 +22,7 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	if err != nil {
 		return &jobs.Result{
 			Success: false,
-			Err:     err,
+			Error:   err,
 		}
 	}
 
@@ -40,13 +40,13 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	if result == 0 {
 		return &jobs.Result{
 			Success:     true,
-			Err:         nil,
+			Error:       nil,
 			Description: "BuildContainer executed",
 		}
 	} else {
 		return &jobs.Result{
 			Success:     false,
-			Err:         nil,
+			Error:       nil,
 			Description: "BuildContainer not executed",
 		}
 	}

@@ -1,15 +1,4 @@
 {
-  "paths": {
-    "frontends": "frontends/endpoints",
-    "frontlibs": "frontends/packages",
-    "uimatrix": "frontends/packages",
-    "microfrontends": "frontends/modules",
-    "tools": "tools",
-    "templates": "templates",
-    "backlibs": "backends/libraries",
-    "deployments": "backends/deployments",
-    "microservices": "backends/modules"
-  },
   "remote": "https://github.com/solenopsys/",
   "groups": {
     "backlibs": [
@@ -17,10 +6,11 @@
       "bl-kubernetes-tools"
     ],
     "tools": [
-      "xs",
-      "build-federation",
-      "vite-federation",
-      "federation-runtime"
+      "tl-xs",
+      "tl-build-federation",
+      "tl-vite-federation",
+      "tl-federation-runtime",
+      "tl-helm-booster"
     ],
     "frontends": [
       "fr-auth",

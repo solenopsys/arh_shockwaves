@@ -27,13 +27,13 @@ func (t *AppCheck) Execute() *jobs.Result {
 		io.Println(verLine)
 		return &jobs.Result{
 			Success:     true,
-			Err:         nil,
+			Error:       nil,
 			Description: "AppCheck executed",
 		}
 	} else {
 		return &jobs.Result{
 			Success:     true,
-			Err:         err,
+			Error:       err,
 			Description: t.command + ":not installed",
 		}
 	}
