@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io"
-	"log"
+	iio "io"
+	"xs/pkg/io"
+
 	"net/http"
 )
 
@@ -84,7 +85,7 @@ func (p *Pinning) execRequestBytes(req *http.Request) ([]byte, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	return io.ReadAll(resp.Body)
+	return iio.ReadAll(resp.Body)
 }
 
 func (p *Pinning) execRequest(req *http.Request, resp interface{}) error {
@@ -224,7 +225,7 @@ func (p *Pinning) FindRepo(repoName string) (*map[string]PackInfo, error) {
 	mapping := make(map[string]PackInfo)
 
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 	for ipnsCid, mp := range resp {
 		info := PackInfo{}

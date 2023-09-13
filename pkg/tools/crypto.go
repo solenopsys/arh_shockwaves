@@ -10,8 +10,8 @@ import (
 	"errors"
 	"github.com/ethereum/go-ethereum/crypto"
 	"golang.org/x/crypto/pbkdf2"
-	"log"
 	"math/big"
+	"xs/pkg/io"
 )
 
 // decrypt data for decode private key
@@ -49,7 +49,7 @@ func LoadPrivateKeyFromString(keyStr string) (**ecdsa.PrivateKey, error) {
 
 	importedPrivKey, err := crypto.HexToECDSA(keyStr)
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 	return &importedPrivKey, nil
 }

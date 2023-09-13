@@ -2,7 +2,6 @@ package configs
 
 import (
 	"encoding/json"
-	"fmt"
 	"regexp"
 	"strings"
 	"xs/pkg/io"
@@ -65,7 +64,7 @@ func (m *WorkspaceManager) FilterLibs(filter string) []*XsModule {
 			pattern := strings.Replace(filter, "*", ".*", -1)
 			matched, err := regexp.MatchString("^"+pattern+"$", packageName)
 			if err != nil {
-				fmt.Println("Error:", err)
+				io.Println("Error:", err)
 				continue
 			}
 

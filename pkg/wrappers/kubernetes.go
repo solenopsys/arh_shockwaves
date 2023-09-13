@@ -2,7 +2,6 @@ package wrappers
 
 import (
 	"context"
-	"fmt"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -11,7 +10,6 @@ import (
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -29,21 +27,21 @@ func (k *Kuber) ConnectToKubernetes() {
 	clientset, err := k.GetClientSet()
 
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 
 	// List all pods in the default namespace
 	pods, err := clientset.CoreV1().Pods("default").List(context.TODO(), metav1.ListOptions{})
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
-	fmt.Printf("There are %d pods in the default namespace\n", len(pods.Items))
+	io.Printf("There are %d pods in the default namespace\n", len(pods.Items))
 }
 
 func (k *Kuber) GetClientSet() (*kubernetes.Clientset, error) {
 	config, err := k.GetConfig()
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 	return kubernetes.NewForConfig(config)
 
@@ -99,9 +97,9 @@ func (k *Kuber) CreateServiceAccount(name string, ns string) error {
 	// Create the service account in the cluster.
 	_, err := k.clientset.CoreV1().ServiceAccounts(ns).Create(context.Background(), serviceAccount, metav1.CreateOptions{})
 	if err != nil {
-		fmt.Printf("Error creating service account: %v\n", err)
+		io.Printf("Error creating service account: %v\n", err)
 	}
 
-	fmt.Println("Service account created successfully.")
+	io.Println("Service account created successfully.")
 	return err
 }

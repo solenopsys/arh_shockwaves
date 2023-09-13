@@ -1,7 +1,6 @@
 package wrappers
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -77,7 +76,7 @@ func (g *GitTools) IsRepoExists() bool {
 		return false
 	}
 
-	fmt.Println("Error:", err)
+	io.Println("Error:", err)
 	return false
 }
 

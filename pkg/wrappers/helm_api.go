@@ -4,11 +4,12 @@ import (
 	"context"
 	helmapiv1 "github.com/k3s-io/helm-controller/pkg/apis/helm.cattle.io/v1"
 	helmcln "github.com/k3s-io/helm-controller/pkg/generated/clientset/versioned"
+	"xs/pkg/io"
+
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/util/retry"
-	"k8s.io/klog/v2"
 )
 
 type HelmApi struct {
@@ -19,7 +20,7 @@ type HelmApi struct {
 func NewAPI(rc *rest.Config) HelmApi {
 	helmcln, err := helmcln.NewForConfig(rc)
 	if err != nil {
-		klog.Error("Error create helmcln: %v\n", err)
+		io.Panic("Error create helmcln: %v\n", err)
 	}
 	return HelmApi{HelmClientSet: helmcln, Namespace: "installers"}
 }

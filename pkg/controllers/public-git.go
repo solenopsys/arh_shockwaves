@@ -2,8 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
-	"log"
 	"os"
 	"os/exec"
 	"strings"
@@ -29,24 +27,23 @@ func (pg *PublicGit) unpackFiles(gitDir string) {
 	// scan files and print
 	files, err := os.ReadDir(gitDir + "/" + subDile)
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 
 	for _, file := range files {
 		if strings.HasSuffix(file.Name(), ".pack") {
-			println(file.Name())
 			packCurrent := subDile + "/" + file.Name()
 			fileBytes, err := os.ReadFile(packCurrent)
 			if err != nil {
-				log.Fatal(err)
+				io.Fatal(err)
 			}
 			err = pg.unpackFile(fileBytes)
 			if err != nil {
-				log.Fatal(err)
+				io.Fatal(err)
 			} else {
 				err := os.Remove(packCurrent)
 				if err != nil {
-					log.Fatal(err)
+					io.Fatal(err)
 				}
 			}
 		}
@@ -89,7 +86,7 @@ func (pg *PublicGit) PublicGitRepo(repoName string, nickname string, moduleType 
 	}
 
 	repoFullPath := pg.config.Remote + repoName
-	fmt.Println("Copy repo " + repoFullPath)
+
 	err = wrappers.CloneGitRepository(repoFullPath, gitTempDir, false, false)
 	gitDir := gitTempDir + "/" + ".git"
 	err = os.Chdir(gitDir)
@@ -107,20 +104,17 @@ func (pg *PublicGit) PublicGitRepo(repoName string, nickname string, moduleType 
 
 	output, err := cmd.Output()
 	if err != nil {
-		fmt.Println("Error running git command:", err)
 		return err
 	}
 
 	commitHash := strings.TrimSpace(string(output))
 
-	//	unpackFiles(gitDir) todo
+	//	unpackFiles(gitDir) todo unpack for reuse blocks in ipfs
 
 	cid, err := wrappers.UploadDirToIpfsNode(pg.IpfsHost, gitDir)
 
 	if err != nil {
 		return err
-	} else {
-		io.Println("File cid: ", cid)
 	}
 
 	pinning := &wrappers.Pinning{}
@@ -141,8 +135,6 @@ func (pg *PublicGit) PublicGitRepo(repoName string, nickname string, moduleType 
 
 	if err != nil {
 		return err
-	} else {
-		io.Println("File cid: ", cid)
 	}
 	return nil
 }
@@ -150,14 +142,14 @@ func (pg *PublicGit) PublicGitRepo(repoName string, nickname string, moduleType 
 func (pg *PublicGit) LoadConfig(fileName string) error {
 	configFile, err := os.Open(fileName)
 	if err != nil {
-		log.Println("Error opening config file:", err)
+		io.Println("Error opening config file:", err)
 		return err
 	}
 	defer configFile.Close()
 
 	err = json.NewDecoder(configFile).Decode(&pg.config)
 	if err != nil {
-		log.Println("Error decoding config:", err)
+		io.Println("Error decoding config:", err)
 		return err
 	}
 	return nil
@@ -166,10 +158,10 @@ func (pg *PublicGit) LoadConfig(fileName string) error {
 func (pg *PublicGit) ProcessingFile(nickname string) {
 	for group, repoNames := range pg.config.Groups {
 		for _, repoName := range repoNames {
-			log.Println("Processing repo ", repoName)
+			io.Println("Processing repo ", repoName)
 			err := pg.PublicGitRepo(repoName, nickname, group)
 			if err != nil {
-				log.Fatal(err)
+				io.Fatal(err)
 			}
 		}
 	}

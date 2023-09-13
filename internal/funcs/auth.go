@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"xs/pkg/io"
 )
@@ -65,7 +64,7 @@ func UnMarshal(bytes []byte) *RegisterData {
 	err := json.Unmarshal(bytes, &register)
 
 	if err != nil {
-		log.Println(err)
+		io.Println(err)
 	}
 
 	return &register

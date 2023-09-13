@@ -3,11 +3,11 @@ package tools
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
-	"io"
+	iio "io"
 	"os"
 	"path/filepath"
 	"strings"
+	"xs/pkg/io"
 )
 
 func computeHash(filePath string) (string, error) {
@@ -18,7 +18,7 @@ func computeHash(filePath string) (string, error) {
 	defer file.Close()
 
 	hash := md5.New()
-	if _, err := io.Copy(hash, file); err != nil {
+	if _, err := iio.Copy(hash, file); err != nil {
 		return "", err
 	}
 
@@ -71,7 +71,7 @@ func HashOfDir(path string, excludedDirs []string) (string, error) {
 
 	finalHash, err := hashDirectory(path, excludedDirs)
 	if err != nil {
-		fmt.Println("Error:", err)
+		io.Println("Error:", err)
 		return "", err
 	} else {
 		return finalHash, nil

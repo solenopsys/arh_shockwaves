@@ -1,13 +1,12 @@
 package code
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
-	"log"
 	"strings"
 	"xs/internal/configs"
 	"xs/internal/jobs"
 	jobs_fetch "xs/internal/jobs/jobs-fetch"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 	"xs/pkg/wrappers"
 )
@@ -22,17 +21,17 @@ var cmdAdd = &cobra.Command{
 		jobsPlan := makePlan(pattern)
 
 		for _, job := range jobsPlan {
-			fmt.Println((*job).Description())
+			io.Println((*job).Description())
 		}
 
 		confirm := tools.ConfirmDialog("Load packets?")
 
 		if confirm {
-			fmt.Println("Proceeding with the action.")
+			io.Println("Proceeding with the action.")
 			jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
 
 		} else {
-			fmt.Println("Canceled.")
+			io.Println("Canceled.")
 		}
 
 	},
@@ -46,7 +45,7 @@ func makePlan(pattern string) []*jobs.PrintableJob {
 	pinning := wrappers.NewPinning()
 	repos, err := pinning.FindRepo(pattern)
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 	for packageName, val := range *repos {
 
@@ -87,7 +86,7 @@ func makePlan(pattern string) []*jobs.PrintableJob {
 func checkTemplateExists(subDir string) jobs.PrintableJob {
 	wsManager, err := configs.NewWsManager()
 	if err != nil {
-		log.Fatal(err)
+		io.Fatal(err)
 	}
 	subDirExists := tools.Exists(subDir)
 	if !subDirExists {

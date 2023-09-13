@@ -1,7 +1,6 @@
 package io
 
 import (
-	"log"
 	"net/http"
 	"net/http/httputil"
 	"net/url"
@@ -33,7 +32,7 @@ func StartProxy(staticDir string, port string) {
 
 	// Start the server
 
-	log.Fatal(http.ListenAndServe(":"+port, mux))
+	Fatal(http.ListenAndServe(":"+port, mux))
 }
 
 // LogTransport is a custom transport that logs the HTTP requests and responses
@@ -46,25 +45,25 @@ func (lt *LogTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 	// Log the request details
 	requestDump, err := httputil.DumpRequestOut(req, true)
 	if err != nil {
-		log.Println("Error logging request:", err)
+		Println("Error logging request:", err)
 	}
-	log.Println("Request:")
-	log.Println(string(requestDump))
+	Println("Request:")
+	Println(string(requestDump))
 
 	// Execute the request using the underlying transport
 	response, err := lt.Transport.RoundTrip(req)
 	if err != nil {
-		log.Println("Error executing request:", err)
+		Println("Error executing request:", err)
 		return nil, err
 	}
 
 	// Log the response details
 	responseDump, err := httputil.DumpResponse(response, true)
 	if err != nil {
-		log.Println("Error logging response:", err)
+		Println("Error logging response:", err)
 	}
-	log.Println("Response:")
-	log.Println(string(responseDump))
+	Println("Response:")
+	Println(string(responseDump))
 
 	return response, nil
 }

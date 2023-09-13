@@ -2,7 +2,6 @@ package tools
 
 import (
 	"encoding/json"
-	"fmt"
 	"xs/pkg/io"
 )
 
@@ -29,7 +28,7 @@ func jsonLoadAndValidate(data string, schema string) {
 	} else {
 		io.Println("The JSON data is not valid. Validation errors:")
 		for _, err := range result.Errors() {
-			fmt.Printf("- %s\n", err)
+			io.Printf("- %s\n", err)
 		}
 	}
 }
