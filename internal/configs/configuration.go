@@ -3,7 +3,6 @@ package configs
 import (
 	"encoding/json"
 	"reflect"
-	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -65,19 +64,30 @@ func (m *ConfigurationManager) GetProcessors(section string, processorType Proce
 	return processorNames
 }
 
-func LoadConfigFile(fileName string) *Configuration {
+func (m *ConfigurationManager) GetBuildersMapping() map[string]string {
+	var result = make(map[string]string)
+	for builder, sections := range m.configuration.Builders {
+		for _, section := range sections {
+			result[section] = builder
+		}
+	}
+	return result
+}
+
+func LoadConfigFile(fileName string) (*Configuration, error) {
 	config := &Configuration{}
 	fileData, err := tools.ReadFile(fileName)
 	if err == nil {
 		err = json.Unmarshal([]byte(fileData), config)
 	} else {
-		io.Fatal(err)
+		return nil, err
 	}
-	return config
+	return config, err
 }
 
-func NewConfigurationManager() *ConfigurationManager {
+func NewConfigurationManager() (*ConfigurationManager, error) {
+	file, err := LoadConfigFile("./xs-configuration.json")
 	return &ConfigurationManager{
-		configuration: LoadConfigFile("./xs-configuration.json"),
-	}
+		configuration: file,
+	}, err
 }

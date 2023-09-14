@@ -1,4 +1,4 @@
-package services
+package fl
 
 import (
 	"xs/internal/configs"

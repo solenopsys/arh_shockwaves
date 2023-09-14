@@ -43,8 +43,10 @@ var cmdAdd = &cobra.Command{
 }
 
 func makePlan(pattern string) []jobs.PrintableJob {
-	confManager := configs.NewConfigurationManager()
-
+	confManager, err := configs.NewConfigurationManager()
+	if err != nil {
+		io.Fatal(err)
+	}
 	templatesJobs := make(map[string]*jobs.PrintableJob)
 	codeJobs := make([]jobs.PrintableJob, 0)
 	pinning := wrappers.NewPinning()

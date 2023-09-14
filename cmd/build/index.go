@@ -2,10 +2,11 @@ package build
 
 import (
 	"github.com/spf13/cobra"
-	"xs/internal/extractors"
-	jobs_build "xs/internal/jobs/jobs-build"
-	"xs/internal/services"
+	"strings"
+	"xs/internal/compilers"
+	"xs/internal/configs"
 	"xs/pkg/io"
+	"xs/pkg/tools"
 )
 
 var Cmd = &cobra.Command{
@@ -17,6 +18,11 @@ var Cmd = &cobra.Command{
 
 		const PUBLISH = "publish"
 
+		err := tools.ToWorkspaceRootDir()
+		if err != nil {
+			io.Fatal("Workspace root dir not found")
+		}
+
 		publish := len(args) > 1 && args[1] == PUBLISH
 
 		base := map[string]string{}
@@ -24,15 +30,41 @@ var Cmd = &cobra.Command{
 			base["publish"] = "true"
 		}
 
-		contr := services.UniversalCompileController{
-			Executor:  jobs_build.Microfronted{PrintConsole: false},
-			Extractor: extractors.Microfrontend{},
-		}
-		err := contr.SelectLibs(filter)
-		if err == nil {
-			contr.CompileSelectedLibs()
-		} else {
+		wm, err := configs.NewWsManager()
+		if err != nil {
 			io.Panic(err)
 		}
+
+		cm, err := configs.NewConfigurationManager()
+
+		libs := wm.FilterLibs(filter)
+
+		mapping := cm.GetBuildersMapping()
+
+		buildGroups := make(map[string][]*configs.XsModule)
+		for _, lib := range libs {
+			for parentDirs, builderName := range mapping {
+				if strings.HasPrefix(lib.Directory, parentDirs) {
+					buildGroups[builderName] = append(buildGroups[builderName], lib)
+				}
+			}
+		}
+
+		jobs := compilers.NewCompilePlanning().GetPlan("frontlib", buildGroups["frontlib"])
+
+		for _, job := range jobs {
+			println(job.Description())
+		}
+
+		//contr := compilers.CompilerPlanGenerator{
+		//	Executor:  jobs_build.Microfronted{PrintConsole: false},
+		//	Extractor: extractors.Microfrontend{},
+		//}
+		//err := contr.SelectLibs(filter)
+		//if err == nil {
+		//	contr.CompileSelectedLibs()
+		//} else {
+		//	io.Panic(err)
+		//}
 	},
 }

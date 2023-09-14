@@ -3,8 +3,8 @@ package tests
 import (
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"xs/internal/compilers/sorters/fl"
 	"xs/internal/configs"
-	"xs/internal/services"
 )
 
 func PackCreateHelper(name string, depsNames []string) *configs.NpmLibPackage {
@@ -20,7 +20,7 @@ func PackCreateHelper(name string, depsNames []string) *configs.NpmLibPackage {
 }
 
 func TestNextList(t *testing.T) {
-	ord := services.NewNpmLibPackagesOrder(false)
+	ord := fl.NewNpmLibPackagesOrder(false)
 	ord.AddPackage(PackCreateHelper("a", []string{"b", "c"}))
 	ord.AddPackage(PackCreateHelper("b", []string{"c"}))
 	ord.AddPackage(PackCreateHelper("c", []string{}))

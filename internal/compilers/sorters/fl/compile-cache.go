@@ -1,4 +1,4 @@
-package services
+package fl
 
 import (
 	"xs/pkg/io"
@@ -23,11 +23,11 @@ func (c *CompileCache) clear() error {
 	return tools.ClearDirectory(c.cacheIndexDir)
 }
 
-func (c *CompileCache) saveHash(srcHash string, dstHash string) error {
+func (c *CompileCache) SaveHash(srcHash string, dstHash string) error {
 	return tools.WriteFile(c.cacheIndexDir+"/"+srcHash, []byte(dstHash))
 }
 
-func (c *CompileCache) checkHash(srcHash string, dstHash string) bool {
+func (c *CompileCache) CheckHash(srcHash string, dstHash string) bool {
 	dstHashFromFile, err := tools.ReadFile(c.cacheIndexDir + "/" + srcHash)
 	if err != nil {
 		return false
