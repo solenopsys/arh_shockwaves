@@ -18,6 +18,11 @@ var cmdAdd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		pattern := args[0]
 
+		err := tools.ToWorkspaceRootDir()
+		if err != nil {
+			io.Fatal("Workspace root dir not found")
+		}
+
 		jobsPlan := makePlan(pattern)
 
 		for _, job := range jobsPlan {
