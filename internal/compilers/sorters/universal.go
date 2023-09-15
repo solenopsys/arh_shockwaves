@@ -7,17 +7,18 @@ import (
 	"xs/pkg/io"
 )
 
-func NewUniversalSorter(jobCreate func(params map[string]string, printConsole bool) jobs.PrintableJob) Sorter {
+func NewUniversalSorter(jobCreate func(params map[string]string, printConsole bool) jobs.PrintableJob, libGroup string, extractor internal.CompileParamsExtractor) Sorter {
 	wm, err := configs.GetInstanceWsManager()
 	if err != nil {
 		io.Panic(err)
 	}
-	return &UniversalSorter{wm: wm, jobCreate: jobCreate}
+	return &UniversalSorter{wm: wm, jobCreate: jobCreate, libGroup: libGroup, extractor: extractor}
 }
 
 type UniversalSorter struct {
 	wm        *configs.WorkspaceManager
-	extractor internal.CompileExecutor
+	extractor internal.CompileParamsExtractor
+	libGroup  string
 	jobCreate func(params map[string]string, printConsole bool) jobs.PrintableJob
 }
 
@@ -39,7 +40,10 @@ func (s *UniversalSorter) Sort(libs []*configs.XsModule) []jobs.PrintableJob {
 	SortByName(libs)
 	result := []jobs.PrintableJob{}
 	for _, lib := range libs {
-		result = append(result, s.JobCreate(map[string]string{"name": lib.Name, "dir": lib.Directory}))
+		var params = map[string]string{}
+		path := "." + "/" + lib.Directory
+		params = s.extractor.Extract(lib.Name, path)
+		result = append(result, s.JobCreate(params))
 	}
 	return result
 }

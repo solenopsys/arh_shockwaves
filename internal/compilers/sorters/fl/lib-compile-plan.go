@@ -56,9 +56,7 @@ func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsEx
 
 			var params = map[string]string{}
 
-			if extractor != nil {
-				params = extractor.Extract(pack.Name, path)
-			}
+			params = extractor.Extract(pack.Name, path)
 
 			dest := params["dest"]
 			dirExists := xstool.Exists(dest)

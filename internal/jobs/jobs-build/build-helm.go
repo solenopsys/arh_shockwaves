@@ -1,6 +1,7 @@
 package jobs_build
 
 import (
+	"path/filepath"
 	"xs/internal/jobs"
 	"xs/pkg/io"
 	"xs/pkg/wrappers"
@@ -11,14 +12,17 @@ type BuildHelm struct {
 }
 
 func (b *BuildHelm) Execute() *jobs.Result {
-	name := b.params["name"]
-	path := b.params["path"]
 
-	io.Println("path", path)
-	arch := wrappers.ArchiveDir(path, name)
+	path := b.params["path"]
+	parentDir := "helm"
+	pathHelmDir := path + "/" + parentDir
+	absolutPath, _ := filepath.Abs(pathHelmDir)
+	io.Println("path", absolutPath)
+
+	arch := wrappers.ArchiveDir(absolutPath, parentDir)
 
 	io.Println("archive size", len(arch))
-	wrappers.PushDir(arch) // todo extract to push job
+	wrappers.PushDir(arch) // todo extract to push job or step inside
 
 	return &jobs.Result{
 		Success:     true,

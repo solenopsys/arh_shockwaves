@@ -1,6 +1,7 @@
 package compilers
 
 import (
+	"xs/internal/compilers/extractors"
 	"xs/internal/compilers/sorters"
 	"xs/internal/configs"
 	"xs/internal/jobs"
@@ -14,11 +15,16 @@ type CompilePlanning struct {
 func NewCompilePlanning() *CompilePlanning {
 	c := &CompilePlanning{}
 	c.orders = map[string]sorters.Sorter{}
-	c.orders["frontlib"] = sorters.NowFrontLibSorter()
-	c.orders["front"] = sorters.NewUniversalSorter(jobs_build.NewBuildFrontend)
-	c.orders["module"] = sorters.NewUniversalSorter(jobs_build.NewMicroFronted)
-	c.orders["helm"] = sorters.NewUniversalSorter(jobs_build.NewBuildHelm)
-	c.orders["container"] = sorters.NewUniversalSorter(jobs_build.NewBuildContainer)
+	FONTLIB := "frontlib"
+	FRONT := "front"
+	MODULE := "module"
+	HELM := "helm"
+	CONTAINER := "container"
+	c.orders[FONTLIB] = sorters.NowFrontLibSorter()
+	c.orders[FRONT] = sorters.NewUniversalSorter(jobs_build.NewBuildFrontend, FRONT, extractors.Frontend{})
+	c.orders[MODULE] = sorters.NewUniversalSorter(jobs_build.NewMicroFronted, MODULE, extractors.Microfrontend{})
+	c.orders[HELM] = sorters.NewUniversalSorter(jobs_build.NewBuildHelm, HELM, extractors.Backend{})
+	c.orders[CONTAINER] = sorters.NewUniversalSorter(jobs_build.NewBuildContainer, CONTAINER, extractors.Backend{})
 	return c
 }
 
