@@ -2,7 +2,9 @@ package jobs_build
 
 import (
 	"errors"
+	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 	"xs/internal/compilers/sorters/fl"
 	"xs/internal/jobs"
@@ -15,15 +17,15 @@ const NPM_APPLICATION = "pnpm"
 type BuildFrontLib struct {
 	params       map[string]string
 	printConsole bool
-	cache        *fl.CompileCache
 }
 
 func NewBuildFrontLib(params map[string]string, printConsole bool) *BuildFrontLib {
-	cache := fl.NewCompileCache(".xs/compiled")
-	return &BuildFrontLib{params, printConsole, cache}
+
+	return &BuildFrontLib{params, printConsole}
 }
 
 func (b *BuildFrontLib) saveToCache(dest string, path string, excludeDirs []string) {
+	cache := fl.NewCompileCache(".xs/compiled")
 	srcHash, errHash := xstool.HashOfDir(path, excludeDirs)
 	if errHash != nil {
 		io.Panic(errHash)
@@ -32,7 +34,7 @@ func (b *BuildFrontLib) saveToCache(dest string, path string, excludeDirs []stri
 	if errHash != nil {
 		io.Panic(errHash)
 	}
-	errHash = b.cache.SaveHash(srcHash, dstHash)
+	errHash = cache.SaveHash(srcHash, dstHash)
 	if errHash != nil {
 		io.Panic(errHash)
 	}
@@ -40,10 +42,10 @@ func (b *BuildFrontLib) saveToCache(dest string, path string, excludeDirs []stri
 }
 
 func (b *BuildFrontLib) Description() string {
-	return "BuildFrontLib " + b.params["name"]
+	return "BuildFrontLib " + b.params["path"]
 }
 
-func (b *BuildFrontLib) Execute() *jobs.Result {
+func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring
 	src := b.params["path"]
 	dest := b.params["dest"]
 	pt := xstool.PathTools{}
@@ -55,18 +57,31 @@ func (b *BuildFrontLib) Execute() *jobs.Result {
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 
+	absoluteDestPath, err := filepath.Abs(dest)
+	absoluteSrcPath, err := filepath.Abs(".")
+	if err != nil {
+		io.Panic(err)
+	}
 	pt.MoveToBasePath()
 
 	if result == 0 {
 		io.PrintColor("OK", io.Green)
 
-		//io.Println("Make link: ", dest)
-		cmd := exec.Command(NPM_APPLICATION, "link", dest)
+		io.Println("Make link: ", absoluteDestPath)
+		pt.MoveTo("frontends") //todo move to const
+		currentDir, err := os.Getwd()
+
+		println("current path", currentDir)
+
+		cmd := exec.Command(NPM_APPLICATION, "link", absoluteDestPath)
 
 		if err := cmd.Start(); err != nil {
 			io.Panic(err)
 		}
-		cmd.Wait()
+		err = cmd.Wait()
+		if err != nil {
+			io.Panic(err)
+		}
 		linkRes := cmd.ProcessState.ExitCode()
 		if linkRes != 0 {
 			return &jobs.Result{
@@ -75,8 +90,8 @@ func (b *BuildFrontLib) Execute() *jobs.Result {
 			}
 		}
 
-		b.saveToCache(dest, src, []string{"node_modules"})
-
+		b.saveToCache(absoluteDestPath, absoluteSrcPath, []string{"node_modules"})
+		pt.MoveToBasePath()
 		return &jobs.Result{
 			Success:     true,
 			Error:       nil,
@@ -84,7 +99,7 @@ func (b *BuildFrontLib) Execute() *jobs.Result {
 		}
 
 	} else {
-
+		pt.MoveToBasePath()
 		return &jobs.Result{
 			Success: false,
 			Error:   errors.New("ERROR PNPM BUILD"),

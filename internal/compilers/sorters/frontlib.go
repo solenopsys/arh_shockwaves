@@ -10,24 +10,23 @@ import (
 )
 
 func NowFrontLibSorter() Sorter {
-	return &FrontLibSorter{}
+	wm, err := configs.GetInstanceWsManager()
+	if err != nil {
+		io.Panic(err)
+	}
+	return &FrontLibSorter{wm: wm}
 }
 
 type FrontLibSorter struct {
 	wm *configs.WorkspaceManager
 }
 
-func (s *FrontLibSorter) JobCreate() jobs.PrintableJob {
-	return jobs_build.NewBuildFrontLib(map[string]string{}, false)
+func (s *FrontLibSorter) JobCreate(params map[string]string) jobs.PrintableJob {
+	return jobs_build.NewBuildFrontLib(params, true)
 }
 
 func (s *FrontLibSorter) Sort(libs []*configs.XsModule) []jobs.PrintableJob {
-	io.Println("SetCompiled all libraries")
-
-	//	executor.PrintConsole= false
-	libCompiler := fl.NewLibCompileController(s.wm, "packages")
-	io.Println("Scan directories")
+	libCompiler := fl.NewLibCompileController(s.wm)
 	libCompiler.LoadConfigs(libs)
-	io.Println("Start compile")
 	return libCompiler.MakeJobs(false, extractors.Frontlib{}, s.JobCreate)
 }

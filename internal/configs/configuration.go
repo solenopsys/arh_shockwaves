@@ -3,6 +3,8 @@ package configs
 import (
 	"encoding/json"
 	"reflect"
+	"sync"
+	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -85,9 +87,18 @@ func LoadConfigFile(fileName string) (*Configuration, error) {
 	return config, err
 }
 
-func NewConfigurationManager() (*ConfigurationManager, error) {
-	file, err := LoadConfigFile("./xs-configuration.json")
-	return &ConfigurationManager{
-		configuration: file,
-	}, err
+var confInstance *ConfigurationManager
+var confOnce sync.Once
+
+func GetInstanceConfManager() (*ConfigurationManager, error) {
+	confOnce.Do(func() {
+		file, err := LoadConfigFile("./xs-configuration.json")
+		if err != nil {
+			io.Panic(err)
+		}
+		confInstance = &ConfigurationManager{
+			configuration: file,
+		}
+	})
+	return confInstance, nil
 }

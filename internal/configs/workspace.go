@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"regexp"
 	"strings"
+	"sync"
 	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
 type Format struct {
 	Type    string `json:"type"`
-	Version int    `json:"version"`
+	Version string `json:"version"`
 }
 
 type XsModule struct {
@@ -104,13 +105,19 @@ func (m *WorkspaceManager) AddModule(name string, dir string) {
 
 }
 
-func NewWsManager() (*WorkspaceManager, error) {
-	manager := WorkspaceManager{}
-	manager.file = "./xs-workspace.json" //todo move to const
-	manager.workspace = &Workspace{}
-	err := manager.Load()
-	if err != nil {
-		io.Panic("Workspace file corrupted: ", manager.file, err)
-	}
-	return &manager, err
+var wsInstance *WorkspaceManager
+var wsOnce sync.Once
+
+func GetInstanceWsManager() (*WorkspaceManager, error) {
+	wsOnce.Do(func() {
+		wsInstance = &WorkspaceManager{}
+		wsInstance.file = "./xs-workspace.json" //todo move to const
+		wsInstance.workspace = &Workspace{}
+		err := wsInstance.Load()
+		if err != nil {
+			io.Panic("Workspace file corrupted: ", wsInstance.file, err)
+		}
+
+	})
+	return wsInstance, nil
 }

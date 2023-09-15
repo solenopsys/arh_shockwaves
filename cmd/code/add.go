@@ -43,7 +43,7 @@ var cmdAdd = &cobra.Command{
 }
 
 func makePlan(pattern string) []jobs.PrintableJob {
-	confManager, err := configs.NewConfigurationManager()
+	confManager, err := configs.GetInstanceConfManager()
 	if err != nil {
 		io.Fatal(err)
 	}
@@ -91,7 +91,7 @@ func makePlan(pattern string) []jobs.PrintableJob {
 }
 
 func checkTemplateExists(subDir string) jobs.PrintableJob {
-	wsManager, err := configs.NewWsManager()
+	wsManager, err := configs.GetInstanceWsManager()
 	if err != nil {
 		io.Fatal(err)
 	}

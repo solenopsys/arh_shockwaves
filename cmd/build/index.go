@@ -5,6 +5,7 @@ import (
 	"strings"
 	"xs/internal/compilers"
 	"xs/internal/configs"
+	"xs/internal/jobs"
 	"xs/pkg/io"
 	"xs/pkg/tools"
 )
@@ -30,12 +31,12 @@ var Cmd = &cobra.Command{
 			base["publish"] = "true"
 		}
 
-		wm, err := configs.NewWsManager()
+		wm, err := configs.GetInstanceWsManager()
 		if err != nil {
 			io.Panic(err)
 		}
 
-		cm, err := configs.NewConfigurationManager()
+		cm, err := configs.GetInstanceConfManager()
 
 		libs := wm.FilterLibs(filter)
 
@@ -50,10 +51,19 @@ var Cmd = &cobra.Command{
 			}
 		}
 
-		jobs := compilers.NewCompilePlanning().GetPlan("frontlib", buildGroups["frontlib"])
+		jobsPlan := compilers.NewCompilePlanning().GetPlan("frontlib", buildGroups["frontlib"])
 
-		for _, job := range jobs {
+		for _, job := range jobsPlan {
 			println(job.Description())
+		}
+
+		confirm := tools.ConfirmDialog("Build this libraries?")
+
+		if confirm {
+			io.Println("Proceeding with the action.")
+			jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
+		} else {
+			io.Println("Canceled.")
 		}
 
 		//contr := compilers.CompilerPlanGenerator{

@@ -15,11 +15,10 @@ type LibCompilePlan struct {
 	libGroup      string
 }
 
-func NewLibCompileController(xm *configs.WorkspaceManager, libGroup string) *LibCompilePlan {
+func NewLibCompileController(xm *configs.WorkspaceManager) *LibCompilePlan {
 	c := &LibCompilePlan{}
 	c.compileNow = map[string]bool{}
 	c.xsManager = xm
-	c.libGroup = libGroup
 	return c
 }
 
@@ -28,14 +27,14 @@ func (c *LibCompilePlan) LoadConfigs(libs []*configs.XsModule) {
 	ord := NewNpmLibPackagesOrder(false)
 
 	for _, lib := range libs {
-		lp := configs.LoadNpmLibPackage("./" + c.libGroup + "/" + lib.Directory + "/package.json")
+		lp := configs.LoadNpmLibPackage("./" + lib.Directory + "/package.json")
 		ord.AddPackage(lp)
 	}
 
 	c.packagesOrder = ord
 }
 
-func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsExtractor, jobCreate func() jobs.PrintableJob) []jobs.PrintableJob { // todo need refactoring
+func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsExtractor, jobCreate func(params map[string]string) jobs.PrintableJob) []jobs.PrintableJob { // todo need refactoring
 
 	cache := NewCompileCache(".xs/compiled")
 
@@ -51,7 +50,7 @@ func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsEx
 		for _, pack := range list {
 			xsPackConf := c.xsManager.ExtractModule(pack.Name)
 
-			path := c.libGroup + "/" + xsPackConf.Directory
+			path := "." + c.libGroup + "/" + xsPackConf.Directory
 
 			c.compileNow[pack.Name] = true
 
@@ -83,7 +82,7 @@ func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsEx
 				c.compileNow[pack.Name] = false
 			} else {
 
-				currentJob := jobCreate()
+				currentJob := jobCreate(params)
 
 				results = append(results, currentJob)
 

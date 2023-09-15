@@ -22,7 +22,7 @@ func (t *CodeLoad) Execute() *jobs.Result {
 		}
 	}
 
-	ws, err := configs.NewWsManager()
+	ws, err := configs.GetInstanceWsManager()
 
 	if err != nil {
 		return &jobs.Result{
