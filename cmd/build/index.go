@@ -51,17 +51,23 @@ var Cmd = &cobra.Command{
 			}
 		}
 
-		jobsPlan := compilers.NewCompilePlanning().GetPlan("frontlib", buildGroups["frontlib"])
-
-		for _, job := range jobsPlan {
-			println(job.Description())
+		for builderName, libs := range buildGroups {
+			jobsPlan := compilers.NewCompilePlanning().GetPlan(builderName, libs)
+			io.Println("SECTION:", builderName)
+			for _, job := range jobsPlan {
+				println(job.Description())
+			}
 		}
 
 		confirm := tools.ConfirmDialog("Build this libraries?")
 
 		if confirm {
 			io.Println("Proceeding with the action.")
-			jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
+			for builderName, libs := range buildGroups {
+				jobsPlan := compilers.NewCompilePlanning().GetPlan(builderName, libs)
+				io.Println("SECTION:", builderName)
+				jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
+			}
 		} else {
 			io.Println("Canceled.")
 		}

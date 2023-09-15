@@ -26,3 +26,13 @@ func (b *BuildHelm) Execute() *jobs.Result {
 		Description: "BuildHelm executed",
 	}
 }
+
+func (b *BuildHelm) Description() string {
+	return "Build helm " + b.params["path"]
+}
+
+func NewBuildHelm(params map[string]string, printConsole bool) jobs.PrintableJob {
+	return &BuildHelm{
+		params: params,
+	}
+}

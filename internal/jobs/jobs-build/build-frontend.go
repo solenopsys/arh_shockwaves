@@ -8,8 +8,16 @@ import (
 )
 
 type BuildFrontend struct {
-	PrintConsole bool
+	printConsole bool
 	params       map[string]string
+}
+
+func NewBuildFrontend(params map[string]string, printConsole bool) jobs.PrintableJob {
+	return &BuildFrontend{printConsole, params}
+}
+
+func (b *BuildFrontend) Description() string {
+	return "Build Front " + b.params["path"]
 }
 
 func (n *BuildFrontend) Execute() *jobs.Result {
@@ -23,7 +31,7 @@ func (n *BuildFrontend) Execute() *jobs.Result {
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "ng", Args: argsSplit, PrintToConsole: n.PrintConsole}
+	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "ng", Args: argsSplit, PrintToConsole: n.printConsole}
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 

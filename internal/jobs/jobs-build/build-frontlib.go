@@ -20,7 +20,6 @@ type BuildFrontLib struct {
 }
 
 func NewBuildFrontLib(params map[string]string, printConsole bool) *BuildFrontLib {
-
 	return &BuildFrontLib{params, printConsole}
 }
 
@@ -42,7 +41,7 @@ func (b *BuildFrontLib) saveToCache(dest string, path string, excludeDirs []stri
 }
 
 func (b *BuildFrontLib) Description() string {
-	return "BuildFrontLib " + b.params["path"]
+	return "Build FrontLib " + b.params["path"]
 }
 
 func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring

@@ -2,23 +2,25 @@ package jobs_build
 
 import (
 	"strings"
+	"xs/internal/jobs"
 	"xs/pkg/io"
 )
 
-type Microfronted struct {
+type MicroFronted struct {
 	PrintConsole bool
+	params       map[string]string
 }
 
-func (n Microfronted) Compile(params map[string]string) error {
+func (b *MicroFronted) Execute() *jobs.Result {
 	//	groupDir := "modules"
 
-	lib := params["lib"]
+	lib := b.params["lib"]
 	//	m := params["name"]
 
 	arg := "bmf " + lib
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit, PrintToConsole: n.PrintConsole}
+	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit, PrintToConsole: b.PrintConsole}
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 
@@ -29,4 +31,14 @@ func (n Microfronted) Compile(params map[string]string) error {
 	}
 
 	return nil
+}
+
+func (b *MicroFronted) Description() string {
+	return "Build helm " + b.params["lib"]
+}
+
+func NewMicroFronted(params map[string]string, printConsole bool) jobs.PrintableJob {
+	return &MicroFronted{
+		params: params,
+	}
 }

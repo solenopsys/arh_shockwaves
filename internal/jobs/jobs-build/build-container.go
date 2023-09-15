@@ -52,6 +52,15 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	}
 }
 
-func NewBuildContainer(params map[string]string) *BuildContainer {
-	return &BuildContainer{params: params, platform: "amd64", registry: "registry.solenopsys.org"}
+func (b *BuildContainer) Description() string {
+	return "Build container " + b.params["path"]
+}
+
+func NewBuildContainer(params map[string]string, printConsole bool) jobs.PrintableJob {
+	return &BuildContainer{
+		params:       params,
+		platform:     "amd64",
+		registry:     "registry.solenopsys.org",
+		printConsole: printConsole,
+	}
 }
