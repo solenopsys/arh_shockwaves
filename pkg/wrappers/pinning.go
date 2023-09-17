@@ -54,18 +54,23 @@ func (p *Pinning) SmartPin(cid string, labels map[string]string, ipnsName string
 		io.Println("pin", pin)
 	}
 
+	ipnsCid, pinErr := p.SmartName(ipnsName, cid)
+	io.Println("ipnsCID", ipnsCid)
+	return pinErr
+}
+
+func (p *Pinning) SmartName(ipnsName string, cid string) (string, error) {
 	hasName, err := p.CheckName(ipnsName)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	ipnsId, err := p.SetName(cid, ipnsName, !hasName)
 	if err != nil {
-		return err
+		return "", err
 	}
-	io.Println("ipnsId", ipnsId)
 
-	return nil
+	return ipnsId, nil
 }
 
 func (p *Pinning) CheckName(name string) (bool, error) {

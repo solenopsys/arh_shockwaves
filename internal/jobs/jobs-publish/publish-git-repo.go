@@ -152,7 +152,7 @@ func (t *PublishGitRepo) Execute() *jobs.Result {
 		t.changeCurrentDir,
 		t.updateServerInfo,
 		t.extractCommitHash,
-		//	unpackFiles todo unpack for reuse blocks in ipfs
+		//	unpackFiles  // todo unpack for reuse blocks in ipfs
 		t.publishDirInIpfs,
 		t.pinCidInPinningService,
 	}
