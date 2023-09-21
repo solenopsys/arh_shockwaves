@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"encoding/json"
+	"gopkg.in/yaml.v3"
 	"reflect"
 	"sync"
 	"xs/pkg/io"
@@ -28,9 +28,10 @@ type Processor struct {
 }
 
 type Configuration struct {
-	Format     Format
-	Builders   map[string][]string  `json:"builders"`
-	Processors map[string]Processor `json:"processors"`
+	Format     string                       `json:"format"`
+	Templates  map[string]map[string]string `json:"templates"`
+	Builders   map[string][]string          `json:"builders"`
+	Processors map[string]Processor         `json:"processors"`
 }
 
 type ConfigurationManager struct {
@@ -66,6 +67,10 @@ func (m *ConfigurationManager) GetProcessors(section string, processorType Proce
 	return processorNames
 }
 
+func (m *ConfigurationManager) GetTemplateDirectory(dir string) string {
+	return m.configuration.Templates["sections"][dir]
+}
+
 func (m *ConfigurationManager) GetBuildersMapping() map[string]string {
 	var result = make(map[string]string)
 	for builder, sections := range m.configuration.Builders {
@@ -80,7 +85,7 @@ func LoadConfigFile(fileName string) (*Configuration, error) {
 	config := &Configuration{}
 	fileData, err := tools.ReadFile(fileName)
 	if err == nil {
-		err = json.Unmarshal([]byte(fileData), config)
+		err = yaml.Unmarshal([]byte(fileData), config)
 	} else {
 		return nil, err
 	}
@@ -92,7 +97,7 @@ var confOnce sync.Once
 
 func GetInstanceConfManager() (*ConfigurationManager, error) {
 	confOnce.Do(func() {
-		file, err := LoadConfigFile("./xs-configuration.json")
+		file, err := LoadConfigFile("./configuration.yaml")
 		if err != nil {
 			io.Panic(err)
 		}

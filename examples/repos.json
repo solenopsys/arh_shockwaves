@@ -12,14 +12,13 @@
       "tl-federation-runtime",
       "tl-helm-booster"
     ],
-    "frontends": [
-      "fr-auth",
-      "fr-website",
-      "fr-uimatrix",
-      "fr-converged",
-      "fr-datasheets",
-      "fr-robotization",
-      "fr-module"
+    "bootstraps": [
+      "bs-auth",
+      "bs-website",
+      "bs-uimatrix",
+      "bs-converged",
+      "bs-datasheets",
+      "bs-robotization"
     ],
     "frontlibs": [
       "fl-storage",

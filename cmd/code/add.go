@@ -91,13 +91,13 @@ func makePlan(pattern string) []jobs.PrintableJob {
 }
 
 func checkTemplateExists(subDir string) jobs.PrintableJob {
-	wsManager, err := configs.GetInstanceWsManager()
+	confManager, err := configs.GetInstanceConfManager()
 	if err != nil {
 		io.Fatal(err)
 	}
 	subDirExists := tools.Exists(subDir)
 	if !subDirExists {
-		templateModule := wsManager.GetTemplateDirectory(subDir)
+		templateModule := confManager.GetTemplateDirectory(subDir)
 		return jobs_fetch.NewTemplateLoad(templateModule, subDir)
 	} else {
 		return nil

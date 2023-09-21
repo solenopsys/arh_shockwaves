@@ -8,7 +8,7 @@ import (
 )
 
 func isWorkspaceRootDir(dir string) bool {
-	return Exists(dir + "/xs-workspace.json") // todo move to constant
+	return Exists(dir + "/workspace.yaml") // todo move to constant
 }
 
 func CheckWorkspace(dir string, before string) (bool, string) {

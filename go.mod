@@ -9,17 +9,16 @@ require (
 	github.com/ipfs-cluster/ipfs-cluster v1.0.6
 	github.com/ipfs/boxo v0.12.0
 	github.com/ipfs/go-ipfs-api v0.7.0
+	github.com/json5/json5-go v0.0.0-20160331055859-40c2958e3bf8
 	github.com/k3s-io/helm-controller v0.14.0
 	github.com/miekg/dns v1.1.54
 	github.com/spf13/cobra v1.7.0
 	github.com/stretchr/testify v1.8.4
-	github.com/tendermint/tendermint v0.35.9
 	github.com/xeipuuv/gojsonschema v1.2.0
 	golang.org/x/crypto v0.9.0
 	k8s.io/api v0.27.1
 	k8s.io/apimachinery v0.27.1
 	k8s.io/client-go v0.27.1
-	k8s.io/klog/v2 v2.100.1
 )
 
 replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
@@ -159,6 +158,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	k8s.io/klog/v2 v2.100.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20230501164219-8b0f38b5fd1f // indirect
 	k8s.io/utils v0.0.0-20230505201702-9f6742963106 // indirect
 	lukechampine.com/blake3 v1.1.7 // indirect

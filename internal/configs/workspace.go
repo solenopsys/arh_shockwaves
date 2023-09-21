@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"encoding/json"
+	"gopkg.in/yaml.v3"
 	"regexp"
 	"strings"
 	"sync"
@@ -9,20 +9,14 @@ import (
 	"xs/pkg/tools"
 )
 
-type Format struct {
-	Type    string `json:"type"`
-	Version string `json:"version"`
-}
-
 type XsModule struct {
 	Directory string
 	Name      string
 }
 
 type Workspace struct {
-	Format    Format
-	Templates map[string]map[string]string `json:"templates"`
-	Code      map[string]map[string]string `json:"code"`
+	Format string                       `json:"format"`
+	Code   map[string]map[string]string `json:"code"`
 }
 
 type WorkspaceManager struct {
@@ -33,7 +27,7 @@ type WorkspaceManager struct {
 func (m *WorkspaceManager) Load() error {
 	fileData, err := tools.ReadFile(m.file)
 	if err == nil {
-		err = json.Unmarshal([]byte(fileData), m.workspace)
+		err = yaml.Unmarshal([]byte(fileData), m.workspace)
 		return nil
 	} else {
 		return err
@@ -41,7 +35,7 @@ func (m *WorkspaceManager) Load() error {
 }
 
 func (m *WorkspaceManager) Save() {
-	bytes, err := json.MarshalIndent(m.workspace, "", "  ")
+	bytes, err := yaml.Marshal(m.workspace)
 	if err != nil {
 		io.Panic(err)
 	} else {
@@ -50,10 +44,6 @@ func (m *WorkspaceManager) Save() {
 			io.Panic(err)
 		}
 	}
-}
-
-func (m *WorkspaceManager) GetTemplateDirectory(dir string) string {
-	return m.workspace.Templates["sections"][dir]
 }
 
 func (m *WorkspaceManager) FilterLibs(filter string) []*XsModule {
@@ -111,7 +101,7 @@ var wsOnce sync.Once
 func GetInstanceWsManager() (*WorkspaceManager, error) {
 	wsOnce.Do(func() {
 		wsInstance = &WorkspaceManager{}
-		wsInstance.file = "./xs-workspace.json" //todo move to const
+		wsInstance.file = "./workspace.yaml" //todo move to const
 		wsInstance.workspace = &Workspace{}
 		err := wsInstance.Load()
 		if err != nil {
