@@ -1,8 +1,8 @@
 package jobs_fetch
 
 import (
-	"xs/internal/configs"
 	"xs/internal/jobs"
+	"xs/pkg/controllers"
 	"xs/pkg/wrappers"
 )
 
@@ -20,7 +20,7 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 			Error:   err,
 		}
 	}
-	templateLoader := configs.NewSourceLoader()
+	templateLoader := controllers.NewSourceLoader()
 	err = templateLoader.Load(repo.Cid, t.targetDir)
 	if err != nil {
 		return &jobs.Result{

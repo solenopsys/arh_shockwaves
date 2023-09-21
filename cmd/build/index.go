@@ -36,7 +36,7 @@ var Cmd = &cobra.Command{
 			io.Panic(err)
 		}
 
-		cm, err := configs.GetInstanceConfManager()
+		cm := configs.GetInstanceConfManager()
 
 		libs := wm.FilterLibs(filter)
 

@@ -13,15 +13,22 @@ import (
 	"xs/cmd/node"
 	"xs/cmd/public"
 	"xs/cmd/serve"
+	"xs/internal/configs"
+	"xs/pkg/io"
 )
 
 func main() {
 	log.SetFlags(log.Lmicroseconds)
+	configs.GetInstanceConfManager() // read conf from xs directory
+
 	var rootCmd = &cobra.Command{Use: "xs"}
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 	initCommands(rootCmd)
-	rootCmd.Execute()
+	err := rootCmd.Execute()
+	if err != nil {
+		io.Fatal(err)
+	}
 }
 
 func initCommands(rootCmd *cobra.Command) {

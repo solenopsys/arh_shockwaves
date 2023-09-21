@@ -1,0 +1,62 @@
+format: xs-configuration-v2
+files:
+  workspace: ""
+hosts:
+  ipfsNode: "127.0.0.1:30501"
+  ipfsClusterNode: "127.0.0.1:30501"
+  pinningService: "http://pinning.solenopsys.org"
+  helmRepository: "http://helm.solenopsys.org"
+templates:
+  sections:
+    frontends: "@solenopsys/tp-frontends"
+    backends: "@solenopsys/tp-backends"
+    tools: "@solenopsys/tp-tools"
+    contracts: "@solenopsys/tp-contracts"
+    embedded: "@solenopsys/tp-embedded"
+    engineering: "@solenopsys/tp-engineering"
+  creation: { }
+git:
+  paths:
+    frontends: frontends/endpoints
+    frontlibs: frontends/packages
+    uimatrix: frontends/packages
+    microfrontends: frontends/modules
+    tools: tools
+    templates: templates
+    backlibs: backends/libraries
+    deployments: backends/deployments
+    microservices: backends/modules
+  prefixes:
+    bs: bootstraps
+    fl: frontlibs
+    ui: uimatrix
+    mf: microfrontends
+    tl: tools
+    tp: templates
+    bl: backlibs
+    dp: deployments
+    ms: microservices
+jobs:
+  builders:
+    front:
+      - frontends/bootstraps
+    module:
+      - frontends/modules
+    frontlib:
+      - frontends/libraries
+    helm:
+      - backends/deployments
+    library:
+      - backends/libraries
+    container:
+      - backends/modules
+  processors:
+    ts_injector:
+      description: Injects source code location to tsconfig.json file
+      triggers:
+        - type: post
+          sections:
+            - frontends
+          command:
+            - code
+            - add

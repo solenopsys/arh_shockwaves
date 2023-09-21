@@ -3,6 +3,7 @@ package public
 import (
 	"github.com/spf13/cobra"
 	"strings"
+	"xs/internal/configs"
 	jobs_publish "xs/internal/jobs/jobs-publish"
 	"xs/pkg/io"
 )
@@ -18,13 +19,17 @@ var cmdGit = &cobra.Command{
 		lastSection := split[len(split)-1]
 		gitRepoName := strings.Replace(lastSection, ".git", "", 1)
 		prefix := strings.Split(gitRepoName, "-")[0]
-		group := PREFIXES[prefix]
-		groupDir := PATHS[group]
 
-		nickname := "solenopsys" // todo get from login
+		conf := configs.GetInstanceConfManager().Conf
+		git := conf.Git
+
+		group := git.Prefixes[prefix]
+		groupDir := git.Paths[group]
+
+		nickname := configs.GetAuthManager().Nickname
 		cloneTo := groupDir + "/" + nickname + "/" + gitRepoName
 
-		job := jobs_publish.NewPublishGitRepo(IpfsHost, PinningHost, nickname, group, gitRepoName, cloneTo, gitRepoUrl)
+		job := jobs_publish.NewPublishGitRepo(conf.Hosts.IpfsHost, conf.Hosts.PinningHost, nickname, group, gitRepoName, cloneTo, gitRepoUrl)
 		result := job.Execute()
 		if result.Error != nil {
 			io.Fatal(result.Error)

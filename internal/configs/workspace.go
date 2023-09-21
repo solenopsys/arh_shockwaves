@@ -15,8 +15,8 @@ type XsModule struct {
 }
 
 type Workspace struct {
-	Format string                       `json:"format"`
-	Code   map[string]map[string]string `json:"code"`
+	Format string                       `yaml:"format"`
+	Code   map[string]map[string]string `yaml:"code"`
 }
 
 type WorkspaceManager struct {

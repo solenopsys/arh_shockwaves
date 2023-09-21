@@ -9,13 +9,14 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"xs/internal/configs"
 	"xs/pkg/io"
 )
 
 func PushDir(archive []byte) {
 	buffer := bytes.NewBuffer(archive)
 
-	url := "http://helm.solenopsys.org/api/charts" // todo move to config
+	url := configs.GetInstanceConfManager().Conf.Hosts.HelmRepositoryHost + "/api/charts"
 	resp, err := http.Post(url, "application/octet-stream", buffer)
 	if err != nil {
 		io.Println("Error sending request:", err)

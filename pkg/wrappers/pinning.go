@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	iio "io"
+	"xs/internal/configs"
 	"xs/pkg/io"
 
 	"net/http"
@@ -245,7 +246,7 @@ func (p *Pinning) FindRepo(repoName string) (*map[string]PackInfo, error) {
 
 func NewPinning() *Pinning {
 	return &Pinning{
-		Host:    "http://pinning.solenopsys.org", // todo remove it
-		UserKey: "alexstorm",                     // todo remove it
+		Host:    configs.GetInstanceConfManager().Conf.Hosts.PinningHost,
+		UserKey: configs.GetAuthManager().PublicKey,
 	}
 }

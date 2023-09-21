@@ -2,6 +2,7 @@ package public
 
 import (
 	"github.com/spf13/cobra"
+	"xs/internal/configs"
 	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
@@ -16,8 +17,8 @@ var cmdName = &cobra.Command{
 
 		pinning := &wrappers.Pinning{}
 
-		pinning.Host = "http://" + PinningHost
-		pinning.UserKey = "alexstorm" // todo remove it
+		pinning.Host = configs.GetInstanceConfManager().Conf.Hosts.PinningHost
+		pinning.UserKey = configs.GetAuthManager().PublicKey
 
 		labels := make(map[string]string)
 		labels["code.site"] = name

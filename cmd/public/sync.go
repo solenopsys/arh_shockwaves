@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/spf13/cobra"
 	"os"
+	"xs/internal/configs"
 	"xs/internal/jobs"
 	jobs_publish "xs/internal/jobs/jobs-publish"
 	"xs/pkg/io"
@@ -16,10 +17,11 @@ var cmdSyncGit = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		configName := args[0]
-		nickname := "solenopsys" // todo get from login
+		nickname := configs.GetAuthManager().Nickname
+		conf := configs.GetInstanceConfManager().Conf
 		pg := &PublicGit{
-			IpfsHost:    IpfsHost,
-			PinningHost: PinningHost,
+			IpfsHost:    conf.Hosts.IpfsHost,
+			PinningHost: conf.Hosts.PinningHost,
 		}
 
 		err := pg.LoadConfig(configName)
@@ -80,7 +82,7 @@ func (pg *PublicGit) ManeJobsPlan(nickname string) []jobs.PrintableJob {
 	for group, repoNames := range pg.Config.Groups {
 		for _, repoName := range repoNames {
 			io.Println("Processing repo ", repoName)
-			cloneTo := PATHS[group]
+			cloneTo := configs.GetInstanceConfManager().Conf.Git.Paths[group]
 			repoFullPath := pg.Config.Remote + repoName
 			job := jobs_publish.NewPublishGitRepo(pg.IpfsHost, pg.PinningHost, nickname, group, repoName, cloneTo, repoFullPath)
 			jobsPlan = append(jobsPlan, job)

@@ -11,6 +11,18 @@ func isWorkspaceRootDir(dir string) bool {
 	return Exists(dir + "/workspace.yaml") // todo move to constant
 }
 
+func GetProgramDir() (string, error) {
+	// Get the path to the executable binary
+	exePath, err := os.Executable()
+
+	if err != nil {
+		return "", err
+	}
+	exeDir := filepath.Dir(exePath)
+
+	return exeDir, nil
+}
+
 func CheckWorkspace(dir string, before string) (bool, string) {
 	isWorkspaceRootDir := isWorkspaceRootDir(dir)
 	if before == dir {

@@ -2,6 +2,7 @@ package public
 
 import (
 	"github.com/spf13/cobra"
+	"xs/internal/configs"
 	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
@@ -14,9 +15,10 @@ var cmdFile = &cobra.Command{
 		file := args[0]
 
 		ipfs := false
+		hosts := configs.GetInstanceConfManager().Conf.Hosts
 
 		if ipfs {
-			cid, err := wrappers.UploadFileToIpfsNode(IpfsHost, file)
+			cid, err := wrappers.UploadFileToIpfsNode(hosts.IpfsHost, file)
 
 			if err != nil {
 				io.Println(err)
@@ -26,7 +28,7 @@ var cmdFile = &cobra.Command{
 		} else {
 			d := make([]string, 1)
 			d[0] = file
-			outChain, err := wrappers.UploadFileToIpfsCluster(IpfsClusterHost, d)
+			outChain, err := wrappers.UploadFileToIpfsCluster(hosts.IpfsClusterHost, d)
 
 			if err != nil {
 				io.Println(err)

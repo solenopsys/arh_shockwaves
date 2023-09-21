@@ -43,10 +43,8 @@ var cmdAdd = &cobra.Command{
 }
 
 func makePlan(pattern string) []jobs.PrintableJob {
-	confManager, err := configs.GetInstanceConfManager()
-	if err != nil {
-		io.Fatal(err)
-	}
+	confManager := configs.GetInstanceConfManager()
+
 	templatesJobs := make(map[string]*jobs.PrintableJob)
 	codeJobs := make([]jobs.PrintableJob, 0)
 	pinning := wrappers.NewPinning()
@@ -91,10 +89,7 @@ func makePlan(pattern string) []jobs.PrintableJob {
 }
 
 func checkTemplateExists(subDir string) jobs.PrintableJob {
-	confManager, err := configs.GetInstanceConfManager()
-	if err != nil {
-		io.Fatal(err)
-	}
+	confManager := configs.GetInstanceConfManager()
 	subDirExists := tools.Exists(subDir)
 	if !subDirExists {
 		templateModule := confManager.GetTemplateDirectory(subDir)

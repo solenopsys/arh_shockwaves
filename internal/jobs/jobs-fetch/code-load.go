@@ -3,6 +3,7 @@ package jobs_fetch
 import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
+	"xs/pkg/controllers"
 )
 
 type CodeLoad struct {
@@ -12,7 +13,7 @@ type CodeLoad struct {
 }
 
 func (t *CodeLoad) Execute() *jobs.Result {
-	source := configs.NewSourceLoader()
+	source := controllers.NewSourceLoader()
 	err := source.Load(t.cid, t.targetDir)
 
 	if err != nil {

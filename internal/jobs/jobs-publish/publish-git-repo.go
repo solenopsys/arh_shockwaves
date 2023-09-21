@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"xs/internal/configs"
 	"xs/internal/jobs"
 	"xs/pkg/wrappers"
 )
@@ -131,8 +132,8 @@ func (t *PublishGitRepo) unpackFile(fileBytes []byte) error {
 func (t *PublishGitRepo) pinCidInPinningService() error {
 	pinning := &wrappers.Pinning{}
 
-	pinning.Host = "http://" + t.pinningHost
-	pinning.UserKey = "alexstorm" // todo remove it
+	pinning.Host = t.pinningHost
+	pinning.UserKey = configs.GetAuthManager().PublicKey
 
 	labels := make(map[string]string)
 

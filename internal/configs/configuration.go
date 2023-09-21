@@ -17,25 +17,43 @@ const (
 )
 
 type Trigger struct {
-	Type     ProcessorType `json:"type"`
-	Sections []string      `json:"sections"`
-	Command  []string      `json:"command"`
+	Type     ProcessorType `yaml:"type"`
+	Sections []string      `yaml:"sections"`
+	Command  []string      `yaml:"command"`
 }
 
 type Processor struct {
-	Description string     `json:"description"`
-	Triggers    []*Trigger `json:"triggers"`
+	Description string     `yaml:"description"`
+	Triggers    []*Trigger `yaml:"triggers"`
+}
+
+type Git struct {
+	Paths    map[string]string `yaml:"paths"`
+	Prefixes map[string]string `yaml:"prefixes"`
+}
+
+type Jobs struct {
+	Builders   map[string][]string  `yaml:"builders"`
+	Processors map[string]Processor `yaml:"processors"`
+}
+
+type Hosts struct {
+	IpfsHost           string `yaml:"ipfsNode"`
+	IpfsClusterHost    string `yaml:"ipfsClusterNode"`
+	PinningHost        string `yaml:"pinningService"`
+	HelmRepositoryHost string `yaml:"helmRepository"`
 }
 
 type Configuration struct {
-	Format     string                       `json:"format"`
-	Templates  map[string]map[string]string `json:"templates"`
-	Builders   map[string][]string          `json:"builders"`
-	Processors map[string]Processor         `json:"processors"`
+	Hosts     *Hosts                       `yaml:"hosts"`
+	Format    string                       `yaml:"format"`
+	Git       *Git                         `yaml:"git"`
+	Templates map[string]map[string]string `yaml:"templates"`
+	Jobs      *Jobs                        `yaml:"jobs"`
 }
 
 type ConfigurationManager struct {
-	configuration *Configuration
+	Conf *Configuration
 }
 
 func triggerValidate(trigger *Trigger, section string, processorType ProcessorType, command []string) bool {
@@ -54,7 +72,7 @@ func (m *ConfigurationManager) GetProcessors(section string, processorType Proce
 
 	var processorNames = make([]string, 0)
 
-	for name, processor := range m.configuration.Processors {
+	for name, processor := range m.Conf.Jobs.Processors {
 
 		for _, trigger := range processor.Triggers {
 			if triggerValidate(trigger, section, processorType, command) {
@@ -68,12 +86,12 @@ func (m *ConfigurationManager) GetProcessors(section string, processorType Proce
 }
 
 func (m *ConfigurationManager) GetTemplateDirectory(dir string) string {
-	return m.configuration.Templates["sections"][dir]
+	return m.Conf.Templates["sections"][dir]
 }
 
 func (m *ConfigurationManager) GetBuildersMapping() map[string]string {
 	var result = make(map[string]string)
-	for builder, sections := range m.configuration.Builders {
+	for builder, sections := range m.Conf.Jobs.Builders {
 		for _, section := range sections {
 			result[section] = builder
 		}
@@ -95,15 +113,19 @@ func LoadConfigFile(fileName string) (*Configuration, error) {
 var confInstance *ConfigurationManager
 var confOnce sync.Once
 
-func GetInstanceConfManager() (*ConfigurationManager, error) {
+func GetInstanceConfManager() *ConfigurationManager {
 	confOnce.Do(func() {
-		file, err := LoadConfigFile("./configuration.yaml")
+		programDir, err := tools.GetProgramDir()
+		if err != nil {
+			io.Panic(err)
+		}
+		file, err := LoadConfigFile(programDir + "/xs.config.yaml")
 		if err != nil {
 			io.Panic(err)
 		}
 		confInstance = &ConfigurationManager{
-			configuration: file,
+			Conf: file,
 		}
 	})
-	return confInstance, nil
+	return confInstance
 }
