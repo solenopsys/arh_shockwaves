@@ -15,7 +15,7 @@ func (t *TsConfigModuleInject) Execute() *jobs.Result {
 	packages := map[string]string{
 		t.packageName: t.targetDir,
 	}
-	configs.InjectPackagesLinksTsconfigJson(packages, configs.GetInstanceConfManager().Conf.Files.TsConfig)
+	configs.InjectPackagesLinksTsconfigJson(packages, "."+configs.GetInstanceConfManager().Conf.Files.TsConfig)
 
 	return &jobs.Result{
 		Success:     true,
