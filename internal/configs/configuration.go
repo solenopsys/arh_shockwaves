@@ -51,7 +51,7 @@ type Files struct {
 }
 
 type Configuration struct {
-	Files     *Files                       `yaml:"hosts"`
+	Files     *Files                       `yaml:"files"`
 	Hosts     *Hosts                       `yaml:"hosts"`
 	Format    string                       `yaml:"format"`
 	Git       *Git                         `yaml:"git"`
