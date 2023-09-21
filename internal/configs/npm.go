@@ -2,8 +2,8 @@ package configs
 
 import (
 	"encoding/json"
+	"os"
 	"xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 type NpmLibPackage struct {
@@ -15,7 +15,8 @@ type NpmLibPackage struct {
 
 func LoadNpmLibPackage(packageJsonPath string) (lp *NpmLibPackage) {
 	lp = &NpmLibPackage{}
-	bytesFromFile, err := tools.ReadFile(packageJsonPath)
+	bytesFromFile, err := os.ReadFile(packageJsonPath)
+
 	if err != nil {
 		io.Panic(err)
 	}

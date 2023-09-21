@@ -2,9 +2,9 @@ package wrappers
 
 import (
 	"encoding/json"
+	"os"
 	"strings"
 	"xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 type BuildConfig struct {
@@ -13,7 +13,7 @@ type BuildConfig struct {
 
 func LoadNgConfig(confFile string) *BuildConfig {
 	bc := &BuildConfig{}
-	bytesFromFile, err := tools.ReadFile(confFile)
+	bytesFromFile, err := os.ReadFile(confFile)
 	if err != nil {
 		io.Panic(err)
 	}

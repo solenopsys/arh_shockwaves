@@ -4,23 +4,12 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"xs/internal/configs"
 	"xs/pkg/io"
 )
 
 func isWorkspaceRootDir(dir string) bool {
-	return Exists(dir + "/workspace.yaml") // todo move to constant
-}
-
-func GetProgramDir() (string, error) {
-	// Get the path to the executable binary
-	exePath, err := os.Executable()
-
-	if err != nil {
-		return "", err
-	}
-	exeDir := filepath.Dir(exePath)
-
-	return exeDir, nil
+	return Exists(dir + configs.GetInstanceConfManager().Conf.Files.Workspace) // todo move to constant
 }
 
 func CheckWorkspace(dir string, before string) (bool, string) {
@@ -55,24 +44,6 @@ func ToWorkspaceRootDir() error {
 	if err != nil {
 		return err
 	}
-	return nil
-}
-
-func ReadFile(fileName string) ([]byte, error) {
-	data, err := os.ReadFile(fileName)
-	if err != nil {
-		return nil, err
-	}
-
-	return []byte(data), err
-}
-
-func WriteFile(fileName string, data []byte) error {
-	err := os.WriteFile(fileName, data, 0444)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 

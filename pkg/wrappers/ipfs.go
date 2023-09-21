@@ -14,13 +14,12 @@ import (
 	"path/filepath"
 	"strings"
 	lio "xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 func UploadFileToIpfsNode(nodeAddr string, file string) (string, error) {
 	sh := ipfs.NewShell(nodeAddr)
 
-	fileBytes, err := tools.ReadFile(file)
+	fileBytes, err := os.ReadFile(file)
 	if err != nil {
 		return "", err
 	}

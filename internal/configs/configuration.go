@@ -2,10 +2,11 @@ package configs
 
 import (
 	"gopkg.in/yaml.v3"
+	"os"
+	"path/filepath"
 	"reflect"
 	"sync"
 	"xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 type ProcessorType string
@@ -44,7 +45,13 @@ type Hosts struct {
 	HelmRepositoryHost string `yaml:"helmRepository"`
 }
 
+type Files struct {
+	TsConfig  string `yaml:"tsconfig"`
+	Workspace string `yaml:"workspace"`
+}
+
 type Configuration struct {
+	Files     *Files                       `yaml:"hosts"`
 	Hosts     *Hosts                       `yaml:"hosts"`
 	Format    string                       `yaml:"format"`
 	Git       *Git                         `yaml:"git"`
@@ -101,9 +108,10 @@ func (m *ConfigurationManager) GetBuildersMapping() map[string]string {
 
 func LoadConfigFile(fileName string) (*Configuration, error) {
 	config := &Configuration{}
-	fileData, err := tools.ReadFile(fileName)
+	data, err := os.ReadFile(fileName)
+
 	if err == nil {
-		err = yaml.Unmarshal([]byte(fileData), config)
+		err = yaml.Unmarshal([]byte(data), config)
 	} else {
 		return nil, err
 	}
@@ -115,7 +123,7 @@ var confOnce sync.Once
 
 func GetInstanceConfManager() *ConfigurationManager {
 	confOnce.Do(func() {
-		programDir, err := tools.GetProgramDir()
+		programDir, err := GetProgramDir()
 		if err != nil {
 			io.Panic(err)
 		}
@@ -128,4 +136,16 @@ func GetInstanceConfManager() *ConfigurationManager {
 		}
 	})
 	return confInstance
+}
+
+func GetProgramDir() (string, error) {
+	// Get the path to the executable binary
+	exePath, err := os.Executable()
+
+	if err != nil {
+		return "", err
+	}
+	exeDir := filepath.Dir(exePath)
+
+	return exeDir, nil
 }

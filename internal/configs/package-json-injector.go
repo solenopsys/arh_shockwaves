@@ -4,12 +4,10 @@ import (
 	"encoding/json"
 	"os"
 	"xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 func InjectToPackageJson(packages map[string]string, fileName string) {
-
-	existingJSON, err := tools.ReadFile(fileName)
+	existingJSON, err := os.ReadFile(fileName)
 	if err != nil {
 		io.Panic(err)
 	}

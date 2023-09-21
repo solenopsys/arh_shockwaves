@@ -4,11 +4,10 @@ import (
 	"encoding/json"
 	"os"
 	"xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 func InjectPackagesLinksTsconfigJson(packages map[string]string, packageJsonFileName string) {
-	existingJSON, err := tools.ReadFile(packageJsonFileName)
+	existingJSON, err := os.ReadFile(packageJsonFileName)
 	if err != nil {
 		io.Panic(err)
 	}

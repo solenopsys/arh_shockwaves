@@ -3,7 +3,6 @@ package storage
 import (
 	os "os"
 	"path/filepath"
-	"xs/pkg/tools"
 )
 
 //const pattern = "xs-session-"
@@ -87,6 +86,6 @@ func (ts *TempStorage) ReadSessionFromTempFile() ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	bytes, err := tools.ReadFile(fileName)
+	bytes, err := os.ReadFile(fileName)
 	return bytes, err
 }

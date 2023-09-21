@@ -2,6 +2,7 @@ package tools
 
 import (
 	"encoding/json"
+	"os"
 	"xs/pkg/io"
 )
 
@@ -34,7 +35,7 @@ func jsonLoadAndValidate(data string, schema string) {
 }
 
 func ValidateJson(jsonFile string, st any) {
-	bytesFromFile, err := ReadFile(jsonFile)
+	bytesFromFile, err := os.ReadFile(jsonFile)
 	if err != nil {
 		io.Panic(err)
 	}

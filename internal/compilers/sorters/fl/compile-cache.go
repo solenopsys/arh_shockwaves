@@ -1,6 +1,7 @@
 package fl
 
 import (
+	"os"
 	"xs/pkg/io"
 	"xs/pkg/tools"
 )
@@ -24,11 +25,11 @@ func (c *CompileCache) clear() error {
 }
 
 func (c *CompileCache) SaveHash(srcHash string, dstHash string) error {
-	return tools.WriteFile(c.cacheIndexDir+"/"+srcHash, []byte(dstHash))
+	return os.WriteFile(c.cacheIndexDir+"/"+srcHash, []byte(dstHash), 0444)
 }
 
 func (c *CompileCache) CheckHash(srcHash string, dstHash string) bool {
-	dstHashFromFile, err := tools.ReadFile(c.cacheIndexDir + "/" + srcHash)
+	dstHashFromFile, err := os.ReadFile(c.cacheIndexDir + "/" + srcHash)
 	if err != nil {
 		return false
 	} else {

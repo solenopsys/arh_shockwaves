@@ -33,7 +33,7 @@ func CommandApplyFromUrl(url string, command string) {
 
 func CommandApplyFromFile(file string, command string) {
 	io.Println("Start install")
-	httpBody, err := ReadFile(file)
+	httpBody, err := os.ReadFile(file)
 	if err != nil {
 		io.Println(err.Error())
 		return

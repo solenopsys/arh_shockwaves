@@ -2,11 +2,11 @@ package configs
 
 import (
 	"gopkg.in/yaml.v3"
+	"os"
 	"regexp"
 	"strings"
 	"sync"
 	"xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 type XsModule struct {
@@ -25,7 +25,7 @@ type WorkspaceManager struct {
 }
 
 func (m *WorkspaceManager) Load() error {
-	fileData, err := tools.ReadFile(m.file)
+	fileData, err := os.ReadFile(m.file)
 	if err == nil {
 		err = yaml.Unmarshal([]byte(fileData), m.workspace)
 		return nil
@@ -39,7 +39,7 @@ func (m *WorkspaceManager) Save() {
 	if err != nil {
 		io.Panic(err)
 	} else {
-		err := tools.WriteFile(m.file, bytes)
+		err := os.WriteFile(m.file, bytes, 0444)
 		if err != nil {
 			io.Panic(err)
 		}
@@ -101,7 +101,7 @@ var wsOnce sync.Once
 func GetInstanceWsManager() (*WorkspaceManager, error) {
 	wsOnce.Do(func() {
 		wsInstance = &WorkspaceManager{}
-		wsInstance.file = "./workspace.yaml" //todo move to const
+		wsInstance.file = "." + GetInstanceConfManager().Conf.Files.Workspace
 		wsInstance.workspace = &Workspace{}
 		err := wsInstance.Load()
 		if err != nil {

@@ -2,9 +2,9 @@ package wrappers
 
 import (
 	"encoding/json"
+	"os"
 	"strings"
 	"xs/pkg/io"
-	"xs/pkg/tools"
 )
 
 type Config struct {
@@ -29,7 +29,7 @@ type Options struct {
 
 func LoadAngConfig(confFile string) *Config {
 	conf := &Config{}
-	bytesFromFile, err := tools.ReadFile(confFile)
+	bytesFromFile, err := os.ReadFile(confFile)
 	if err != nil {
 		io.Panic(err)
 	}
