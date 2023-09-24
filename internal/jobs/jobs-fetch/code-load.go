@@ -10,11 +10,12 @@ type CodeLoad struct {
 	cid         string
 	packageName string
 	targetDir   string
+	sourceUrl   string
 }
 
 func (t *CodeLoad) Execute() *jobs.Result {
 	source := controllers.NewSourceLoader()
-	err := source.Load(t.cid, t.targetDir)
+	err := source.Load(t.cid, t.targetDir, t.sourceUrl)
 
 	if err != nil {
 		return &jobs.Result{
@@ -45,6 +46,6 @@ func (t *CodeLoad) Description() string {
 	return t.packageName + " -> " + t.targetDir
 }
 
-func NewCodeLoad(cid string, packageName string, targetDir string) *CodeLoad {
-	return &CodeLoad{cid: cid, packageName: packageName, targetDir: targetDir}
+func NewCodeLoad(cid string, packageName string, targetDir string, sourceUrl string) *CodeLoad {
+	return &CodeLoad{cid: cid, packageName: packageName, targetDir: targetDir, sourceUrl: sourceUrl}
 }

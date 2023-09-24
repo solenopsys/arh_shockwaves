@@ -68,7 +68,7 @@ func makePlan(pattern string) []jobs.PrintableJob {
 
 		if !moduleSubDirExists {
 			var loadJob jobs.PrintableJob
-			loadJob = jobs_fetch.NewCodeLoad(val.Cid, packageName, moduleSubDir)
+			loadJob = jobs_fetch.NewCodeLoad(val.Cid, packageName, moduleSubDir, val.Src)
 			preJobs := processingJobs(*confManager, configs.PreProcessor, subDir, processorsMapping)
 			postJobs := processingJobs(*confManager, configs.PostProcessor, subDir, processorsMapping)
 			codeJobs = append(codeJobs, preJobs...)

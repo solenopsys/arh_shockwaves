@@ -28,12 +28,12 @@ func (t *ModuleSourceLoader) RandomServer() string {
 	return t.servers[randomIndex]
 }
 
-func (t *ModuleSourceLoader) Load(cid string, path string) error {
+func (t *ModuleSourceLoader) Load(cid string, path string, originalRemote string) error {
 	url := "https://" + t.RandomServer() + "/ipns/" + cid
 
 	wg := sync.WaitGroup{} // todo may be it not needed now
 	wg.Add(1)
-	err := wrappers.CloneGitRepository(url, path, false, false)
+	err := wrappers.CloneGitRepository(url, path, false, false, originalRemote)
 
 	defer wg.Done()
 	if err != nil {

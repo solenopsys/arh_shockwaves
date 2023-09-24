@@ -202,6 +202,7 @@ func (p *Pinning) UpdateLabels(conf *Configuration) (string, error) {
 type PackInfo struct {
 	Cid string
 	To  string
+	Src string
 }
 
 func (p *Pinning) FindOne(packageName string) (*PackInfo, error) {
@@ -237,7 +238,7 @@ func (p *Pinning) FindRepo(repoName string) (*map[string]PackInfo, error) {
 		info := PackInfo{}
 		info.Cid = ipnsCid
 		info.To = mp["clone.to"]
-
+		info.Src = mp["source.url"]
 		mapping[mp["code.source"]] = info
 
 	}
