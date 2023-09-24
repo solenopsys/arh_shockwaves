@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 	"xs/pkg/tools"
-	"xs/pkg/wrappers"
+	"xs/pkg/wrappers/git"
 )
 
 type ModuleSourceLoader struct {
@@ -33,7 +33,7 @@ func (t *ModuleSourceLoader) Load(cid string, path string, originalRemote string
 
 	wg := sync.WaitGroup{} // todo may be it not needed now
 	wg.Add(1)
-	err := wrappers.CloneGitRepository(url, path, false, false, originalRemote)
+	err := git.CloneGitRepository(url, path, false, false, originalRemote)
 
 	defer wg.Done()
 	if err != nil {

@@ -7,6 +7,7 @@ import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
 	"xs/pkg/wrappers"
+	"xs/pkg/wrappers/git"
 )
 
 type PublishGitRepo struct {
@@ -45,7 +46,7 @@ func (t *PublishGitRepo) makeTempDir() error {
 }
 
 func (t *PublishGitRepo) cloneRepository() error {
-	err := wrappers.CloneGitRepository(t.repoUrl, t.gitTempDir, false, false, "")
+	err := git.CloneGitRepository(t.repoUrl, t.gitTempDir, false, false, "")
 	t.gitDir = t.gitTempDir + "/" + ".git"
 	return err
 }

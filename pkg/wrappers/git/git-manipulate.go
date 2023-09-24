@@ -1,9 +1,8 @@
-package wrappers
+package git
 
 import (
 	"path/filepath"
 	"xs/pkg/io"
-	"xs/pkg/wrappers/git"
 )
 
 const GIT_DIR = ".git"
@@ -11,9 +10,9 @@ const GIT_DIR = ".git"
 func CloneGitRepository(url string, path string, asModule bool, updateIfExists bool, replaceRemote string) error {
 	gitDir := path + "/" + GIT_DIR
 
-	var gt git.GitInterface
+	var gt GitInterface
 
-	gt = &git.GoGit{
+	gt = &GoGit{
 		BasePath: path,
 		Remote:   url,
 	}

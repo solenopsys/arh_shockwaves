@@ -4,7 +4,6 @@ import (
 	"os"
 	"os/exec"
 	"xs/pkg/io"
-	"xs/pkg/wrappers"
 )
 
 type NativeGit struct {
@@ -18,7 +17,7 @@ func (g *NativeGit) RunGitCommand(args ...string) error {
 }
 
 func (g *NativeGit) IsRepoExists() bool {
-	gitDir := g.BasePath + "/" + wrappers.GIT_DIR
+	gitDir := g.BasePath + "/" + GIT_DIR
 
 	_, err := os.Stat(gitDir)
 
