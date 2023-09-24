@@ -46,8 +46,8 @@ func (t *PublishGitRepo) makeTempDir() error {
 }
 
 func (t *PublishGitRepo) cloneRepository() error {
-	err := git.CloneGitRepository(t.repoUrl, t.gitTempDir, false, false, "")
-	t.gitDir = t.gitTempDir + "/" + ".git"
+	err := git.CloneGitRepository(t.repoUrl, t.gitTempDir, true, false, false, "")
+	t.gitDir = t.gitTempDir //+ "/" + ".git"
 	return err
 }
 

@@ -32,7 +32,7 @@ func (g *NativeGit) IsRepoExists() bool {
 	return false
 }
 
-func (g *NativeGit) GitClone() error {
+func (g *NativeGit) GitClone(bare bool) error {
 	return g.RunGitCommand("clone", g.Remote, g.BasePath)
 }
 

@@ -7,7 +7,7 @@ import (
 
 const GIT_DIR = ".git"
 
-func CloneGitRepository(url string, path string, asModule bool, updateIfExists bool, replaceRemote string) error {
+func CloneGitRepository(url string, path string, bare bool, asModule bool, updateIfExists bool, replaceRemote string) error {
 	gitDir := path + "/" + GIT_DIR
 
 	var gt GitInterface
@@ -23,8 +23,12 @@ func CloneGitRepository(url string, path string, asModule bool, updateIfExists b
 		if asModule {
 			err = gt.GitAddSubmodule()
 		} else {
-
-			err = gt.GitClone()
+			var err error
+			if bare { // todo need refactoring
+				err = gt.GitClone(bare)
+			} else {
+				err = gt.CloneFromIpfs()
+			}
 			if err != nil {
 				io.Fatal("Git clone error: " + err.Error())
 			}
