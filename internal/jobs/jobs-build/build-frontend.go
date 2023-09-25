@@ -16,8 +16,12 @@ func NewBuildFrontend(params map[string]string, printConsole bool) jobs.Printabl
 	return &BuildFrontend{printConsole, params}
 }
 
-func (b *BuildFrontend) Description() string {
-	return "Build Front " + b.params["path"]
+func (b *BuildFrontend) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "Build Front " + b.params["path"],
+		Short:       "Reddy",
+	}
 }
 
 func (n *BuildFrontend) Execute() *jobs.Result {

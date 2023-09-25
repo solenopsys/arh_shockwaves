@@ -43,7 +43,7 @@ func Fatal(err ...interface{}) {
 }
 
 func Println(message ...interface{}) {
-	fmt.Println(message)
+	fmt.Println(message...)
 }
 
 func Printf(message string, args ...interface{}) {
@@ -51,12 +51,12 @@ func Printf(message string, args ...interface{}) {
 }
 
 func Print(message ...interface{}) {
-	fmt.Print(message)
+	fmt.Print(message...)
 }
 
 func PrintColor(message string, st PrintStyle) {
 
 	c := GetStyle(st)
 	c.Print(" " + message + " ")
-	fmt.Println("")
+	fmt.Print("\t")
 }

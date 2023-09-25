@@ -1,6 +1,8 @@
 package jobs
 
-import "xs/pkg/io"
+import (
+	"xs/pkg/io"
+)
 
 type Result struct {
 	Success     bool
@@ -12,8 +14,19 @@ type Job interface {
 	Execute() *Result
 }
 
+type JobDescription struct {
+	Color       io.PrintStyle
+	Description string
+	Short       string
+}
+
+func PrintJob(message JobDescription) {
+	io.PrintColor(message.Short, message.Color)
+	io.Println(message.Description)
+}
+
 type JobInfo interface {
-	Description() string
+	Description() JobDescription
 }
 
 type PrintableJob interface {

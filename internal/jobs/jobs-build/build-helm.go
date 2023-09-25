@@ -31,8 +31,12 @@ func (b *BuildHelm) Execute() *jobs.Result {
 	}
 }
 
-func (b *BuildHelm) Description() string {
-	return "Build helm " + b.params["path"]
+func (b *BuildHelm) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "Build helm " + b.params["path"],
+		Short:       "Reddy",
+	}
 }
 
 func NewBuildHelm(params map[string]string, printConsole bool) jobs.PrintableJob {

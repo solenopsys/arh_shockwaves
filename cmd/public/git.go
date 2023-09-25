@@ -27,9 +27,8 @@ var cmdGit = &cobra.Command{
 		groupDir := git.Paths[group]
 
 		nickname := configs.GetAuthManager().Nickname
-		cloneTo := groupDir + "/" + nickname + "/" + gitRepoName
 
-		job := jobs_publish.NewPublishGitRepo(conf.Hosts.IpfsHost, conf.Hosts.PinningHost, nickname, group, gitRepoName, cloneTo, gitRepoUrl)
+		job := jobs_publish.NewPublishGitRepo(conf.Hosts.IpfsHost, conf.Hosts.PinningHost, nickname, group, gitRepoName, groupDir, gitRepoUrl)
 		result := job.Execute()
 		if result.Error != nil {
 			io.Fatal(result.Error)

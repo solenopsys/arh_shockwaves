@@ -4,6 +4,7 @@ import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
 	"xs/pkg/controllers"
+	"xs/pkg/io"
 )
 
 type CodeLoad struct {
@@ -38,12 +39,17 @@ func (t *CodeLoad) Execute() *jobs.Result {
 	return &jobs.Result{
 		Success:     true,
 		Error:       nil,
-		Description: "Code loaded" + t.packageName + " to " + t.targetDir,
+		Description: "Code loaded " + t.packageName + " -> " + t.targetDir,
 	}
 }
 
-func (t *CodeLoad) Description() string {
-	return t.packageName + " -> " + t.targetDir
+func (t *CodeLoad) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: t.packageName + " -> " + t.targetDir,
+		Short:       "Reddy",
+	}
+
 }
 
 func NewCodeLoad(cid string, packageName string, targetDir string, sourceUrl string) *CodeLoad {

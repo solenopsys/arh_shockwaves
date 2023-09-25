@@ -6,6 +6,7 @@ import (
 	"strings"
 	"xs/internal/configs"
 	"xs/internal/jobs"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 	"xs/pkg/wrappers/git"
 )
@@ -176,6 +177,10 @@ func (t *PublishGitRepo) Execute() *jobs.Result {
 	}
 }
 
-func (t *PublishGitRepo) Description() string {
-	return "Template load " + t.repoName
+func (t *PublishGitRepo) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "Publish git repo " + t.repoName,
+		Short:       "Reddy",
+	}
 }

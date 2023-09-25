@@ -55,7 +55,7 @@ var Cmd = &cobra.Command{
 			jobsPlan := compilers.NewCompilePlanning().GetPlan(builderName, libs)
 			io.Println("SECTION:", builderName)
 			for _, job := range jobsPlan {
-				println(job.Description())
+				jobs.PrintJob(job.Description())
 			}
 		}
 

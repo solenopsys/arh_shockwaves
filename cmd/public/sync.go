@@ -34,7 +34,7 @@ var cmdSyncGit = &cobra.Command{
 		jobsPlan := pg.ManeJobsPlan(nickname)
 
 		for _, job := range jobsPlan {
-			io.Println((job).Description())
+			jobs.PrintJob((job).Description())
 		}
 
 		confirm := tools.ConfirmDialog("Load packets?")

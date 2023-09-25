@@ -9,7 +9,7 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"path/filepath"
+	"strings"
 ) // with go modules enabled (GO111MODULE=on or outside GOPATH)
 
 type GoGit struct {
@@ -61,6 +61,20 @@ func checkoutFromBareRepository(repoPath, targetRefName string) error {
 	return nil
 }
 
+func replaceRootDir(originalStr string) string {
+	parts := strings.Split(originalStr, "/")
+
+	for i, _ := range parts {
+		if i == 0 {
+			parts[i] = ".git"
+			break // Replace only the first occurrence
+		}
+	}
+
+	// Join the parts back into a string
+	return strings.Join(parts, "/")
+}
+
 func downloadAndExtractTar(url, toDir string) error {
 	// Create the destination directory if it doesn't exist.
 	if err := os.MkdirAll(toDir, os.ModePerm); err != nil {
@@ -95,7 +109,7 @@ func downloadAndExtractTar(url, toDir string) error {
 		}
 
 		// Ensure the extracted file or directory is within the destination directory.
-		targetPath := filepath.Join(toDir, header.Name)
+		targetPath := toDir + "/" + replaceRootDir(header.Name)
 
 		// Create parent directories as needed.
 		if header.FileInfo().IsDir() {

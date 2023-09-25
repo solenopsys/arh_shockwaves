@@ -52,8 +52,12 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	}
 }
 
-func (b *BuildContainer) Description() string {
-	return "Build container " + b.params["path"]
+func (b *BuildContainer) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "Build container " + b.params["path"],
+		Short:       "Reddy",
+	}
 }
 
 func NewBuildContainer(params map[string]string, printConsole bool) jobs.PrintableJob {

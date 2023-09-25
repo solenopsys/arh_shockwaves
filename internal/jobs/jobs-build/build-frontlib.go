@@ -40,8 +40,12 @@ func (b *BuildFrontLib) saveToCache(dest string, path string, excludeDirs []stri
 
 }
 
-func (b *BuildFrontLib) Description() string {
-	return "Build FrontLib " + b.params["path"]
+func (b *BuildFrontLib) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "Build FrontLib " + b.params["path"],
+		Short:       "Reddy",
+	}
 }
 
 func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring

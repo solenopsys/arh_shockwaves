@@ -3,6 +3,7 @@ package jobs_fetch
 import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
+	"xs/pkg/io"
 )
 
 type TsConfigModuleInject struct {
@@ -20,12 +21,17 @@ func (t *TsConfigModuleInject) Execute() *jobs.Result {
 	return &jobs.Result{
 		Success:     true,
 		Error:       nil,
-		Description: "Code loaded" + t.packageName + " to " + t.targetDir,
+		Description: "Link injected in tsconfig " + t.packageName + " -> " + t.targetDir,
 	}
 }
 
-func (t *TsConfigModuleInject) Description() string {
-	return "inject to tsconfig link for:  " + t.packageName
+func (t *TsConfigModuleInject) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "inject to tsconfig link for:  " + t.packageName,
+		Short:       "Reddy",
+	}
+
 }
 
 func NewTsConfigModuleInject(packageName string, targetDir string) jobs.PrintableJob {

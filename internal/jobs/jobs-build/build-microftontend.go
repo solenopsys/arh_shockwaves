@@ -33,8 +33,12 @@ func (b *MicroFronted) Execute() *jobs.Result {
 	return nil
 }
 
-func (b *MicroFronted) Description() string {
-	return "Build helm " + b.params["lib"]
+func (b *MicroFronted) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "Build helm " + b.params["lib"],
+		Short:       "Reddy",
+	}
 }
 
 func NewMicroFronted(params map[string]string, printConsole bool) jobs.PrintableJob {

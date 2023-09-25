@@ -46,8 +46,6 @@ func CloneGitRepository(url string, path string, bare bool, asModule bool, updat
 
 		if err != nil {
 			io.Fatal("Git error: " + err.Error())
-		} else {
-			io.Println("Cloned repository: " + url)
 		}
 
 		return err

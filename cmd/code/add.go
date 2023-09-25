@@ -26,7 +26,7 @@ var cmdAdd = &cobra.Command{
 		jobsPlan := makePlan(pattern)
 
 		for _, job := range jobsPlan {
-			io.Println(job.Description())
+			jobs.PrintJob(job.Description())
 		}
 
 		confirm := tools.ConfirmDialog("Load packets?")
@@ -75,7 +75,7 @@ func makePlan(pattern string) []jobs.PrintableJob {
 			codeJobs = append(codeJobs, loadJob)
 			codeJobs = append(codeJobs, postJobs...)
 		} else {
-			io.Println("Already loaded ", moduleSubDir)
+			jobs.PrintJob(jobs.JobDescription{Short: "Skip", Description: "Already loaded " + moduleSubDir, Color: io.Green})
 		}
 	}
 

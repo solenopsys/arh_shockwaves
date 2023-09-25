@@ -3,6 +3,7 @@ package jobs_fetch
 import (
 	"xs/internal/jobs"
 	"xs/pkg/controllers"
+	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -35,8 +36,12 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 	}
 }
 
-func (t *TemplateLoad) Description() string {
-	return "Template load " + t.packageName + " to " + t.targetDir
+func (t *TemplateLoad) Description() jobs.JobDescription {
+	return jobs.JobDescription{
+		Color:       io.Blue,
+		Description: "Template load " + t.packageName + " to " + t.targetDir,
+		Short:       "Reddy",
+	}
 }
 
 func NewTemplateLoad(packageName string, targetDir string) *TemplateLoad {
