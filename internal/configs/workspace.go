@@ -95,6 +95,17 @@ func (m *WorkspaceManager) AddModule(name string, dir string) {
 
 }
 
+func (m *WorkspaceManager) RemoveModule(name string) {
+	for _, modules := range m.workspace.Code {
+		for packageName, _ := range modules {
+			if packageName == name {
+				delete(modules, packageName)
+			}
+		}
+	}
+	m.Save()
+}
+
 var wsInstance *WorkspaceManager
 var wsOnce sync.Once
 

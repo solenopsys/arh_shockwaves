@@ -12,7 +12,7 @@ import (
 )
 
 var cmdAdd = &cobra.Command{
-	Use:   "add",
+	Use:   "add [pattern]",
 	Short: "Tags section monorepo",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
@@ -23,7 +23,7 @@ var cmdAdd = &cobra.Command{
 			io.Fatal("Workspace root dir not found")
 		}
 
-		jobsPlan := makePlan(pattern)
+		jobsPlan := makeAddPlan(pattern)
 
 		for _, job := range jobsPlan {
 			jobs.PrintJob(job.Description())
@@ -42,7 +42,7 @@ var cmdAdd = &cobra.Command{
 	},
 }
 
-func makePlan(pattern string) []jobs.PrintableJob {
+func makeAddPlan(pattern string) []jobs.PrintableJob {
 	confManager := configs.GetInstanceConfManager()
 
 	templatesJobs := make(map[string]*jobs.PrintableJob)
