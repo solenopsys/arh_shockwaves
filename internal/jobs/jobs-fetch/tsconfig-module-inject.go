@@ -12,11 +12,10 @@ type TsConfigModuleInject struct {
 }
 
 func (t *TsConfigModuleInject) Execute() *jobs.Result {
-
-	packages := map[string]string{
-		t.packageName: t.targetDir,
-	}
-	configs.InjectPackagesLinksTsconfigJson(packages, "."+configs.GetInstanceConfManager().Conf.Files.TsConfig)
+	injector := configs.NewTsInjector()
+	injector.Load()
+	injector.AddPackage(t.packageName, t.targetDir)
+	injector.Save()
 
 	return &jobs.Result{
 		Success:     true,

@@ -1,7 +1,7 @@
 format: xs-configuration-v2
 files:
   workspace: "/workspace.yaml"
-  tsconfig: "/configurations/typescript/base.json"
+  tsconfig: "/frontends/configurations/typescript/base.json"
 hosts:
   ipfsNode: "127.0.0.1:30501"
   ipfsClusterNode: "127.0.0.1:30501"
@@ -61,3 +61,12 @@ jobs:
           command:
             - code
             - add
+    ts_remover:
+      description: Remove source code location from tsconfig.json file
+      triggers:
+        - type: post
+          sections:
+            - frontends
+          command:
+            - code
+            - remove

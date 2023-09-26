@@ -6,37 +6,69 @@ import (
 	"xs/pkg/io"
 )
 
-func InjectPackagesLinksTsconfigJson(packages map[string]string, packageJsonFileName string) {
-	existingJSON, err := os.ReadFile(packageJsonFileName)
-	if err != nil {
-		io.Panic(err)
-	}
-	var confData map[string]any
-	err = json.Unmarshal([]byte(existingJSON), &confData)
+type TsInjector struct {
+	packageFileName string
+	confData        map[string]any
+}
+
+func (i *TsInjector) Load() {
+	existingJSON, err := os.ReadFile(i.packageFileName)
 	if err != nil {
 		io.Panic(err)
 	}
 
-	compillerOptions := confData["compilerOptions"].(map[string]any)
-	var modulesConf map[string]interface{} = compillerOptions["paths"].(map[string]interface{})
+	err = json.Unmarshal([]byte(existingJSON), &i.confData)
+	if err != nil {
+		io.Panic(err)
+	}
+}
+
+func (i *TsInjector) Save() {
+	newJSON, err := json.MarshalIndent(i.confData, "", "  ")
+	if err != nil {
+		io.Panic(err)
+	}
+
+	os.WriteFile(i.packageFileName, newJSON, 0644)
+}
+
+func NewTsInjector() *TsInjector {
+	return &TsInjector{
+		packageFileName: "." + GetInstanceConfManager().Conf.Files.TsConfig,
+		confData:        make(map[string]any),
+	}
+}
+
+func (i *TsInjector) loadPaths() map[string]any {
+	var modulesConf map[string]interface{} = i.confData["compilerOptions"].(map[string]any)["paths"].(map[string]interface{})
 	if modulesConf == nil {
 		modulesConf = make(map[string]interface{})
 	}
+	return modulesConf
+}
 
+func (i *TsInjector) savePaths(paths map[string]any) {
+	i.confData["compilerOptions"].(map[string]any)["paths"] = paths
+}
+
+func (i *TsInjector) InjectPackagesLinksTsconfigJson(packages map[string]string) {
 	for modName, path := range packages {
-		tsFile := path + "/src/index.ts"
-
-		npm := modName
-		io.Println("Inject to config:", npm, tsFile)
-		modulesConf[npm] = []string{tsFile}
+		i.AddPackage(modName, path)
 	}
+}
 
-	compillerOptions["paths"] = modulesConf
+func (i *TsInjector) AddPackage(npmName string, directory string) {
+	modulesConf := i.loadPaths()
+	tsFile := directory + "/src/index.ts"
+	modulesConf[npmName] = []string{tsFile}
 
-	newJSON, err := json.MarshalIndent(confData, "", "  ")
-	if err != nil {
-		io.Panic(err)
-	}
+	i.savePaths(modulesConf)
+}
 
-	os.WriteFile(packageJsonFileName, newJSON, 0644)
+func (i *TsInjector) RemovePackage(name string) {
+	modulesConf := i.loadPaths()
+
+	modulesConf[name] = nil
+
+	i.savePaths(modulesConf)
 }

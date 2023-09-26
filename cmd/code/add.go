@@ -43,7 +43,7 @@ var cmdAdd = &cobra.Command{
 }
 
 func makeAddPlan(pattern string) []jobs.PrintableJob {
-	confManager := configs.GetInstanceConfManager()
+	processorsManager := jobs.NewProcessors([]string{"code", "add"})
 
 	templatesJobs := make(map[string]*jobs.PrintableJob)
 	codeJobs := make([]jobs.PrintableJob, 0)
@@ -61,16 +61,14 @@ func makeAddPlan(pattern string) []jobs.PrintableJob {
 		subDir := strings.Split(directory, "/")[0]
 		templateJob := checkTemplateExists(subDir)
 
-		processorsMapping := make(map[string]jobs.PrintableJob) // todo export to global constant
-		processorsMapping["ts_injector"] = jobs_fetch.NewTsConfigModuleInject(packageName, moduleSubDir)
-
 		templatesJobs[subDir] = &templateJob
 
 		if !moduleSubDirExists {
 			var loadJob jobs.PrintableJob
 			loadJob = jobs_fetch.NewCodeLoad(val.Cid, packageName, moduleSubDir, val.Src)
-			preJobs := processingJobs(*confManager, configs.PreProcessor, subDir, processorsMapping)
-			postJobs := processingJobs(*confManager, configs.PostProcessor, subDir, processorsMapping)
+
+			preJobs := processorsManager.GetPreProcessors(subDir, packageName, moduleSubDir)
+			postJobs := processorsManager.GetPostProcessors(subDir, packageName, moduleSubDir)
 			codeJobs = append(codeJobs, preJobs...)
 			codeJobs = append(codeJobs, loadJob)
 			codeJobs = append(codeJobs, postJobs...)
@@ -97,21 +95,4 @@ func checkTemplateExists(subDir string) jobs.PrintableJob {
 	} else {
 		return nil
 	}
-}
-
-func processingJobs(
-	confManager configs.ConfigurationManager,
-	processorType configs.ProcessorType,
-	subDir string,
-	processorsMapping map[string]jobs.PrintableJob) []jobs.PrintableJob {
-
-	processorsJobs := make([]jobs.PrintableJob, 0)
-
-	processorsNames := confManager.GetProcessors(subDir, processorType, []string{"code", "add"})
-
-	for _, processorName := range processorsNames {
-		job := processorsMapping[processorName]
-		processorsJobs = append(processorsJobs, job)
-	}
-	return processorsJobs
 }

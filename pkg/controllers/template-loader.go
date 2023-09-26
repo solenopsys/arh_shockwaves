@@ -40,5 +40,9 @@ func (t *ModuleSourceLoader) Load(cid string, path string, originalRemote string
 		return err
 	}
 	gitDir := path + "/.git"
-	return tools.DeleteDir(gitDir)
+	if originalRemote == "" {
+		return tools.DeleteDir(gitDir)
+	} else {
+		return nil
+	}
 }
