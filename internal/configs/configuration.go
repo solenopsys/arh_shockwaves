@@ -121,13 +121,15 @@ func LoadConfigFile(fileName string) (*Configuration, error) {
 var confInstance *ConfigurationManager
 var confOnce sync.Once
 
+const XS_CONFIGURATION_FILE = "xs-configuration.yaml"
+
 func GetInstanceConfManager() *ConfigurationManager {
 	confOnce.Do(func() {
 		programDir, err := GetProgramDir()
 		if err != nil {
 			io.Panic(err)
 		}
-		file, err := LoadConfigFile(programDir + "/xs.config.yaml")
+		file, err := LoadConfigFile(programDir + "/" + XS_CONFIGURATION_FILE)
 		if err != nil {
 			io.Panic(err)
 		}
