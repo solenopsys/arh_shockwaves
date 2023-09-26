@@ -1,4 +1,4 @@
-package public
+package publish
 
 import (
 	"github.com/spf13/cobra"
@@ -7,18 +7,18 @@ import (
 	"xs/pkg/wrappers"
 )
 
-var cmdFile = &cobra.Command{
-	Use:   "file [path] ",
-	Short: "Public file in ipfs",
+var cmdDir = &cobra.Command{
+	Use:   "dir [path]",
+	Short: "Public dir in ipfs",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		file := args[0]
+		dir := args[0]
 
-		ipfs := false
+		ipfs := true
 		hosts := configs.GetInstanceConfManager().Conf.Hosts
 
 		if ipfs {
-			cid, err := wrappers.UploadFileToIpfsNode(hosts.IpfsHost, file)
+			cid, err := wrappers.UploadDirToIpfsNode(hosts.IpfsHost, dir)
 
 			if err != nil {
 				io.Println(err)
@@ -27,17 +27,13 @@ var cmdFile = &cobra.Command{
 			}
 		} else {
 			d := make([]string, 1)
-			d[0] = file
-			outChain, err := wrappers.UploadFileToIpfsCluster(hosts.IpfsClusterHost, d)
+			d[0] = dir
+			cid, err := wrappers.UploadFileToIpfsCluster(hosts.IpfsClusterHost, d)
 
 			if err != nil {
 				io.Println(err)
 			} else {
-				//await chain
-				io.Println("await chain")
-				for out := range outChain {
-					io.Println(out)
-				}
+				io.Println("File cid: ", cid)
 			}
 		}
 

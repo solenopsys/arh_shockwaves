@@ -1,6 +1,6 @@
 format: xs-configuration-v2
 files:
-  workspace: "/workspace.yaml"
+  workspace: "/xs-workspace.yaml"
   tsconfig: "/frontends/configurations/typescript/base.json"
 hosts:
   ipfsNode: "127.0.0.1:30501"

@@ -1,4 +1,4 @@
-package public
+package publish
 
 import (
 	"github.com/spf13/cobra"

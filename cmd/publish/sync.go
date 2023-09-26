@@ -1,8 +1,8 @@
-package public
+package publish
 
 import (
-	"encoding/json"
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v3"
 	"os"
 	"xs/internal/configs"
 	"xs/internal/jobs"
@@ -51,8 +51,8 @@ var cmdSyncGit = &cobra.Command{
 }
 
 type Configuration struct {
-	Groups map[string][]string `json:"groups"`
-	Remote string              `json:"remote"`
+	Groups map[string][]string `yaml:"groups"`
+	Remote string              `yaml:"remote"`
 }
 
 type PublicGit struct {
@@ -69,7 +69,7 @@ func (pg *PublicGit) LoadConfig(fileName string) error {
 	}
 	defer configFile.Close()
 
-	err = json.NewDecoder(configFile).Decode(&pg.Config)
+	err = yaml.NewDecoder(configFile).Decode(&pg.Config)
 	if err != nil {
 		io.Println("Error decoding config:", err)
 		return err

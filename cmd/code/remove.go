@@ -40,7 +40,7 @@ var cmdState = &cobra.Command{
 }
 
 func makeRemovePlan(pattern string) []jobs.PrintableJob {
-	processorsManager := jobs.NewProcessors([]string{"code", "remove"})
+	processorsManager := CreateProcessors([]string{"code", "remove"})
 	codeJobs := make([]jobs.PrintableJob, 0)
 	confManager, err := configs.GetInstanceWsManager()
 	if err != nil {

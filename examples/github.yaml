@@ -1,0 +1,124 @@
+remote: https://github.com/solenopsys/
+groups:
+  backlibs:
+    - bl-zmq-connector
+    - bl-kubernetes-tools
+  tools:
+    - tl-xs
+    - tl-build-federation
+    - tl-vite-federation
+    - tl-federation-runtime
+    - tl-helm-booster
+  bootstraps:
+    - bs-auth
+    - bs-website
+    - bs-uimatrix
+    - bs-converged
+    - bs-datasheets
+    - bs-robotization
+  frontlibs:
+    - fl-storage
+    - fl-clusters
+    - fl-content
+    - fl-dgraph
+    - fl-helm
+    - fl-globals
+    - fl-crypto
+    - fl-hyperstreams
+    - fl-installer
+  templates:
+    - tp-tools
+    - tp-backends
+    - tp-workspace
+    - tp-frontends
+    - tp-embedded
+    - tp-contracts
+    - tp-engineering
+  uimatrix:
+    - ui-icons
+    - ui-publications
+    - ui-templates
+    - ui-forms
+    - ui-navigate
+    - ui-utils
+    - ui-modals
+    - ui-controls
+    - ui-3d
+    - ui-qr
+    - ui-lists
+    - ui-themes
+    - ui-charts
+    - ui-layouts
+  deployments:
+    - dp-pinning
+    - dp-ds-postgres
+    - dp-ipfs
+    - dp-solechain-spn
+    - dp-ipfs-revproxy
+    - dp-solechain
+    - dp-git
+    - dp-smtp-server
+    - dp-keys
+    - dp-installer
+    - dp-hs-router
+    - dp-ds-dgraph
+    - dp-fluentbit
+    - dp-hs-postgres
+    - dp-helm-lookup
+    - dp-ipfs-cluster
+    - dp-interactions
+    - dp-ipfs-registry
+    - dp-hs-clickhouse
+    - dp-ds-clickhouse
+    - dp-hs-kubernetes
+    - dp-ds-dgraph-http
+    - dp-helm-repository
+    - dp-protonmail-bridge
+    - dp-containers-registry
+    - dp-ci
+  microservices:
+    - ms-ci
+    - ms-git
+    - ms-keys
+    - ms-installer
+    - ms-fluentbit
+    - ms-hs-router
+    - ms-helm-lookup
+    - ms-hs-postgres
+    - ms-interactions
+    - ms-hs-clickhouse
+    - ms-hs-kubernetes
+    - ms-ipfs-revproxy
+    - ms-ds-dgraph-http
+    - ms-pinning
+    - ms-hs-http
+    - ms-solechain
+  microfrontends:
+    - mf-editor-code
+    - mf-content
+    - mf-editor-content
+    - mf-editor-electronic
+    - mf-git
+    - mf-rom
+    - mf-auth
+    - mf-time
+    - mf-video
+    - mf-website
+    - mf-quality
+    - mf-postgres
+    - mf-uimatrix
+    - mf-registry
+    - mf-inventory
+    - mf-converged
+    - mf-clickhouse
+    - mf-datasheets
+    - mf-kubernetes
+    - mf-layout
+    - mf-microfonds
+    - mf-dgraph
+    - mf-people
+    - mf-stages
+    - mf-diagram
+    - mf-generator
+    - mf-backups
+    - mf-files

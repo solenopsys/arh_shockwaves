@@ -11,7 +11,7 @@ import (
 	"xs/cmd/env"
 	"xs/cmd/net"
 	"xs/cmd/node"
-	"xs/cmd/public"
+	"xs/cmd/publish"
 	"xs/cmd/serve"
 	"xs/internal/configs"
 	"xs/pkg/io"
@@ -35,7 +35,7 @@ func initCommands(rootCmd *cobra.Command) {
 	rootCmd.AddCommand(node.Cmd)
 	rootCmd.AddCommand(cluster.Cmd)
 	rootCmd.AddCommand(chart.Cmd)
-	rootCmd.AddCommand(public.Cmd)
+	rootCmd.AddCommand(publish.Cmd)
 	rootCmd.AddCommand(net.Cmd)
 	rootCmd.AddCommand(env.Cmd)
 	rootCmd.AddCommand(auth.Cmd)

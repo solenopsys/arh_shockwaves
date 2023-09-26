@@ -43,7 +43,6 @@ var cmdAdd = &cobra.Command{
 }
 
 func makeAddPlan(pattern string) []jobs.PrintableJob {
-	processorsManager := jobs.NewProcessors([]string{"code", "add"})
 
 	templatesJobs := make(map[string]*jobs.PrintableJob)
 	codeJobs := make([]jobs.PrintableJob, 0)
@@ -67,6 +66,7 @@ func makeAddPlan(pattern string) []jobs.PrintableJob {
 			var loadJob jobs.PrintableJob
 			loadJob = jobs_fetch.NewCodeLoad(val.Cid, packageName, moduleSubDir, val.Src)
 
+			processorsManager := CreateProcessors([]string{"code", "add"})
 			preJobs := processorsManager.GetPreProcessors(subDir, packageName, moduleSubDir)
 			postJobs := processorsManager.GetPostProcessors(subDir, packageName, moduleSubDir)
 			codeJobs = append(codeJobs, preJobs...)
