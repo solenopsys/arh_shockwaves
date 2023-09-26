@@ -12,11 +12,16 @@ import (
 )
 
 var cmdSyncGit = &cobra.Command{
-	Use:   "sync [config] ",
-	Short: "Public file in ipfs",
+	Use:   "sync [config]",
+	Short: "Mass publish repos from git in ipfs",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		configName := args[0]
+		filter := ""
+		if len(args) > 1 {
+			filter = args[1]
+		}
+
 		nickname := configs.GetAuthManager().Nickname
 		conf := configs.GetInstanceConfManager().Conf
 		pg := &PublicGit{
@@ -31,7 +36,7 @@ var cmdSyncGit = &cobra.Command{
 			return
 		}
 
-		jobsPlan := pg.ManeJobsPlan(nickname)
+		jobsPlan := pg.ManeJobsPlan(nickname, filter)
 
 		for _, job := range jobsPlan {
 			jobs.PrintJob((job).Description())
@@ -77,11 +82,21 @@ func (pg *PublicGit) LoadConfig(fileName string) error {
 	return nil
 }
 
-func (pg *PublicGit) ManeJobsPlan(nickname string) []jobs.PrintableJob {
+func (pg *PublicGit) ManeJobsPlan(nickname string, filter string) []jobs.PrintableJob {
 	var jobsPlan = make([]jobs.PrintableJob, 0)
 	for group, repoNames := range pg.Config.Groups {
 		for _, repoName := range repoNames {
-			io.Println("Processing repo ", repoName)
+
+			if filter != "" {
+				matched, err := configs.PatternMatching(repoName, filter)
+				if err != nil {
+					io.Println("Error:", err)
+					continue
+				}
+				if !matched {
+					continue
+				}
+			}
 			cloneTo := configs.GetInstanceConfManager().Conf.Git.Paths[group]
 			repoFullPath := pg.Config.Remote + repoName
 			job := jobs_publish.NewPublishGitRepo(pg.IpfsHost, pg.PinningHost, nickname, group, repoName, cloneTo, repoFullPath)

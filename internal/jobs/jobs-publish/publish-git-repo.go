@@ -173,14 +173,14 @@ func (t *PublishGitRepo) Execute() *jobs.Result {
 	return &jobs.Result{
 		Success:     true,
 		Error:       nil,
-		Description: "PublishGitRepo executed",
+		Description: "Git repository published: " + t.repoName,
 	}
 }
 
 func (t *PublishGitRepo) Description() jobs.JobDescription {
 	return jobs.JobDescription{
 		Color:       io.Blue,
-		Description: "Publish git repo " + t.repoName,
+		Description: "Publish repository: " + t.repoUrl,
 		Short:       "Reddy",
 	}
 }

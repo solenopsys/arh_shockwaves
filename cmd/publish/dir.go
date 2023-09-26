@@ -9,7 +9,7 @@ import (
 
 var cmdDir = &cobra.Command{
 	Use:   "dir [path]",
-	Short: "Public dir in ipfs",
+	Short: "Publish dir in ipfs",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		dir := args[0]

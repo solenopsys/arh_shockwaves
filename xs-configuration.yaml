@@ -18,9 +18,9 @@ templates:
   creation: { }
 git:
   paths:
-    frontends: frontends/endpoints
-    frontlibs: frontends/packages
-    uimatrix: frontends/packages
+    bootstraps: frontends/bootstraps
+    frontlibs: frontends/libraries
+    uimatrix: frontends/libraries
     microfrontends: frontends/modules
     tools: tools
     templates: templates

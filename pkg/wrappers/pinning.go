@@ -46,17 +46,17 @@ func (p *Pinning) SmartPin(cid string, labels map[string]string, ipnsName string
 		if err != nil {
 			return err
 		}
-		io.Println("pin exists label updated", cid)
+		io.Debug("pin exists label updated", cid)
 	} else {
 		pin, err := p.SimplePin(cid, labels)
 		if err != nil {
 			return err
 		}
-		io.Println("pin", pin)
+		io.Debug("pin", pin)
 	}
 
 	ipnsCid, pinErr := p.SmartName(ipnsName, cid)
-	io.Println("ipnsCID", ipnsCid)
+	io.Debug("ipnsCID", ipnsCid)
 	return pinErr
 }
 
@@ -100,7 +100,7 @@ func (p *Pinning) execRequest(req *http.Request, resp interface{}) error {
 	if err != nil {
 		return err
 	}
-	io.Println(string(body))
+	io.Debug(string(body))
 	return json.Unmarshal(body, &resp)
 }
 

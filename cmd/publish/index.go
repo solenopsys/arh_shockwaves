@@ -6,7 +6,7 @@ import (
 
 var Cmd = &cobra.Command{
 	Use:   "publish [command]",
-	Short: "Publish content in ipfs",
+	Short: "Publish in ipfs",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 	},

@@ -9,7 +9,7 @@ import (
 
 var cmdName = &cobra.Command{
 	Use:   "name [name] [cid]",
-	Short: "Public file in ipfs",
+	Short: "Publish inpn name for cid",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		name := args[0]

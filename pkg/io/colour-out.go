@@ -46,6 +46,10 @@ func Println(message ...interface{}) {
 	fmt.Println(message...)
 }
 
+func Debug(message ...interface{}) {
+	// fmt.Println(message...)
+}
+
 func Printf(message string, args ...interface{}) {
 	fmt.Printf(message, args)
 }

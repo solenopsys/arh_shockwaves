@@ -3,7 +3,6 @@ package configs
 import (
 	"gopkg.in/yaml.v3"
 	"os"
-	"regexp"
 	"strings"
 	"sync"
 	"xs/pkg/io"
@@ -51,9 +50,7 @@ func (m *WorkspaceManager) FilterLibs(filter string) []*XsModule {
 	var filtered []*XsModule = []*XsModule{}
 	for _, modules := range m.workspace.Code {
 		for packageName, path := range modules {
-
-			pattern := strings.Replace(filter, "*", ".*", -1)
-			matched, err := regexp.MatchString("^"+pattern+"$", packageName)
+			matched, err := PatternMatching(packageName, filter)
 			if err != nil {
 				io.Println("Error:", err)
 				continue

@@ -10,7 +10,7 @@ import (
 
 var cmdGit = &cobra.Command{
 	Use:   "git [repo-url] ",
-	Short: "Public file in ipfs",
+	Short: "Publish single git repo in ipfs",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		gitRepoUrl := args[0]

@@ -9,7 +9,7 @@ import (
 
 var cmdFile = &cobra.Command{
 	Use:   "file [path] ",
-	Short: "Public file in ipfs",
+	Short: "Publish file in ipfs",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		file := args[0]
