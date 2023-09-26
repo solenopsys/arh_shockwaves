@@ -33,5 +33,5 @@ func (t *TsConfigModuleRemove) Description() jobs.JobDescription {
 }
 
 func NewTsConfigModuleRemove(packageName string, targetDir string) jobs.PrintableJob {
-	return &TsConfigModuleInject{packageName: packageName}
+	return &TsConfigModuleRemove{packageName: packageName}
 }

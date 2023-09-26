@@ -68,7 +68,7 @@ func (i *TsInjector) AddPackage(npmName string, directory string) {
 func (i *TsInjector) RemovePackage(name string) {
 	modulesConf := i.loadPaths()
 
-	modulesConf[name] = nil
+	delete(modulesConf, name)
 
 	i.savePaths(modulesConf)
 }

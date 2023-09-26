@@ -16,11 +16,11 @@ https://solenopsys.org
 
 ### Compile for Windows
 
-`GOOS=windows GOARCH=amd64 go build -o xs.exe main.go`
+`GOOS=windows GOARCH=amd64 go build -o xs.exe ./cmd`
 
 ### Compile for Linux
 
-`GOOS=linux GOARCH=amd64 go build -o xs main.go`
+`GOOS=linux GOARCH=amd64 go build -o xs ./cmd`
 
 ### Get source code for development
 

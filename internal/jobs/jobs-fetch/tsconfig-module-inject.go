@@ -27,7 +27,7 @@ func (t *TsConfigModuleInject) Execute() *jobs.Result {
 func (t *TsConfigModuleInject) Description() jobs.JobDescription {
 	return jobs.JobDescription{
 		Color:       io.Blue,
-		Description: "inject to tsconfig link for:  " + t.packageName,
+		Description: "Jnject to tsconfig link for:  " + t.packageName,
 		Short:       "Reddy",
 	}
 

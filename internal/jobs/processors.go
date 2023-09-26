@@ -15,7 +15,7 @@ func (p *Processors) GetPreProcessors(subDir string, packageName string, targetD
 }
 
 func (p *Processors) GetPostProcessors(subDir string, packageName string, targetDir string) []PrintableJob {
-	return p.processingJobs(configs.PreProcessor, subDir, packageName, targetDir)
+	return p.processingJobs(configs.PostProcessor, subDir, packageName, targetDir)
 }
 
 func (p *Processors) processingJobs(processorType configs.ProcessorType, subDir string, packageName string, targetDir string) []PrintableJob {
