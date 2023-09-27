@@ -272,7 +272,74 @@ func (g *GoGit) GitUpdate() error {
 
 // UnpackObjects unpacks Git objects from pack files.
 //func (g *GoGit) UnpackObjects() error {
-//	// Implement the UnpackObjects method as per your requirements.
-//	// You can use the go-git library to manipulate objects if needed.
+//	// Replace with the path to your Git repository
+//	repoPath := "/path/to/your/git/repo"
+//
+//	// Open the Git repository
+//	repo, err := git.PlainOpen(repoPath)
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	// Get the object storage to unpack objects
+//	objStorage, err := repo.Storer.ObjectStorage()
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	// Get a list of packfiles in the .git/objects/pack directory
+//	packfileDir := filepath.Join(repoPath, ".git", "objects", "pack")
+//	packfiles, err := filepath.Glob(filepath.Join(packfileDir, "*.pack"))
+//	if err != nil {
+//		log.Fatal(err)
+//	}
+//
+//	for _, packfilePath := range packfiles {
+//		fmt.Printf("Unpacking objects from: %s\n", packfilePath)
+//
+//		// Open the packfile
+//		packfile, err := os.Open(packfilePath)
+//		if err != nil {
+//			log.Fatal(err)
+//		}
+//		defer packfile.Close()
+//
+//		// Create a packfile reader
+//		reader, err := io.Reader()
+//
+//		// Iterate through the packfile and write objects to the object storage
+//		err = reader.ForEach(func(obj plumbing.EncodedObject) error {
+//			// Calculate the object hash
+//			objHash := obj.Hash()
+//
+//			// Create the object directory structure based on the hash
+//			objDir := filepath.Join(repoPath, ".git", "objects", objHash.String()[:2])
+//			err := os.MkdirAll(objDir, os.ModePerm)
+//			if err != nil {
+//				return err
+//			}
+//
+//			// Create the object file
+//			objPath := filepath.Join(objDir, objHash.String()[2:])
+//			objFile, err := os.Create(objPath)
+//			if err != nil {
+//				return err
+//			}
+//			defer objFile.Close()
+//
+//			// Encode and write the object to the object file
+//			_, err = obj.Encode(objFile)
+//			if err != nil {
+//				return err
+//			}
+//
+//			fmt.Printf("Unpacked object: %s\n", objHash)
+//			return nil
+//		})
+//
+//		if err != nil {
+//			log.Fatal(err)
+//		}
+//	}
 //	return nil
 //}
