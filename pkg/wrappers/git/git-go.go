@@ -2,6 +2,7 @@ package git
 
 import (
 	"archive/tar"
+	"errors"
 	"fmt"
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/config"
@@ -189,6 +190,34 @@ func (g *GoGit) SetRemote(name string, url string) error {
 		URLs: []string{url},
 	})
 	return err
+}
+
+func (g *GoGit) SetHead(branch string) error {
+	repo, err := g.OpenRepo()
+	if err != nil {
+		return err
+	}
+
+	// Get the hash of the latest commit on the specified branch
+	branchRefName := plumbing.ReferenceName("refs/heads/" + branch)
+	branchRef, err := repo.Reference(branchRefName, true)
+	if err != nil {
+		return err
+	}
+	if branchRef == nil {
+		return errors.New("branch does not exist")
+	}
+	//	latestCommitHash := branchRef.Hash()
+
+	//	io.Debug("latestCommitHash: " + latestCommitHash.String())
+
+	// Set HEAD to point to the latest commit
+	headRefName := plumbing.HEAD
+	headRef := plumbing.NewSymbolicReference(headRefName, branchRefName)
+	if err := repo.Storer.SetReference(headRef); err != nil {
+		return err
+	}
+	return nil
 }
 
 func (g *GoGit) GitAddSubmodule() error {

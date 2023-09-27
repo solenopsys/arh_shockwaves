@@ -35,6 +35,11 @@ type PrintableJob interface {
 }
 
 func PrintResult(result *Result) {
+	if result == nil {
+		io.PrintColor("ERROR", io.Red)
+		io.Println("Result is nil")
+		return
+	}
 	if result.Success {
 		io.PrintColor("OK", io.Green)
 		io.Println(result.Description)

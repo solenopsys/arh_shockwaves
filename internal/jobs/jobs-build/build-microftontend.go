@@ -1,9 +1,11 @@
 package jobs_build
 
 import (
+	"errors"
 	"strings"
 	"xs/internal/jobs"
 	"xs/pkg/io"
+	xstool "xs/pkg/tools"
 )
 
 type MicroFronted struct {
@@ -13,8 +15,11 @@ type MicroFronted struct {
 
 func (b *MicroFronted) Execute() *jobs.Result {
 	//	groupDir := "modules"
+	pt := xstool.PathTools{}
+	pt.MoveTo("frontends") //todo move to const
+	pt.SetBasePathPwd()
 
-	lib := b.params["lib"]
+	lib := strings.Replace(b.params["lib"], "./frontends", ".", 1) // todo remove replace
 	//	m := params["name"]
 
 	arg := "bmf " + lib
@@ -24,25 +29,34 @@ func (b *MicroFronted) Execute() *jobs.Result {
 	go stdPrinter.Processing()
 	result := stdPrinter.Start()
 
-	if result == 0 {
-		io.PrintColor("OK", io.Green)
-	} else {
-		io.PrintColor("ERROR", io.Red)
-	}
+	pt.MoveToBasePath()
 
-	return nil
+	if result == 0 {
+		return &jobs.Result{
+			Success:     true,
+			Error:       nil,
+			Description: "Build microfrontend executed",
+		}
+	} else {
+		return &jobs.Result{
+			Success:     false,
+			Error:       errors.New("Build microfrontend  failed"),
+			Description: "Build microfrontend  failed",
+		}
+	}
 }
 
 func (b *MicroFronted) Description() jobs.JobDescription {
 	return jobs.JobDescription{
 		Color:       io.Blue,
-		Description: "Build helm " + b.params["lib"],
+		Description: "Build microfrontend " + b.params["lib"],
 		Short:       "Reddy",
 	}
 }
 
 func NewMicroFronted(params map[string]string, printConsole bool) jobs.PrintableJob {
 	return &MicroFronted{
-		params: params,
+		PrintConsole: printConsole,
+		params:       params,
 	}
 }

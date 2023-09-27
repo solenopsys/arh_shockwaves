@@ -16,13 +16,14 @@ func NewCompilePlanning() *CompilePlanning {
 	c := &CompilePlanning{}
 	c.orders = map[string]sorters.Sorter{}
 	FONTLIB := "frontlib"
-	FRONT := "front"
-	MODULE := "module"
+	BOOTSTRAP := "bootstrap"
+	MICROFRONTEND := "microfrontend"
 	HELM := "helm"
 	CONTAINER := "container"
+	//BACKLIB := "backlib"
 	c.orders[FONTLIB] = sorters.NowFrontLibSorter()
-	c.orders[FRONT] = sorters.NewUniversalSorter(jobs_build.NewBuildFrontend, FRONT, extractors.Frontend{})
-	c.orders[MODULE] = sorters.NewUniversalSorter(jobs_build.NewMicroFronted, MODULE, extractors.Microfrontend{})
+	c.orders[BOOTSTRAP] = sorters.NewUniversalSorter(jobs_build.NewBuildFrontend, BOOTSTRAP, extractors.Frontend{})
+	c.orders[MICROFRONTEND] = sorters.NewUniversalSorter(jobs_build.NewMicroFronted, MICROFRONTEND, extractors.Microfrontend{})
 	c.orders[HELM] = sorters.NewUniversalSorter(jobs_build.NewBuildHelm, HELM, extractors.Backend{})
 	c.orders[CONTAINER] = sorters.NewUniversalSorter(jobs_build.NewBuildContainer, CONTAINER, extractors.Backend{})
 	return c

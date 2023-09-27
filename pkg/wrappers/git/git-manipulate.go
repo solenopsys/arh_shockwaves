@@ -41,6 +41,11 @@ func CloneGitRepository(url string, path string, bare bool, asModule bool, updat
 				if err != nil {
 					io.Fatal("Git origin add error: " + err.Error())
 				}
+
+				err = gt.SetHead("master")
+				if err != nil {
+					io.Fatal("Attach head error: " + err.Error())
+				}
 			}
 		}
 

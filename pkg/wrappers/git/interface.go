@@ -6,6 +6,7 @@ type GitInterface interface {
 	RemoveRemote(name string) error
 	SetRemote(name string, url string) error
 	GitAddSubmodule() error
+	SetHead(branch string) error
 	GitUpdateSubmodules() error
 	GitUpdate() error
 	CloneFromIpfs() error

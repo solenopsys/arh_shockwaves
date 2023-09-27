@@ -39,15 +39,15 @@ git:
     ms: microservices
 jobs:
   builders:
-    front:
+    bootstrap:
       - frontends/bootstraps
-    module:
+    microfrontend:
       - frontends/modules
     frontlib:
       - frontends/libraries
     helm:
       - backends/deployments
-    library:
+    backlib:
       - backends/libraries
     container:
       - backends/modules
