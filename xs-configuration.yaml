@@ -3,7 +3,7 @@ files:
   workspace: "/xs-workspace.yaml"
   tsconfig: "/frontends/configurations/typescript/base.json"
 hosts:
-  ipfsNode: "127.0.0.1:30501"
+  ipfsNode: "ipfs-api.solenopsys.org"
   ipfsClusterNode: "127.0.0.1:30501"
   pinningService: "http://pinning.solenopsys.org"
   helmRepository: "http://helm.solenopsys.org"

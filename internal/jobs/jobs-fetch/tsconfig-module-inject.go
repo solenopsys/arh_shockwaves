@@ -1,6 +1,7 @@
 package jobs_fetch
 
 import (
+	"strings"
 	"xs/internal/configs"
 	"xs/internal/jobs"
 	"xs/pkg/io"
@@ -34,5 +35,6 @@ func (t *TsConfigModuleInject) Description() jobs.JobDescription {
 }
 
 func NewTsConfigModuleInject(packageName string, targetDir string) jobs.PrintableJob {
-	return &TsConfigModuleInject{packageName: packageName, targetDir: targetDir}
+	subDir := strings.Replace(targetDir, "frontends/", "", 1) // todo move to const or change logic
+	return &TsConfigModuleInject{packageName: packageName, targetDir: subDir}
 }
