@@ -4,6 +4,7 @@ import (
 	"errors"
 	"strings"
 	"xs/internal/jobs"
+	"xs/internal/services"
 	"xs/pkg/io"
 	xstool "xs/pkg/tools"
 )
@@ -13,12 +14,7 @@ type MicroFronted struct {
 	params       map[string]string
 }
 
-func (b *MicroFronted) Execute() *jobs.Result {
-	//	groupDir := "modules"
-	pt := xstool.PathTools{}
-	pt.MoveTo("frontends") //todo move to const
-	pt.SetBasePathPwd()
-
+func (b *MicroFronted) build() int {
 	lib := strings.Replace(b.params["lib"], "./frontends", ".", 1) // todo remove replace
 	//	m := params["name"]
 
@@ -27,9 +23,20 @@ func (b *MicroFronted) Execute() *jobs.Result {
 
 	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "pnpm", Args: argsSplit, PrintToConsole: b.PrintConsole}
 	go stdPrinter.Processing()
-	result := stdPrinter.Start()
+	return stdPrinter.Start()
+}
 
-	pt.MoveToBasePath()
+func (b *MicroFronted) Execute() *jobs.Result {
+
+	pt := xstool.PathTools{}
+	pt.MoveTo("frontends") //todo move to const
+	pt.SetBasePathPwd()
+	defer pt.MoveToBasePath()
+
+	fl := services.FrontLib{}
+
+	fl.CacheCheck()
+	result := b.build()
 
 	if result == 0 {
 		return &jobs.Result{
@@ -44,6 +51,7 @@ func (b *MicroFronted) Execute() *jobs.Result {
 			Description: "Build microfrontend  failed",
 		}
 	}
+
 }
 
 func (b *MicroFronted) Description() jobs.JobDescription {

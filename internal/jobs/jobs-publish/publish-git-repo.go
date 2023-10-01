@@ -139,6 +139,7 @@ func (t *PublishGitRepo) pinCidInPinningService() error {
 
 	labels := make(map[string]string)
 
+	//todo  move to method of  pinning request
 	namePack := "@" + t.nickname + "/" + t.repoName
 	labels["source.url"] = t.repoUrl
 	labels["code.source"] = namePack

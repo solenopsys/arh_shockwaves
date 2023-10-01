@@ -6,9 +6,9 @@ import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
 	jobs_fetch "xs/internal/jobs/jobs-fetch"
+	"xs/internal/services"
 	"xs/pkg/io"
 	"xs/pkg/tools"
-	"xs/pkg/wrappers"
 )
 
 var cmdAdd = &cobra.Command{
@@ -46,7 +46,7 @@ func makeAddPlan(pattern string) []jobs.PrintableJob {
 
 	templatesJobs := make(map[string]*jobs.PrintableJob)
 	codeJobs := make([]jobs.PrintableJob, 0)
-	pinning := wrappers.NewPinning()
+	pinning := services.NewPinningRequests()
 	repos, err := pinning.FindRepo(pattern)
 	if err != nil {
 		io.Fatal(err)

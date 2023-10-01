@@ -3,7 +3,6 @@ package wrappers
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	iio "io"
 	"xs/internal/configs"
 	"xs/pkg/io"
@@ -199,50 +198,13 @@ func (p *Pinning) UpdateLabels(conf *Configuration) (string, error) {
 	return string(body), nil
 }
 
-type PackInfo struct {
-	Cid string
-	To  string
-	Src string
-}
-
-func (p *Pinning) FindOne(packageName string) (*PackInfo, error) {
-	repo, err := p.FindRepo(packageName)
-	if err != nil {
-		return nil, err
-	}
-	for _, v := range *repo {
-		return &v, nil
-	}
-	return nil, errors.New("not found")
-}
-
-func (p *Pinning) FindRepo(repoName string) (*map[string]PackInfo, error) {
-	namePattern := "code*"
-	url := p.Host + "/select/names?name=" + namePattern + "&value=" + repoName
+func (p *Pinning) FindName(namePattern string, valuePattern string) ([]byte, error) {
+	url := p.Host + "/select/names?name=" + namePattern + "&value=" + valuePattern
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
-	body, err := p.execRequestBytes(req)
-
-	var resp map[string]map[string]string
-
-	err = json.Unmarshal(body, &resp)
-
-	mapping := make(map[string]PackInfo)
-
-	if err != nil {
-		io.Fatal(err)
-	}
-	for ipnsCid, mp := range resp {
-		info := PackInfo{}
-		info.Cid = ipnsCid
-		info.To = mp["clone.to"]
-		info.Src = mp["source.url"]
-		mapping[mp["code.source"]] = info
-
-	}
-	return &mapping, nil
+	return p.execRequestBytes(req)
 }
 
 func NewPinning() *Pinning {

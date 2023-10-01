@@ -2,9 +2,9 @@ package jobs_fetch
 
 import (
 	"xs/internal/jobs"
+	"xs/internal/services"
 	"xs/pkg/controllers"
 	"xs/pkg/io"
-	"xs/pkg/wrappers"
 )
 
 type TemplateLoad struct {
@@ -13,7 +13,7 @@ type TemplateLoad struct {
 }
 
 func (t *TemplateLoad) Execute() *jobs.Result {
-	pinning := wrappers.NewPinning()
+	pinning := services.NewPinningRequests()
 	repo, err := pinning.FindOne(t.packageName)
 	if err != nil {
 		return &jobs.Result{
