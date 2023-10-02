@@ -70,7 +70,7 @@ func (b *FrontLib) tryUpLoadLib(fileName string) (string, error) {
 		io.Panic(err)
 	}
 	labels := make(map[string]string)
-	labels["front.static.library"] = fileName //todo const
+	labels["front.static.library"] = fileName
 	return b.pinningService.SmartPin(cid, labels)
 }
 

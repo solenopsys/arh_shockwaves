@@ -12,7 +12,7 @@ type IpfsRequests struct {
 	servers []string
 }
 
-func (i *IpfsRequests) NewIpfsRequests() *IpfsRequests {
+func NewIpfsRequests() *IpfsRequests {
 	hostsNames := []string{"alpha", "bravo", "charlie"}
 	servers := make([]string, len(hostsNames))
 	nodesHost := "node.solenopsys.org"
@@ -24,7 +24,8 @@ func (i *IpfsRequests) NewIpfsRequests() *IpfsRequests {
 }
 
 func (i *IpfsRequests) RandomServer() string {
-	randomIndex := rand.Intn(len(i.servers))
+	count := len(i.servers)
+	randomIndex := rand.Intn(count)
 	return i.servers[randomIndex]
 }
 
@@ -42,8 +43,4 @@ func (i *IpfsRequests) LoadCid(cid string) ([]byte, error) {
 
 	return ioutil.ReadAll(response.Body)
 
-}
-
-func NewIpfsRequests() *IpfsRequests {
-	return &IpfsRequests{}
 }

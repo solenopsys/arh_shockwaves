@@ -32,29 +32,6 @@ func (i *IpfsNode) UploadFileToIpfsNode(file string) (string, error) {
 	return cid, nil
 }
 
-//func (i *IpfsNode) UploadFileToIpfsCluster(files []string) (chan api.AddedOutput, error) {
-//	//split nodeAddr
-//	split := strings.Split(i.IpfsNodeAddr, ":")
-//
-//	config := client.Config{
-//		Host: split[0],
-//		Port: split[1],
-//	}
-//	clusterClient, err := client.NewDefaultClient(&config)
-//	if err != nil {
-//		lio.Panic(err)
-//	}
-//
-//	outChain := make(chan api.AddedOutput, 1)
-//	// Add the files to IPFS Cluster
-//	err = clusterClient.Add(context.Background(), files, api.DefaultAddParams(), outChain)
-//	if err != nil {
-//		lio.Panic(err)
-//	}
-//
-//	return outChain, nil
-//}
-
 func Hidden(enabled bool) ipfs.AddOpts {
 	return func(rb *ipfs.RequestBuilder) error {
 		rb.Option("hidden", enabled)
@@ -80,9 +57,6 @@ func addDirRecursiveIncludeHidden(s *ipfs.Shell, dir string, options ...ipfs.Add
 		option(rb)
 	}
 
-	// Here we cannot use .Exec because "add" streams responses back for each file
-	// within the directory, and we only care about the last one, which is the directory
-	// itself.
 	resp, err := rb.Body(reader).Send(context.Background())
 	if err != nil {
 		return "", err
