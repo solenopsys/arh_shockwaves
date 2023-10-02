@@ -21,7 +21,7 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 			Error:   err,
 		}
 	}
-	templateLoader := controllers.NewSourceLoader()
+	templateLoader := controllers.NewModuleSourceLoader()
 	err = templateLoader.Load(repo.Cid, t.targetDir, "")
 	if err != nil {
 		return &jobs.Result{

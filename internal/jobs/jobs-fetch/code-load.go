@@ -15,7 +15,7 @@ type CodeLoad struct {
 }
 
 func (t *CodeLoad) Execute() *jobs.Result {
-	source := controllers.NewSourceLoader()
+	source := controllers.NewModuleSourceLoader()
 	err := source.Load(t.cid, t.targetDir, t.sourceUrl)
 
 	if err != nil {
