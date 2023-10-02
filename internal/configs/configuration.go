@@ -40,7 +40,6 @@ type Jobs struct {
 
 type Hosts struct {
 	IpfsHost           string `yaml:"ipfsNode"`
-	IpfsClusterHost    string `yaml:"ipfsClusterNode"`
 	PinningHost        string `yaml:"pinningService"`
 	HelmRepositoryHost string `yaml:"helmRepository"`
 }

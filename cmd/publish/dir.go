@@ -14,30 +14,23 @@ var cmdDir = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		dir := args[0]
 
-		ipfs := true
 		hosts := configs.GetInstanceConfManager().Conf.Hosts
-
 		ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: hosts.IpfsHost}
-
-		if ipfs {
-			cid, err := ipfsNode.UploadDirToIpfsNode(dir)
-
-			if err != nil {
-				io.Println(err)
-			} else {
-				io.Println("File cid: ", cid)
-			}
+		cid, err := ipfsNode.UploadDirToIpfsNode(dir)
+		pinning := wrappers.NewPinning()
+		labels := make(map[string]string)
+		labels["type"] = "dir"
+		if err != nil {
+			io.Println(err)
 		} else {
-			d := make([]string, 1)
-			d[0] = dir
-			cid, err := ipfsNode.UploadFileToIpfsCluster(d)
-
-			if err != nil {
-				io.Println(err)
-			} else {
-				io.Println("File cid: ", cid)
-			}
+			io.Println("File cid: ", cid)
 		}
+		_, err = pinning.SmartPin(cid, labels)
 
+		if err != nil {
+			io.Println(err)
+		} else {
+			io.Println("Pined!")
+		}
 	},
 }

@@ -14,32 +14,25 @@ var cmdFile = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		file := args[0]
 
-		ipfs := false
 		hosts := configs.GetInstanceConfManager().Conf.Hosts
 
 		ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: hosts.IpfsHost}
-		if ipfs {
-			cid, err := ipfsNode.UploadFileToIpfsNode(file)
 
-			if err != nil {
-				io.Println(err)
-			} else {
-				io.Println("File cid: ", cid)
-			}
+		cid, err := ipfsNode.UploadFileToIpfsNode(file)
+		pinning := wrappers.NewPinning()
+		labels := make(map[string]string)
+		labels["type"] = "file"
+		if err != nil {
+			io.Println(err)
 		} else {
-			d := make([]string, 1)
-			d[0] = file
-			outChain, err := ipfsNode.UploadFileToIpfsCluster(d)
+			io.Println("File cid: ", cid)
+		}
+		_, err = pinning.SmartPin(cid, labels)
 
-			if err != nil {
-				io.Println(err)
-			} else {
-				//await chain
-				io.Println("await chain")
-				for out := range outChain {
-					io.Println(out)
-				}
-			}
+		if err != nil {
+			io.Println(err)
+		} else {
+			io.Println("Pined!")
 		}
 
 	},

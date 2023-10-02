@@ -5,15 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/ipfs-cluster/ipfs-cluster/api"
-	"github.com/ipfs-cluster/ipfs-cluster/api/rest/client"
 	files "github.com/ipfs/boxo/files"
 	ipfs "github.com/ipfs/go-ipfs-api"
 	"io"
 	"os"
 	"path/filepath"
-	"strings"
-	lio "xs/pkg/io"
 )
 
 type IpfsNode struct {
@@ -36,27 +32,28 @@ func (i *IpfsNode) UploadFileToIpfsNode(file string) (string, error) {
 	return cid, nil
 }
 
-func (i *IpfsNode) UploadFileToIpfsCluster(files []string) (chan api.AddedOutput, error) {
-	//split nodeAddr
-	split := strings.Split(i.IpfsNodeAddr, ":")
-	config := client.Config{
-		Host: split[0],
-		Port: split[1],
-	}
-	clusterClient, err := client.NewDefaultClient(&config)
-	if err != nil {
-		lio.Panic(err)
-	}
-
-	outChain := make(chan api.AddedOutput, 1)
-	// Add the files to IPFS Cluster
-	err = clusterClient.Add(context.Background(), files, api.DefaultAddParams(), outChain)
-	if err != nil {
-		lio.Panic(err)
-	}
-
-	return outChain, nil
-}
+//func (i *IpfsNode) UploadFileToIpfsCluster(files []string) (chan api.AddedOutput, error) {
+//	//split nodeAddr
+//	split := strings.Split(i.IpfsNodeAddr, ":")
+//
+//	config := client.Config{
+//		Host: split[0],
+//		Port: split[1],
+//	}
+//	clusterClient, err := client.NewDefaultClient(&config)
+//	if err != nil {
+//		lio.Panic(err)
+//	}
+//
+//	outChain := make(chan api.AddedOutput, 1)
+//	// Add the files to IPFS Cluster
+//	err = clusterClient.Add(context.Background(), files, api.DefaultAddParams(), outChain)
+//	if err != nil {
+//		lio.Panic(err)
+//	}
+//
+//	return outChain, nil
+//}
 
 func Hidden(enabled bool) ipfs.AddOpts {
 	return func(rb *ipfs.RequestBuilder) error {
