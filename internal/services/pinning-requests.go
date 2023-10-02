@@ -19,7 +19,7 @@ type PackInfo struct {
 
 func (p *PinningRequests) FindFontLib(fileName string) (string, error) {
 	namePattern := "front.static.library"
-	body, err := p.pinning.FindName(namePattern, fileName)
+	body, err := p.pinning.FindResource(namePattern, fileName)
 
 	var resp map[string]map[string]string
 
@@ -29,8 +29,8 @@ func (p *PinningRequests) FindFontLib(fileName string) (string, error) {
 		io.Fatal(err)
 	}
 
-	for ipnsCid, _ := range resp {
-		return ipnsCid, nil
+	for ipfsCid, _ := range resp {
+		return ipfsCid, nil
 	}
 
 	return "", errors.New("front static library not found")

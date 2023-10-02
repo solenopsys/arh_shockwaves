@@ -17,8 +17,9 @@ var cmdFile = &cobra.Command{
 		ipfs := false
 		hosts := configs.GetInstanceConfManager().Conf.Hosts
 
+		ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: hosts.IpfsHost}
 		if ipfs {
-			cid, err := wrappers.UploadFileToIpfsNode(hosts.IpfsHost, file)
+			cid, err := ipfsNode.UploadFileToIpfsNode(file)
 
 			if err != nil {
 				io.Println(err)
@@ -28,7 +29,7 @@ var cmdFile = &cobra.Command{
 		} else {
 			d := make([]string, 1)
 			d[0] = file
-			outChain, err := wrappers.UploadFileToIpfsCluster(hosts.IpfsClusterHost, d)
+			outChain, err := ipfsNode.UploadFileToIpfsCluster(d)
 
 			if err != nil {
 				io.Println(err)

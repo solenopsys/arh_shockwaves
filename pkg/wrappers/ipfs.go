@@ -16,8 +16,12 @@ import (
 	lio "xs/pkg/io"
 )
 
-func UploadFileToIpfsNode(nodeAddr string, file string) (string, error) {
-	sh := ipfs.NewShell(nodeAddr)
+type IpfsNode struct {
+	IpfsNodeAddr string
+}
+
+func (i *IpfsNode) UploadFileToIpfsNode(file string) (string, error) {
+	sh := ipfs.NewShell(i.IpfsNodeAddr)
 
 	fileBytes, err := os.ReadFile(file)
 	if err != nil {
@@ -32,9 +36,9 @@ func UploadFileToIpfsNode(nodeAddr string, file string) (string, error) {
 	return cid, nil
 }
 
-func UploadFileToIpfsCluster(nodeAddr string, files []string) (chan api.AddedOutput, error) {
+func (i *IpfsNode) UploadFileToIpfsCluster(files []string) (chan api.AddedOutput, error) {
 	//split nodeAddr
-	split := strings.Split(nodeAddr, ":")
+	split := strings.Split(i.IpfsNodeAddr, ":")
 	config := client.Config{
 		Host: split[0],
 		Port: split[1],
@@ -118,9 +122,9 @@ type object struct {
 	Hash string
 }
 
-func UploadDirToIpfsNode(nodeAddr string, dir string) (string, error) {
+func (i *IpfsNode) UploadDirToIpfsNode(dir string) (string, error) {
 
-	sh := ipfs.NewShell(nodeAddr)
+	sh := ipfs.NewShell(i.IpfsNodeAddr)
 
 	//cid, err := sh.AddDir(dir)
 	cid, err := addDirRecursiveIncludeHidden(sh, dir)

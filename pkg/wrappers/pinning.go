@@ -34,23 +34,28 @@ type Pinning struct {
 	UserKey string
 }
 
-func (p *Pinning) SmartPin(cid string, labels map[string]string, ipnsName string) error {
+func (p *Pinning) SmartPin(cid string, labels map[string]string) (string, error) {
 	hasPin, err := p.CheckPin(cid)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	if hasPin {
 		_, err := p.SimpleUpdateLabels(cid, labels)
-		if err != nil {
-			return err
-		}
 		io.Debug("pin exists label updated", cid)
-	} else {
-		pin, err := p.SimplePin(cid, labels)
 		if err != nil {
-			return err
+			return "", err
 		}
+
+	}
+
+	return p.SimplePin(cid, labels)
+}
+
+func (p *Pinning) SmartPinAndName(cid string, labels map[string]string, ipnsName string) error {
+	pin, err := p.SmartPin(cid, labels)
+
+	if err == nil {
 		io.Debug("pin", pin)
 	}
 
@@ -200,6 +205,15 @@ func (p *Pinning) UpdateLabels(conf *Configuration) (string, error) {
 
 func (p *Pinning) FindName(namePattern string, valuePattern string) ([]byte, error) {
 	url := p.Host + "/select/names?name=" + namePattern + "&value=" + valuePattern
+	req, err := http.NewRequest("GET", url, nil)
+	if err != nil {
+		return nil, err
+	}
+	return p.execRequestBytes(req)
+}
+
+func (p *Pinning) FindResource(namePattern string, valuePattern string) ([]byte, error) {
+	url := p.Host + "/select/ipfs?name=" + namePattern + "&value=" + valuePattern
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err

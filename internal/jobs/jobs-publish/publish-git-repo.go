@@ -16,7 +16,7 @@ type PublishGitRepo struct {
 	moduleType  string
 	repoName    string
 	cloneTo     string
-	ipfsHost    string
+	ipfsNode    *wrappers.IpfsNode
 	pinningHost string
 	steps       []func() error
 	dist        string
@@ -35,7 +35,7 @@ func NewPublishGitRepo(ipfsHost string, pinningHost string, nickname string, mod
 		moduleType:  moduleType,
 		repoName:    repoName,
 		cloneTo:     cloneTo,
-		ipfsHost:    ipfsHost,
+		ipfsNode:    &wrappers.IpfsNode{ipfsHost},
 		pinningHost: pinningHost}
 }
 
@@ -70,7 +70,7 @@ func (t *PublishGitRepo) extractCommitHash() error {
 
 func (t *PublishGitRepo) publishDirInIpfs() error {
 	var err error
-	t.cid, err = wrappers.UploadDirToIpfsNode(t.ipfsHost, t.gitDir)
+	t.cid, err = t.ipfsNode.UploadDirToIpfsNode(t.gitDir)
 	return err
 }
 
@@ -146,7 +146,7 @@ func (t *PublishGitRepo) pinCidInPinningService() error {
 	labels["code.type"] = t.moduleType
 	labels["clone.to"] = t.cloneTo
 	labels["commit.hash"] = t.commitHash
-	return pinning.SmartPin(t.cid, labels, t.repoName)
+	return pinning.SmartPinAndName(t.cid, labels, t.repoName)
 }
 
 func (t *PublishGitRepo) Execute() *jobs.Result {

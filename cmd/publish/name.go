@@ -23,7 +23,7 @@ var cmdName = &cobra.Command{
 		labels := make(map[string]string)
 		labels["code.site"] = name
 
-		err := pinning.SmartPin(cid, labels, name)
+		err := pinning.SmartPinAndName(cid, labels, name)
 
 		if err != nil {
 			io.Println(err)
