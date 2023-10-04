@@ -71,8 +71,8 @@ func (p *PinningRequests) FindOne(packageName string) (*PackInfo, error) {
 	return nil, errors.New("not found")
 }
 
-func NewPinningRequests() PinningRequests {
+func NewPinningRequests() *PinningRequests {
 
-	return PinningRequests{wrappers.NewPinning()}
+	return &PinningRequests{wrappers.NewPinning()}
 
 }

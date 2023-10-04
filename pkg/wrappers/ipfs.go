@@ -10,10 +10,16 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"xs/internal/configs"
 )
 
 type IpfsNode struct {
 	IpfsNodeAddr string
+}
+
+func NewIpfsNode() *IpfsNode {
+	conf := configs.GetInstanceConfManager().Conf
+	return &IpfsNode{conf.Hosts.IpfsHost}
 }
 
 func (i *IpfsNode) UploadFileToIpfsNode(file string) (string, error) {

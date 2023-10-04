@@ -8,17 +8,17 @@ import (
 	"xs/pkg/wrappers"
 )
 
-type FrontLib struct {
+type FrontLibsController struct {
 	cacheFile       string
 	npmCacheDir     string
 	ipfsNode        *wrappers.IpfsNode
 	libs            map[string]string
 	remoteCheck     map[string]bool
-	pinningRequests PinningRequests
+	pinningRequests *PinningRequests
 	pinningService  *wrappers.Pinning
 }
 
-func (b *FrontLib) genCache() {
+func (b *FrontLibsController) genCache() {
 	cmd := exec.Command("pnpm  ", []string{"cache"}...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
@@ -28,21 +28,30 @@ func (b *FrontLib) genCache() {
 	}
 }
 
-func (b *FrontLib) CacheCheck() {
+func (b *FrontLibsController) CacheCheck() {
 	if _, err := os.Stat(b.cacheFile); os.IsNotExist(err) {
 		b.genCache()
 	}
 }
 
-func NewFrontLib() *FrontLib {
-	return &FrontLib{libs: make(map[string]string), cacheFile: ".xs/cache.json", npmCacheDir: "node_modules/.cache/native-federation"}
+func NewFrontLibController() *FrontLibsController {
+	return &FrontLibsController{
+		libs:            make(map[string]string),
+		remoteCheck:     make(map[string]bool),
+		cacheFile:       ".xs/cache.json",
+		npmCacheDir:     "node_modules/.cache/native-federation",
+		ipfsNode:        wrappers.NewIpfsNode(),
+		pinningRequests: NewPinningRequests(),
+		pinningService:  wrappers.NewPinning(),
+	}
 }
 
-func (b *FrontLib) filePath(fileName string) string {
+func (b *FrontLibsController) filePath(fileName string) string {
 	return b.npmCacheDir + "/" + fileName
 }
 
-func (b *FrontLib) tryDownLoadLib(fileName string) bool {
+func (b *FrontLibsController) tryDownLoadLib(fileName string) bool {
+	io.Println("Try download static front lib:", fileName)
 	cid, err := b.pinningRequests.FindFontLib(fileName)
 	if err == nil {
 		requests := NewIpfsRequests()
@@ -56,15 +65,13 @@ func (b *FrontLib) tryDownLoadLib(fileName string) bool {
 			io.Panic(err)
 		}
 		return true
-	} else {
-		if err != nil {
-			io.Panic(err)
-		}
 	}
 	return false
 }
 
-func (b *FrontLib) tryUpLoadLib(fileName string) (string, error) {
+func (b *FrontLibsController) tryUpLoadLib(fileName string) (string, error) {
+	io.Println("Upload static front lib:", fileName)
+
 	cid, err := b.ipfsNode.UploadFileToIpfsNode(b.filePath(fileName))
 	if err != nil {
 		io.Panic(err)
@@ -74,7 +81,7 @@ func (b *FrontLib) tryUpLoadLib(fileName string) (string, error) {
 	return b.pinningService.SmartPin(cid, labels)
 }
 
-func (b *FrontLib) loadCache() {
+func (b *FrontLibsController) loadCache() {
 
 	file, err := os.ReadFile(b.cacheFile)
 	if err != nil {
@@ -86,4 +93,39 @@ func (b *FrontLib) loadCache() {
 		io.Panic(err)
 	}
 
+}
+
+func (b *FrontLibsController) localLibExists(fileName string) bool {
+	path := b.filePath(fileName)
+	_, err := os.Stat(path)
+	return !os.IsNotExist(err)
+}
+
+func (b *FrontLibsController) PreProcessing() {
+	b.genCache()
+	b.loadCache()
+	for libName, fileName := range b.libs {
+		io.Println("Check lib:", libName, "file name:", fileName)
+		libInLocalCache := b.localLibExists(fileName)
+		if !libInLocalCache {
+			b.remoteCheck[fileName] = b.tryDownLoadLib(fileName)
+		}
+	}
+}
+
+func (b *FrontLibsController) PostProcessing() {
+	for libName, fileName := range b.libs {
+		if b.remoteCheck[fileName] == false {
+			libInLocalCache := b.localLibExists(fileName)
+			b.remoteCheck[fileName] = libInLocalCache
+			if libInLocalCache {
+				cid, err := b.tryUpLoadLib(fileName)
+				io.Println("Upload lib:", libName, "file name:", fileName, "cid:", cid)
+				if err != nil {
+					io.Panic(err)
+				}
+				b.remoteCheck[fileName] = true
+			}
+		}
+	}
 }

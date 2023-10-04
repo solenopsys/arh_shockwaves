@@ -213,7 +213,7 @@ func (p *Pinning) FindName(namePattern string, valuePattern string) ([]byte, err
 }
 
 func (p *Pinning) FindResource(namePattern string, valuePattern string) ([]byte, error) {
-	url := p.Host + "/select/ipfs?name=" + namePattern + "&value=" + valuePattern
+	url := p.Host + "/select/pins?name=" + namePattern + "&value=" + valuePattern
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return nil, err

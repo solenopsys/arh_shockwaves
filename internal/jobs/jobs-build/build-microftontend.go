@@ -33,10 +33,11 @@ func (b *MicroFronted) Execute() *jobs.Result {
 	pt.SetBasePathPwd()
 	defer pt.MoveToBasePath()
 
-	fl := services.FrontLib{}
+	fl := services.NewFrontLibController()
 
-	fl.CacheCheck()
+	fl.PreProcessing()
 	result := b.build()
+	fl.PostProcessing()
 
 	if result == 0 {
 		return &jobs.Result{
