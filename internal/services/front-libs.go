@@ -18,8 +18,10 @@ type FrontLibsController struct {
 	pinningService  *wrappers.Pinning
 }
 
+const NPM_APPLICATION = "pnpm"
+
 func (b *FrontLibsController) genCache() {
-	cmd := exec.Command("pnpm  ", []string{"cache"}...)
+	cmd := exec.Command(NPM_APPLICATION, []string{"cache"}...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		io.Println("Error executing command:", err)
@@ -77,7 +79,7 @@ func (b *FrontLibsController) tryUpLoadLib(fileName string) (string, error) {
 		io.Panic(err)
 	}
 	labels := make(map[string]string)
-	labels["front.static.library"] = fileName
+	labels["front.static.library"] = fileName // todo move to const
 	return b.pinningService.SmartPin(cid, labels)
 }
 
@@ -113,19 +115,28 @@ func (b *FrontLibsController) PreProcessing() {
 	}
 }
 
+func (b *FrontLibsController) checkRemoteLib(fileName string) bool {
+	if val, exists := b.remoteCheck[fileName]; exists {
+		return val
+	} else {
+		_, err := b.pinningRequests.FindFontLib(fileName)
+		exists := err == nil
+		b.remoteCheck[fileName] = exists
+		return exists
+	}
+}
+
 func (b *FrontLibsController) PostProcessing() {
 	for libName, fileName := range b.libs {
-		if b.remoteCheck[fileName] == false {
-			libInLocalCache := b.localLibExists(fileName)
-			b.remoteCheck[fileName] = libInLocalCache
-			if libInLocalCache {
-				cid, err := b.tryUpLoadLib(fileName)
-				io.Println("Upload lib:", libName, "file name:", fileName, "cid:", cid)
-				if err != nil {
-					io.Panic(err)
-				}
-				b.remoteCheck[fileName] = true
+		libInLocalCache := b.localLibExists(fileName)
+		libExistsInRemote := b.checkRemoteLib(fileName)
+		if libInLocalCache && !libExistsInRemote {
+			cid, err := b.tryUpLoadLib(fileName)
+			io.Println("Upload lib:", libName, "file name:", fileName, "cid:", cid)
+			if err != nil {
+				io.Panic(err)
 			}
+			b.remoteCheck[fileName] = true
 		}
 	}
 }

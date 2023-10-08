@@ -1,11 +1,11 @@
 package services
 
 import (
+	"errors"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"time"
-	"xs/pkg/io"
 )
 
 type IpfsRequests struct {
@@ -13,7 +13,7 @@ type IpfsRequests struct {
 }
 
 func NewIpfsRequests() *IpfsRequests {
-	hostsNames := []string{"alpha", "bravo", "charlie"}
+	hostsNames := []string{"zero"} //[]string{"alpha", "bravo", "charlie"}
 	servers := make([]string, len(hostsNames))
 	nodesHost := "node.solenopsys.org"
 	for i, hostName := range hostsNames {
@@ -30,15 +30,18 @@ func (i *IpfsRequests) RandomServer() string {
 }
 
 func (i *IpfsRequests) GetCidUrl(cid string) string {
-	return "https://" + i.RandomServer() + "/ipns/" + cid
+	return "https://" + i.RandomServer() + "/ipfs/" + cid
 }
 
 func (i *IpfsRequests) LoadCid(cid string) ([]byte, error) {
 	response, err := http.Get(i.GetCidUrl(cid))
 	if err != nil {
-		io.Println("Error:", err)
 		return nil, err
 	}
+	if response.StatusCode != 200 {
+		return nil, errors.New("ipfs node return not 200 status code")
+	}
+
 	defer response.Body.Close()
 
 	return ioutil.ReadAll(response.Body)

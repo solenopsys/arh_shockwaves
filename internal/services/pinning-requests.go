@@ -18,7 +18,7 @@ type PackInfo struct {
 }
 
 func (p *PinningRequests) FindFontLib(fileName string) (string, error) {
-	namePattern := "front.static.library"
+	namePattern := "front.static.library" // todo move to const
 	body, err := p.pinning.FindResource(namePattern, fileName)
 
 	var resp map[string]map[string]string
