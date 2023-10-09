@@ -15,7 +15,7 @@ func (t *ModuleSourceLoader) Load(cid string, path string, originalRemote string
 
 	wg := sync.WaitGroup{} // todo may be it not needed now
 	wg.Add(1)
-	err := git.CloneGitRepository(t.ipfs.GetCidUrl(cid), path, false, false, false, originalRemote)
+	err := git.CloneGitRepository(t.ipfs.GetNameCidUrl(cid), path, false, false, false, originalRemote)
 
 	defer wg.Done()
 	if err != nil {

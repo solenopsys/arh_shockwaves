@@ -11,13 +11,13 @@ import (
 )
 
 var Cmd = &cobra.Command{
-	Use:   "build [module/pattern]",
+	Use:   "build [module/pattern] [-d]",
 	Short: "Build modules (frontend, module ,container, helm,...)",
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		filter := args[0]
 
-		const PUBLISH = "publish"
+		const PUBLISH = "-d"
 
 		err := tools.ToWorkspaceRootDir()
 		if err != nil {

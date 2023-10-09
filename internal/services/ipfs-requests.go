@@ -13,7 +13,7 @@ type IpfsRequests struct {
 }
 
 func NewIpfsRequests() *IpfsRequests {
-	hostsNames := []string{"zero"} //[]string{"alpha", "bravo", "charlie"}
+	hostsNames := []string{"alpha", "bravo", "charlie"}
 	servers := make([]string, len(hostsNames))
 	nodesHost := "node.solenopsys.org"
 	for i, hostName := range hostsNames {
@@ -27,6 +27,10 @@ func (i *IpfsRequests) RandomServer() string {
 	count := len(i.servers)
 	randomIndex := rand.Intn(count)
 	return i.servers[randomIndex]
+}
+
+func (i *IpfsRequests) GetNameCidUrl(cid string) string {
+	return "https://" + i.RandomServer() + "/ipns/" + cid
 }
 
 func (i *IpfsRequests) GetCidUrl(cid string) string {
