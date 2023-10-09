@@ -29,7 +29,7 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	command := "nerdctl"
 	io.Println("command:" + command)
 
-	arg := "build --platform=" + c.platform + "  --progress=plain --output type=image,name=" + c.registry + "/" + name + ":latest,push=true ."
+	arg := "build --platform=" + c.platform + "  --progress=plain --output type=image,name=" + c.registry + "/" + name + ":latest ."
 	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 
@@ -64,7 +64,7 @@ func NewBuildContainer(params map[string]string, printConsole bool) jobs.Printab
 	return &BuildContainer{
 		params:       params,
 		platform:     "amd64",
-		registry:     "registry.solenopsys.org",
+		registry:     "registry.solenopsys.org", // todo move to config
 		printConsole: printConsole,
 	}
 }

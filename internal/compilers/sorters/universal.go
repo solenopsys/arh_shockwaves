@@ -7,23 +7,31 @@ import (
 	"xs/pkg/io"
 )
 
-func NewUniversalSorter(jobCreate func(params map[string]string, printConsole bool) jobs.PrintableJob, libGroup string, extractor internal.CompileParamsExtractor) Sorter {
+func NewUniversalSorter(
+	jobsCreateFunctions []func(params map[string]string, printConsole bool) jobs.PrintableJob,
+	libGroup string,
+	extractor internal.CompileParamsExtractor) Sorter {
 	wm, err := configs.GetInstanceWsManager()
 	if err != nil {
 		io.Panic(err)
 	}
-	return &UniversalSorter{wm: wm, jobCreate: jobCreate, libGroup: libGroup, extractor: extractor}
+	return &UniversalSorter{wm: wm, jobsCreateFunctions: jobsCreateFunctions, libGroup: libGroup, extractor: extractor}
 }
 
 type UniversalSorter struct {
-	wm        *configs.WorkspaceManager
-	extractor internal.CompileParamsExtractor
-	libGroup  string
-	jobCreate func(params map[string]string, printConsole bool) jobs.PrintableJob
+	wm                  *configs.WorkspaceManager
+	extractor           internal.CompileParamsExtractor
+	libGroup            string
+	jobsCreateFunctions []func(params map[string]string, printConsole bool) jobs.PrintableJob
 }
 
-func (s *UniversalSorter) JobCreate(params map[string]string) jobs.PrintableJob {
-	return s.jobCreate(params, true)
+func (s *UniversalSorter) JobsCreate(params map[string]string) []jobs.PrintableJob {
+	jobsBatch := []jobs.PrintableJob{}
+	for _, f := range s.jobsCreateFunctions {
+		job := f(params, true)
+		jobsBatch = append(jobsBatch, job)
+	}
+	return jobsBatch
 }
 
 func SortByName(libs []*configs.XsModule) { // todo move to tools
@@ -43,7 +51,7 @@ func (s *UniversalSorter) Sort(libs []*configs.XsModule) []jobs.PrintableJob {
 		var params = map[string]string{}
 		path := "." + "/" + lib.Directory
 		params = s.extractor.Extract(lib.Name, path)
-		result = append(result, s.JobCreate(params))
+		result = append(result, s.JobsCreate(params)...)
 	}
 	return result
 }

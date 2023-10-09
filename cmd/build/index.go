@@ -52,7 +52,7 @@ var Cmd = &cobra.Command{
 		}
 
 		for builderName, libs := range buildGroups {
-			jobsPlan := compilers.NewCompilePlanning().GetPlan(builderName, libs)
+			jobsPlan := compilers.NewCompilePlanning(publish).GetPlan(builderName, libs)
 			io.Println("SECTION:", builderName)
 			for _, job := range jobsPlan {
 				jobs.PrintJob(job.Description())
@@ -64,7 +64,7 @@ var Cmd = &cobra.Command{
 		if confirm {
 			io.Println("Proceeding with the action.")
 			for builderName, libs := range buildGroups {
-				jobsPlan := compilers.NewCompilePlanning().GetPlan(builderName, libs)
+				jobsPlan := compilers.NewCompilePlanning(publish).GetPlan(builderName, libs)
 				io.Println("SECTION:", builderName)
 				jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
 			}
