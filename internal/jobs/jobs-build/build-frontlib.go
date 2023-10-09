@@ -50,7 +50,7 @@ func (b *BuildFrontLib) Description() jobs.JobDescription {
 
 func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring
 	src := b.params["path"]
-	dest := b.params["dest"]
+	dest := b.params["dist"]
 	pt := xstool.PathTools{}
 	pt.SetBasePathPwd()
 	pt.MoveTo(src)

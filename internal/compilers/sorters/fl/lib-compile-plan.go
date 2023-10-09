@@ -58,7 +58,7 @@ func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsEx
 
 			params = extractor.Extract(pack.Name, path)
 
-			dest := params["dest"]
+			dest := params["dist"]
 			dirExists := xstool.Exists(dest)
 			excludeDirs := []string{"node_modules"}
 			var hashesOk = false

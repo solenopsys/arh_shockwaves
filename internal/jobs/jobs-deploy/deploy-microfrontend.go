@@ -3,6 +3,7 @@ package jobs_deploy
 import (
 	"xs/internal/jobs"
 	"xs/pkg/io"
+	"xs/pkg/tools"
 )
 
 type DeployMicroFrontend struct {
@@ -10,14 +11,27 @@ type DeployMicroFrontend struct {
 }
 
 func (d *DeployMicroFrontend) Execute() *jobs.Result {
-	path := d.params["dist"]
+	distDir := d.params["dist"]
+	name := d.params["name"]
 
-	println("not implemented: ", path)
+	labels := make(map[string]string)
+	labels["type"] = "microfrontend"
+	labels["name"] = name
+	// labels["version"] = todo
 
-	return &jobs.Result{
-		Success:     true,
-		Error:       nil,
-		Description: "BuildHelm executed",
+	err := tools.IpfsPublishDir(distDir, labels)
+
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
+	} else {
+		return &jobs.Result{
+			Success:     true,
+			Error:       nil,
+			Description: "Microfrontend deployed executed " + name,
+		}
 	}
 }
 

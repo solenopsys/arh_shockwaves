@@ -7,10 +7,10 @@ type Frontlib struct {
 }
 
 func (e Frontlib) Extract(name string, path string) map[string]string {
-	dest := wrappers.LoadNgDest(path)
+	distribution := wrappers.LoadNgDest(path)
 	params := map[string]string{
 		"path": path,
-		"dest": dest,
+		"dist": distribution,
 	}
 
 	for k, v := range e.Base {

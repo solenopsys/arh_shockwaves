@@ -1,6 +1,7 @@
 package jobs_build
 
 import (
+	"os"
 	"path/filepath"
 	"xs/internal/jobs"
 	"xs/pkg/io"
@@ -14,20 +15,38 @@ type BuildHelm struct {
 func (b *BuildHelm) Execute() *jobs.Result {
 
 	path := b.params["path"]
-	parentDir := "helm"
-	pathHelmDir := path + "/" + parentDir
+	dist := b.params["dist"]
+	pathHelmDir := path + "/helm"
+
+	parent := filepath.Dir(path)
+	err := os.Mkdir(dist, 0777)
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
+	}
+	distFile := dist + "/" + parent + ".tar.gz"
 	absolutPath, _ := filepath.Abs(pathHelmDir)
 	io.Println("path", absolutPath)
 
-	arch := wrappers.ArchiveDir(absolutPath, parentDir)
+	arch := wrappers.ArchiveDir(absolutPath, "helm")
 
 	io.Println("archive size", len(arch))
-	wrappers.PushDir(arch) // todo extract to push job or step inside
+
+	err = os.WriteFile(distFile, arch, 0444)
+
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
+	}
 
 	return &jobs.Result{
 		Success:     true,
 		Error:       nil,
-		Description: "BuildHelm executed",
+		Description: "BuildHelm executed: " + distFile,
 	}
 }
 
