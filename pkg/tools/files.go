@@ -2,14 +2,14 @@ package tools
 
 import (
 	"errors"
+	"github.com/spf13/viper"
 	"os"
 	"path/filepath"
-	"xs/internal/configs"
 	"xs/pkg/io"
 )
 
 func isWorkspaceRootDir(dir string) bool {
-	return Exists(dir + configs.GetInstanceConfManager().Conf.Files.Workspace) // todo move to constant
+	return Exists(dir + viper.GetString("files.workspace")) // todo move to constant
 }
 
 func CheckWorkspace(dir string, before string) (bool, string) {

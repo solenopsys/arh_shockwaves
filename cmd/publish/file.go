@@ -2,7 +2,7 @@ package publish
 
 import (
 	"github.com/spf13/cobra"
-	"xs/internal/configs"
+	"github.com/spf13/viper"
 	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
@@ -14,9 +14,7 @@ var cmdFile = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		file := args[0]
 
-		hosts := configs.GetInstanceConfManager().Conf.Hosts
-
-		ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: hosts.IpfsHost}
+		ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: viper.GetString("hosts.ipfsNode")}
 
 		cid, err := ipfsNode.UploadFileToIpfsNode(file)
 		pinning := wrappers.NewPinning()

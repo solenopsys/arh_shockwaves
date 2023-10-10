@@ -3,6 +3,7 @@ package wrappers
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/spf13/viper"
 	iio "io"
 	"xs/internal/configs"
 	"xs/pkg/io"
@@ -223,7 +224,7 @@ func (p *Pinning) FindResource(namePattern string, valuePattern string) ([]byte,
 
 func NewPinning() *Pinning {
 	return &Pinning{
-		Host:    configs.GetInstanceConfManager().Conf.Hosts.PinningHost,
+		Host:    viper.GetString("hosts.pinningService"),
 		UserKey: configs.GetAuthManager().PublicKey,
 	}
 }

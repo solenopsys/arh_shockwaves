@@ -7,10 +7,10 @@ import (
 	"errors"
 	files "github.com/ipfs/boxo/files"
 	ipfs "github.com/ipfs/go-ipfs-api"
+	"github.com/spf13/viper"
 	"io"
 	"os"
 	"path/filepath"
-	"xs/internal/configs"
 )
 
 type IpfsNode struct {
@@ -18,8 +18,7 @@ type IpfsNode struct {
 }
 
 func NewIpfsNode() *IpfsNode {
-	conf := configs.GetInstanceConfManager().Conf
-	return &IpfsNode{conf.Hosts.IpfsHost}
+	return &IpfsNode{viper.GetString("hosts.ipfsNode")}
 }
 
 func (i *IpfsNode) UploadFileToIpfsNode(file string) (string, error) {

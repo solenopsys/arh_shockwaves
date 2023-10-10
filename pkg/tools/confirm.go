@@ -2,7 +2,7 @@ package tools
 
 import (
 	"github.com/AlecAivazis/survey/v2"
-	"xs/pkg/io"
+	"log"
 )
 
 func ConfirmDialog(question string) bool {
@@ -13,7 +13,7 @@ func ConfirmDialog(question string) bool {
 	}
 	err := survey.AskOne(prompt, &confirm, survey.WithValidator(survey.Required))
 	if err != nil {
-		io.Fatal(err)
+		log.Fatal("Error create dialog:", err)
 	}
 	return confirm
 }

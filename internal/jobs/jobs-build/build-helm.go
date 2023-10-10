@@ -18,14 +18,9 @@ func (b *BuildHelm) Execute() *jobs.Result {
 	dist := b.params["dist"]
 	pathHelmDir := path + "/helm"
 
-	parent := filepath.Dir(path)
-	err := os.Mkdir(dist, 0777)
-	if err != nil {
-		return &jobs.Result{
-			Success: false,
-			Error:   err,
-		}
-	}
+	parent := filepath.Base(path)
+	os.Mkdir(dist, 0777)
+
 	distFile := dist + "/" + parent + ".tar.gz"
 	absolutPath, _ := filepath.Abs(pathHelmDir)
 	io.Println("path", absolutPath)
@@ -34,7 +29,7 @@ func (b *BuildHelm) Execute() *jobs.Result {
 
 	io.Println("archive size", len(arch))
 
-	err = os.WriteFile(distFile, arch, 0444)
+	err := os.WriteFile(distFile, arch, 0444)
 
 	if err != nil {
 		return &jobs.Result{

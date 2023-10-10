@@ -17,7 +17,7 @@ var Cmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		filter := args[0]
 
-		const PUBLISH = "-d"
+		const PUBLISH = "deploy"
 
 		err := tools.ToWorkspaceRootDir()
 		if err != nil {

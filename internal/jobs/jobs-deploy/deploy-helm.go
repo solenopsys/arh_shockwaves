@@ -15,7 +15,8 @@ type DeployHelm struct {
 func (d *DeployHelm) Execute() *jobs.Result {
 	dist := d.params["dist"]
 	path := d.params["path"]
-	parent := filepath.Dir(path)
+
+	parent := filepath.Base(path)
 	distFile := dist + "/" + parent + ".tar.gz"
 	archBytes, err := os.ReadFile(distFile)
 
@@ -38,7 +39,7 @@ func (d *DeployHelm) Execute() *jobs.Result {
 func (d *DeployHelm) Description() jobs.JobDescription {
 	return jobs.JobDescription{
 		Color:       io.Blue,
-		Description: "Deploy Helm " + d.params["dist"],
+		Description: "Deploy Helm " + d.params["path"],
 		Short:       "Reddy",
 	}
 }

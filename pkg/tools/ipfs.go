@@ -1,14 +1,14 @@
 package tools
 
 import (
-	"xs/internal/configs"
+	"github.com/spf13/viper"
 	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
 func IpfsPublishDir(dir string, labels map[string]string) error {
-	hosts := configs.GetInstanceConfManager().Conf.Hosts
-	ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: hosts.IpfsHost}
+
+	ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: viper.GetString("hosts.ipfsNode")}
 	cid, err := ipfsNode.UploadDirToIpfsNode(dir)
 	pinning := wrappers.NewPinning()
 

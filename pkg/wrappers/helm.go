@@ -4,19 +4,19 @@ import (
 	"archive/tar"
 	"bytes"
 	"compress/gzip"
+	"github.com/spf13/viper"
 	sio "io"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
-	"xs/internal/configs"
 	"xs/pkg/io"
 )
 
 func PushDir(archive []byte) {
 	buffer := bytes.NewBuffer(archive)
 
-	url := configs.GetInstanceConfManager().Conf.Hosts.HelmRepositoryHost + "/api/charts"
+	url := viper.GetString("hosts.helmRepository") + "/api/charts"
 	resp, err := http.Post(url, "application/octet-stream", buffer)
 	if err != nil {
 		io.Println("Error sending request:", err)

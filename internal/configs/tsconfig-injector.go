@@ -2,6 +2,7 @@ package configs
 
 import (
 	"encoding/json"
+	"github.com/spf13/viper"
 	"os"
 	"xs/pkg/io"
 )
@@ -34,7 +35,7 @@ func (i *TsInjector) Save() {
 
 func NewTsInjector() *TsInjector {
 	return &TsInjector{
-		packageFileName: "." + GetInstanceConfManager().Conf.Files.TsConfig,
+		packageFileName: "." + viper.GetString("files.tsconfig"),
 		confData:        make(map[string]any),
 	}
 }

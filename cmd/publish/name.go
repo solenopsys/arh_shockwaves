@@ -2,6 +2,7 @@ package publish
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"xs/internal/configs"
 	"xs/pkg/io"
 	"xs/pkg/wrappers"
@@ -17,7 +18,7 @@ var cmdName = &cobra.Command{
 
 		pinning := &wrappers.Pinning{}
 
-		pinning.Host = configs.GetInstanceConfManager().Conf.Hosts.PinningHost
+		pinning.Host = viper.GetString("hosts.pinningService")
 		pinning.UserKey = configs.GetAuthManager().PublicKey
 
 		labels := make(map[string]string)

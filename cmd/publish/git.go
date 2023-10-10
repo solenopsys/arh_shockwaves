@@ -2,6 +2,7 @@ package publish
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"strings"
 	"xs/internal/configs"
 	jobs_publish "xs/internal/jobs/jobs-publish"
@@ -20,15 +21,14 @@ var cmdGit = &cobra.Command{
 		gitRepoName := strings.Replace(lastSection, ".git", "", 1)
 		prefix := strings.Split(gitRepoName, "-")[0]
 
-		conf := configs.GetInstanceConfManager().Conf
-		git := conf.Git
-
-		group := git.Prefixes[prefix]
-		groupDir := git.Paths[group]
+		group := viper.GetString("git.prefixes." + prefix)
+		groupDir := viper.GetString("git.paths." + group)
 
 		nickname := configs.GetAuthManager().Nickname
 
-		job := jobs_publish.NewPublishGitRepo(conf.Hosts.IpfsHost, conf.Hosts.PinningHost, nickname, group, gitRepoName, groupDir, gitRepoUrl)
+		ipfsNodeHost := viper.GetString("hosts.ipfsNode")
+		pinningServiceHosts := viper.GetString("hosts.pinningService")
+		job := jobs_publish.NewPublishGitRepo(ipfsNodeHost, pinningServiceHosts, nickname, group, gitRepoName, groupDir, gitRepoUrl)
 		result := job.Execute()
 		if result.Error != nil {
 			io.Fatal(result.Error)

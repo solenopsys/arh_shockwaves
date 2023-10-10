@@ -1,6 +1,7 @@
 package configs
 
 import (
+	"github.com/spf13/viper"
 	"gopkg.in/yaml.v3"
 	"os"
 	"strings"
@@ -109,7 +110,7 @@ var wsOnce sync.Once
 func GetInstanceWsManager() (*WorkspaceManager, error) {
 	wsOnce.Do(func() {
 		wsInstance = &WorkspaceManager{}
-		wsInstance.file = "." + GetInstanceConfManager().Conf.Files.Workspace
+		wsInstance.file = "." + viper.GetString("files.workspace")
 		wsInstance.workspace = &Workspace{}
 		err := wsInstance.Load()
 		if err != nil {

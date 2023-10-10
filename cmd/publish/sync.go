@@ -2,6 +2,7 @@ package publish
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"gopkg.in/yaml.v3"
 	"os"
 	"xs/internal/configs"
@@ -23,10 +24,9 @@ var cmdSyncGit = &cobra.Command{
 		}
 
 		nickname := configs.GetAuthManager().Nickname
-		conf := configs.GetInstanceConfManager().Conf
 		pg := &PublicGit{
-			IpfsHost:    conf.Hosts.IpfsHost,
-			PinningHost: conf.Hosts.PinningHost,
+			IpfsHost:    viper.GetString("hosts.ipfsNode"),
+			PinningHost: viper.GetString("hosts.pinningService"),
 		}
 
 		err := pg.LoadConfig(configName)
@@ -97,7 +97,7 @@ func (pg *PublicGit) ManeJobsPlan(nickname string, filter string) []jobs.Printab
 					continue
 				}
 			}
-			cloneTo := configs.GetInstanceConfManager().Conf.Git.Paths[group]
+			cloneTo := viper.GetString("git.paths." + group)
 			repoFullPath := pg.Config.Remote + repoName
 			job := jobs_publish.NewPublishGitRepo(pg.IpfsHost, pg.PinningHost, nickname, group, repoName, cloneTo, repoFullPath)
 			jobsPlan = append(jobsPlan, job)
