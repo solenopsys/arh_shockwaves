@@ -1,14 +1,15 @@
 package ui
 
 import (
+	"fmt"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"os"
 	"time"
 	"xs/internal/configs"
-	"xs/pkg/io"
-
 	"xs/internal/jobs"
+	"xs/pkg/io"
 )
 
 var docStyle = lipgloss.NewStyle().Margin(1, 2)
@@ -27,9 +28,10 @@ func (i item) FilterValue() string { return i.title }
 //}
 
 type Model struct {
-	List   list.Model
-	Filter list.FilterFunc
-	Value  string // todo remove and use callback
+	List        list.Model
+	Applied     bool
+	Filter      list.FilterFunc
+	FilterValue string // todo remove and use callback
 }
 
 func (m Model) Init() tea.Cmd {
@@ -52,7 +54,8 @@ func (m *Model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		if msg.String() == "enter" && (m.List.FilterState() == list.FilterApplied || m.List.FilterState() == list.Unfiltered) {
-			m.Value = m.List.FilterInput.Value()
+			m.FilterValue = m.List.FilterInput.Value()
+			m.Applied = true
 
 			return m, tea.Quit
 
@@ -106,39 +109,56 @@ func ListFilter(filter string, strings []string) []list.Rank {
 	return ranks
 }
 
-func JobsToListModel(jobsPlan []jobs.PrintableJob, title string, filter string) (*tea.Program, *Model) {
+func ListView(items []jobs.ItemTitle, title string) bool {
+	apply, _ := filteredListViewAbs(items, title, "", false)
+	return apply
+}
+
+func filteredListViewAbs(listItems []jobs.ItemTitle, title string, filter string, filtred bool) (bool, string) {
+	tea.EnterAltScreen()
 	items := []list.Item{}
 
-	for _, job := range jobsPlan {
+	for _, it := range listItems {
 		items = append(items, item{
-			title: job.Description().Short,
-			desc:  job.Description().Description,
+			title: it.Name,
+			desc:  it.Description,
 		})
 	}
 
 	keyMap := list.DefaultKeyMap()
 
-	m2 := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	m2.Filter = ListFilter
-	m2.FilterInput.SetValue(filter)
-	//	m2.SetShowFilter(true)
-	m2.KeyMap = keyMap
-	m := Model{List: m2}
-	m.List.Title = title
+	libsModel := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	libsModel.Filter = ListFilter
+	libsModel.FilterInput.SetValue(filter)
+	libsModel.SetShowFilter(filtred)
+	libsModel.KeyMap = keyMap
+	programModel := Model{List: libsModel, Applied: false, FilterValue: filter}
+	programModel.List.Title = title
 
-	p := tea.NewProgram(&m)
+	program := tea.NewProgram(&programModel, tea.WithAltScreen())
 
 	if filter != "" {
 
 		go func() {
-			p.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("/")})
+			program.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune("/")})
 			time.Sleep(10 * time.Millisecond)
-			p.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(" ")})
+			program.Send(tea.KeyMsg{Type: tea.KeyRunes, Runes: []rune(" ")})
 
 			time.Sleep(10 * time.Millisecond)
-			p.Send(tea.KeyMsg{Type: tea.KeyBackspace})
+			program.Send(tea.KeyMsg{Type: tea.KeyBackspace})
 			time.Sleep(300 * time.Millisecond)
 		}()
 	}
-	return p, &m
+
+	if _, err := program.Run(); err != nil {
+		fmt.Println("Error running program:", err)
+		os.Exit(1)
+	}
+	tea.ExitAltScreen()
+
+	return programModel.Applied, programModel.FilterValue
+}
+
+func FilteredListView(listItems []jobs.ItemTitle, title string, filter string) (bool, string) {
+	return filteredListViewAbs(listItems, title, filter, true)
 }

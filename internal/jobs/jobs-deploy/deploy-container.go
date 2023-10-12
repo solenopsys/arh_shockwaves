@@ -40,11 +40,11 @@ func (d *DeployContainer) Execute() *jobs.Result {
 	}
 }
 
-func (d *DeployContainer) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (d *DeployContainer) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy container: " + d.params["name"],
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 }
 

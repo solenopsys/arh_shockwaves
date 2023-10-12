@@ -2,7 +2,6 @@ package jobs_deploy
 
 import (
 	"xs/internal/jobs"
-	"xs/pkg/io"
 	"xs/pkg/tools"
 )
 
@@ -35,11 +34,11 @@ func (d *DeployMicroFrontend) Execute() *jobs.Result {
 	}
 }
 
-func (d *DeployMicroFrontend) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (d *DeployMicroFrontend) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy micro-frontend " + d.params["dist"],
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 }
 

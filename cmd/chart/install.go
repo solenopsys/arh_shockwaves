@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"xs/internal/jobs"
 	jobs_chart "xs/internal/jobs/jobs-chart"
+	"xs/pkg/ui"
 )
 
 var cmdInstall = &cobra.Command{
@@ -14,6 +15,8 @@ var cmdInstall = &cobra.Command{
 		chart := args[0]
 		repoUrl := args[2]
 		version := args[1]
-		jobs.ExecuteOneSync(jobs_chart.NewChartInstall(chart, repoUrl, version))
+
+		load := jobs_chart.NewChartInstall(chart, repoUrl, version)
+		ui.ProcessingJobs([]jobs.PrintableJob{load})
 	},
 }

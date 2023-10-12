@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"xs/internal/jobs"
 	jobs_chart "xs/internal/jobs/jobs-chart"
+	"xs/pkg/ui"
 )
 
 var cmdRemove = &cobra.Command{
@@ -12,6 +13,7 @@ var cmdRemove = &cobra.Command{
 	Args:  cobra.MinimumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		chart := args[0]
-		jobs.ExecuteOneSync(jobs_chart.NewChartRemove(chart))
+		load := jobs_chart.NewChartRemove(chart)
+		ui.ProcessingJobs([]jobs.PrintableJob{load})
 	},
 }

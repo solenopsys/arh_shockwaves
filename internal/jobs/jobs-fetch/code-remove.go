@@ -4,7 +4,6 @@ import (
 	"os"
 	"xs/internal/configs"
 	"xs/internal/jobs"
-	"xs/pkg/io"
 )
 
 type CodeRemove struct {
@@ -32,11 +31,11 @@ func (t *CodeRemove) Execute() *jobs.Result {
 	}
 }
 
-func (t *CodeRemove) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (t *CodeRemove) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Remove " + t.packageName + " from " + t.targetDir,
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 
 }

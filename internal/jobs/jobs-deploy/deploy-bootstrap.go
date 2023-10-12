@@ -2,7 +2,6 @@ package jobs_deploy
 
 import (
 	"xs/internal/jobs"
-	"xs/pkg/io"
 )
 
 type DeployFrontendBootstrap struct {
@@ -21,11 +20,11 @@ func (d *DeployFrontendBootstrap) Execute() *jobs.Result {
 	}
 }
 
-func (d *DeployFrontendBootstrap) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (d *DeployFrontendBootstrap) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy frontend bootstrap " + d.params["dist"],
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 }
 

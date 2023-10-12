@@ -89,7 +89,7 @@ func (m model) funcName(resType lipgloss.Style) (tea.Model, tea.Cmd) {
 	job := m.jobs[m.index]
 	return m, tea.Batch(
 		progressCmd,
-		tea.Printf("%s %s ", resType, m.jobs[m.index].Description().Short),
+		tea.Printf("%s %s ", resType, m.jobs[m.index].Title().Name),
 		runJob(job), // download the next package
 	)
 }
@@ -109,8 +109,8 @@ func (m model) View() string {
 	cellsAvail := max(0, m.width-lipgloss.Width(spin+prog+pkgCount))
 
 	job := m.jobs[m.index]
-	pkgName := currentPkgNameStyle.Render(job.Description().Short)
-	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Run " + pkgName + " <- " + job.Description().Description)
+	pkgName := currentPkgNameStyle.Render(job.Title().Name)
+	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Run " + pkgName + " <- " + job.Title().Description)
 
 	cellsRemaining := max(0, m.width-lipgloss.Width(spin+info+prog+pkgCount))
 	gap := strings.Repeat(" ", cellsRemaining)
@@ -127,7 +127,7 @@ func runJob(job jobs.PrintableJob) tea.Cmd {
 		result := job.Execute()
 
 		if result.Success {
-			return jobExecMessage(job.Description().Short)
+			return jobExecMessage(job.Title().Name)
 		} else {
 			return jobErrorMessage(result.Error.Error())
 		}

@@ -1,7 +1,7 @@
 package jobs
 
 import (
-	"xs/pkg/io"
+	"github.com/charmbracelet/lipgloss"
 )
 
 type Result struct {
@@ -14,59 +14,50 @@ type Job interface {
 	Execute() *Result
 }
 
-type JobDescription struct {
-	Color       io.PrintStyle
+type ItemTitle struct {
+	Style       lipgloss.Style
 	Description string
-	Short       string
+	Name        string
 }
 
-func PrintJob(message JobDescription) {
-	io.PrintColor(message.Short, message.Color)
-	io.Println(message.Description)
-}
-
-type JobInfo interface {
-	Description() JobDescription
+type UiListItem interface {
+	Title() ItemTitle
 }
 
 type PrintableJob interface {
 	Job
-	JobInfo
+	UiListItem
 }
 
-func PrintResult(result *Result) {
-	if result == nil {
-		io.PrintColor("ERROR", io.Red)
-		io.Println("Result is nil")
-		return
-	}
-	if result.Success {
-		io.PrintColor("OK", io.Green)
-		io.Println(result.Description)
-	} else {
-		io.PrintColor("ERROR", io.Red)
-		io.Println(result.Error.Error())
-	}
-}
-
-func ExecuteOneSync(job Job) {
-	result := (job).Execute()
-	PrintResult(result)
-}
-
-func ExecuteJobsSync(jobs []Job) {
-	for _, job := range jobs {
-		result := job.Execute()
-		PrintResult(result)
-	}
-}
-
-func ConvertJobs(jobsList []PrintableJob) []Job {
-	var ex []Job
+func ConvertPjToJi(jobsList []PrintableJob) []ItemTitle {
+	var ex []ItemTitle
 
 	for _, printableJob := range jobsList {
-		var job Job = printableJob
-		ex = append(ex, job)
+		ex = append(ex, printableJob.Title())
 	}
 	return ex
 }
+
+//	func ExecuteOneSync(job Job) {
+//		result := (job).Execute()
+//		PrintResult(result)
+//	}
+func ExecuteJobsSync(jobs []Job) []Result {
+	var results []Result
+	for _, job := range jobs {
+		result := job.Execute()
+		results = append(results, *result)
+	}
+	return results
+}
+
+//
+//func ConvertJobs(jobsList []PrintableJob) []Job {
+//	var ex []Job
+//
+//	for _, printableJob := range jobsList {
+//		var job Job = printableJob
+//		ex = append(ex, job)
+//	}
+//	return ex
+//}

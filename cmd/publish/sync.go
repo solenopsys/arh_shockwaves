@@ -1,7 +1,6 @@
 package publish
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v3"
@@ -37,21 +36,12 @@ var cmdSyncGit = &cobra.Command{
 			return
 		}
 
-		jobsPlan := pg.ManeJobsPlan(nickname, filter)
-
-		p, m := ui.JobsToListModel(jobsPlan, "Publishing git repos", filter)
-
-		if _, err := p.Run(); err != nil {
-			fmt.Println("Error running program:", err)
-			os.Exit(1)
+		jobsPlan := jobs.ConvertPjToJi(pg.ManeJobsPlan(nickname, filter))
+		applied, changedFilter := ui.FilteredListView(jobsPlan, "Publishing git repos", filter)
+		if applied {
+			jobsPlanApplied := pg.ManeJobsPlan(nickname, changedFilter)
+			ui.ProcessingJobs(jobsPlanApplied)
 		}
-
-		p.Quit()
-
-		jobsPlanAplied := pg.ManeJobsPlan(nickname, m.Value)
-
-		ui.ProcessingJobs(jobsPlanAplied)
-
 	},
 }
 
@@ -103,5 +93,6 @@ func (pg *PublicGit) ManeJobsPlan(nickname string, filter string) []jobs.Printab
 			jobsPlan = append(jobsPlan, job)
 		}
 	}
+
 	return jobsPlan
 }

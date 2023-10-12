@@ -8,6 +8,7 @@ import (
 	jobs_fetch "xs/internal/jobs/jobs-fetch"
 	"xs/pkg/io"
 	"xs/pkg/tools"
+	"xs/pkg/ui"
 )
 
 var cmdState = &cobra.Command{
@@ -22,19 +23,11 @@ var cmdState = &cobra.Command{
 			io.Fatal("Workspace root dir not found")
 		}
 
-		jobsPlan := makeRemovePlan(pattern)
-
-		for _, job := range jobsPlan {
-			jobs.PrintJob(job.Description())
-		}
-
-		confirm := tools.ConfirmDialog("Remove packets?")
-
-		if confirm {
-			io.Println("Proceeding with the action.")
-			jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
-		} else {
-			io.Println("Canceled.")
+		jobsPlan := jobs.ConvertPjToJi(makeRemovePlan(pattern))
+		applied, changedPattern := ui.FilteredListView(jobsPlan, "Sources for remove", pattern)
+		if applied {
+			jobsPlanApplied := makeRemovePlan(changedPattern)
+			ui.ProcessingJobs(jobsPlanApplied)
 		}
 	},
 }

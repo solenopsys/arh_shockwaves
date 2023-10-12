@@ -3,7 +3,6 @@ package jobs_fetch
 import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
-	"xs/pkg/io"
 )
 
 type TsConfigModuleRemove struct {
@@ -23,11 +22,11 @@ func (t *TsConfigModuleRemove) Execute() *jobs.Result {
 	}
 }
 
-func (t *TsConfigModuleRemove) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (t *TsConfigModuleRemove) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Remove link from tsconfig:  " + t.packageName,
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 
 }

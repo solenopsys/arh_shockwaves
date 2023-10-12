@@ -9,6 +9,7 @@ import (
 	"xs/internal/services"
 	"xs/pkg/io"
 	"xs/pkg/tools"
+	"xs/pkg/ui"
 )
 
 var cmdAdd = &cobra.Command{
@@ -23,22 +24,12 @@ var cmdAdd = &cobra.Command{
 			io.Fatal("Workspace root dir not found")
 		}
 
-		jobsPlan := makeAddPlan(pattern)
-
-		for _, job := range jobsPlan {
-			jobs.PrintJob(job.Description())
+		jobsPlan := jobs.ConvertPjToJi(makeAddPlan(pattern))
+		applied, changedPattern := ui.FilteredListView(jobsPlan, "Sources for loaded", pattern)
+		if applied {
+			jobsPlanApplied := makeAddPlan(changedPattern)
+			ui.ProcessingJobs(jobsPlanApplied)
 		}
-
-		confirm := tools.ConfirmDialog("Load packets?")
-
-		if confirm {
-			io.Println("Proceeding with the action.")
-			jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
-
-		} else {
-			io.Println("Canceled.")
-		}
-
 	},
 }
 
@@ -72,8 +63,6 @@ func makeAddPlan(pattern string) []jobs.PrintableJob {
 			codeJobs = append(codeJobs, preJobs...)
 			codeJobs = append(codeJobs, loadJob)
 			codeJobs = append(codeJobs, postJobs...)
-		} else {
-			jobs.PrintJob(jobs.JobDescription{Short: "Skip", Description: "Already loaded " + moduleSubDir, Color: io.Green})
 		}
 	}
 

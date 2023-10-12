@@ -55,11 +55,11 @@ func (b *MicroFronted) Execute() *jobs.Result {
 
 }
 
-func (b *MicroFronted) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
-		Description: "Build microfrontend " + b.params["lib"],
-		Short:       "Reddy",
+func (b *MicroFronted) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
+		Description: b.params["lib"],
+		Name:        b.params["name"],
 	}
 }
 

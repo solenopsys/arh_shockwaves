@@ -16,11 +16,11 @@ func NewBuildFrontend(params map[string]string, printConsole bool) jobs.Printabl
 	return &BuildFrontend{printConsole, params}
 }
 
-func (b *BuildFrontend) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
-		Description: "Build Front " + b.params["path"],
-		Short:       "Reddy",
+func (b *BuildFrontend) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
+		Description: b.params["path"],
+		Name:        b.params["name"],
 	}
 }
 

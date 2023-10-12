@@ -63,7 +63,6 @@ func (m *WorkspaceManager) FilterLibs(filter string) []*XsModule {
 		}
 	}
 
-	io.Println("Found  lib count:", len(filtered))
 	return filtered
 }
 

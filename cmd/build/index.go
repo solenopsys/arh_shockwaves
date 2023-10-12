@@ -8,6 +8,7 @@ import (
 	"xs/internal/jobs"
 	"xs/pkg/io"
 	"xs/pkg/tools"
+	"xs/pkg/ui"
 )
 
 var Cmd = &cobra.Command{
@@ -25,64 +26,40 @@ var Cmd = &cobra.Command{
 		}
 
 		publish := len(args) > 1 && args[1] == PUBLISH
-
-		base := map[string]string{}
-		if publish {
-			base["publish"] = "true"
+		filter = "*"
+		jobsPlan := jobs.ConvertPjToJi(JobsPlanByGroups(filter, publish))
+		applied, changedFilter := ui.FilteredListView(jobsPlan, "Build this projects", filter)
+		if applied {
+			jobsPlanApplied := JobsPlanByGroups(changedFilter, publish)
+			ui.ProcessingJobs(jobsPlanApplied)
 		}
-
-		wm, err := configs.GetInstanceWsManager()
-		if err != nil {
-			io.Panic(err)
-		}
-
-		cm := configs.GetInstanceConfManager()
-
-		libs := wm.FilterLibs(filter)
-
-		mapping := cm.GetBuildersMapping()
-
-		buildGroups := make(map[string][]*configs.XsModule)
-		for _, lib := range libs {
-			for parentDirs, builderName := range mapping {
-				if strings.HasPrefix(lib.Directory, parentDirs) {
-					buildGroups[builderName] = append(buildGroups[builderName], lib)
-				}
-			}
-		}
-
-		for builderName, libs := range buildGroups {
-			jobsPlan := compilers.NewCompilePlanning(publish).GetPlan(builderName, libs)
-			io.Println("SECTION:", builderName)
-			for _, job := range jobsPlan {
-				jobs.PrintJob(job.Description())
-			}
-		}
-
-		confirm := tools.ConfirmDialog("Build this libraries?")
-
-		if confirm {
-			io.Println("Proceeding with the action.")
-			for builderName, libs := range buildGroups {
-				jobsPlan := compilers.NewCompilePlanning(publish).GetPlan(builderName, libs)
-				io.Println("SECTION:", builderName)
-				jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
-			}
-		} else {
-			io.Println("Canceled.")
-		}
-
-		//contr := compilers.CompilerPlanGenerator{
-		//	Executor:  jobs_build.Microfronted{PrintConsole: false},
-		//	Extractor: extractors.Microfrontend{},
-		//}
-		//err := contr.SelectLibs(filter)
-		//if err == nil {
-		//	contr.CompileSelectedLibs()
-		//} else {
-		//	io.Panic(err)
-		//}
 	},
 }
 
-//*Cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
+func JobsPlanByGroups(filter string, publish bool) []jobs.PrintableJob {
+	cm := configs.GetInstanceConfManager()
+	wm, err := configs.GetInstanceWsManager()
+	if err != nil {
+		io.Panic(err)
+	}
+
+	libs := wm.FilterLibs(filter)
+
+	mapping := cm.GetBuildersMapping()
+
+	buildGroups := make(map[string][]*configs.XsModule)
+	for _, lib := range libs {
+		for parentDirs, builderName := range mapping {
+			if strings.HasPrefix(lib.Directory, parentDirs) {
+				buildGroups[builderName] = append(buildGroups[builderName], lib)
+			}
+		}
+	}
+	resultPlan := make([]jobs.PrintableJob, 0)
+	for builderName, libs := range buildGroups {
+		jobsPlan := compilers.NewCompilePlanning(publish).GetPlan(builderName, libs)
+		resultPlan = append(resultPlan, jobsPlan...)
+	}
+
+	return resultPlan
+}

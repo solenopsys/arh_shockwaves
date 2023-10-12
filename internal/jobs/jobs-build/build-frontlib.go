@@ -40,11 +40,11 @@ func (b *BuildFrontLib) saveToCache(dest string, path string, excludeDirs []stri
 
 }
 
-func (b *BuildFrontLib) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
-		Description: "Build FrontLib " + b.params["path"],
-		Short:       "Reddy",
+func (b *BuildFrontLib) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
+		Description: b.params["path"],
+		Name:        b.params["name"],
 	}
 }
 

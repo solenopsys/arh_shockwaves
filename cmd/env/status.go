@@ -18,6 +18,15 @@ var cmdStatus = &cobra.Command{
 			jobs_env.NewAppCheck("ng-packagr", []string{"ng-packagr", "-v"}),
 			jobs_env.NewAppCheck("nerdctl", []string{"nerdctl", "version"}),
 		}
-		jobs.ExecuteJobsSync(jobsPlan)
+		stat := jobs.ExecuteJobsSync(jobsPlan)
+
+		println("Status:")
+		for _, item := range stat {
+			if item.Success {
+				println("✅ " + item.Description)
+			} else {
+				println("❌ " + item.Description)
+			}
+		}
 	},
 }

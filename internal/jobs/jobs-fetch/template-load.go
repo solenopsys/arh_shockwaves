@@ -4,7 +4,6 @@ import (
 	"xs/internal/jobs"
 	"xs/internal/services"
 	"xs/pkg/controllers"
-	"xs/pkg/io"
 )
 
 type TemplateLoad struct {
@@ -36,11 +35,11 @@ func (t *TemplateLoad) Execute() *jobs.Result {
 	}
 }
 
-func (t *TemplateLoad) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (t *TemplateLoad) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Template load " + t.packageName + " to " + t.targetDir,
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 }
 

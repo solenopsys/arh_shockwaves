@@ -12,7 +12,7 @@ type ChartInstall struct {
 	namespace string
 }
 
-func (c *ChartInstall) Execute() *jobs.Result {
+func (c ChartInstall) Execute() *jobs.Result {
 	kubernetes := wrappers.Kuber{}
 	config, err := kubernetes.GetConfig()
 	if err != nil {
@@ -37,7 +37,14 @@ func (c *ChartInstall) Execute() *jobs.Result {
 		Description: "Installed: " + simple.Name,
 	}
 }
+func (c ChartInstall) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
+		Description: c.repoUrl,
+		Name:        c.chart,
+	}
+}
 
-func NewChartInstall(chart string, repoUrl string, version string) *ChartInstall {
-	return &ChartInstall{chart: chart, repoUrl: repoUrl, version: version, namespace: "default"}
+func NewChartInstall(chart string, repoUrl string, version string) ChartInstall {
+	return ChartInstall{chart: chart, repoUrl: repoUrl, version: version, namespace: "default"}
 }

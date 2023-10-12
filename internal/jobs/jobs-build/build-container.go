@@ -52,11 +52,11 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	}
 }
 
-func (b *BuildContainer) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
-		Description: "Build container " + b.params["path"],
-		Short:       "Reddy",
+func (b *BuildContainer) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
+		Description: b.params["path"],
+		Name:        b.params["name"],
 	}
 }
 

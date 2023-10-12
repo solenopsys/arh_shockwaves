@@ -45,11 +45,11 @@ func (b *BuildHelm) Execute() *jobs.Result {
 	}
 }
 
-func (b *BuildHelm) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
-		Description: "Build helm " + b.params["path"],
-		Short:       "Reddy",
+func (b *BuildHelm) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
+		Description: b.params["path"],
+		Name:        b.params["name"],
 	}
 }
 

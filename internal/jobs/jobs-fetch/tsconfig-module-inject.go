@@ -4,7 +4,6 @@ import (
 	"strings"
 	"xs/internal/configs"
 	"xs/internal/jobs"
-	"xs/pkg/io"
 )
 
 type TsConfigModuleInject struct {
@@ -25,11 +24,11 @@ func (t *TsConfigModuleInject) Execute() *jobs.Result {
 	}
 }
 
-func (t *TsConfigModuleInject) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (t *TsConfigModuleInject) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Inject to tsconfig link for:  " + t.packageName,
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 
 }

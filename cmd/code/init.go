@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"xs/internal/jobs"
 	jobs_fetch "xs/internal/jobs/jobs-fetch"
+	"xs/pkg/ui"
 )
 
 var cmdInit = &cobra.Command{
@@ -11,6 +12,7 @@ var cmdInit = &cobra.Command{
 	Short: "Workspace initialization",
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
-		jobs.ExecuteOneSync(jobs_fetch.NewTemplateLoad("@solenopsys/tp-workspace", "."))
+		load := jobs_fetch.NewTemplateLoad("@solenopsys/tp-workspace", ".")
+		ui.ProcessingJobs([]jobs.PrintableJob{load})
 	},
 }

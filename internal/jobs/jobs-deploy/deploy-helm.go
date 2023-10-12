@@ -4,7 +4,6 @@ import (
 	"os"
 	"path/filepath"
 	"xs/internal/jobs"
-	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -36,11 +35,11 @@ func (d *DeployHelm) Execute() *jobs.Result {
 	}
 }
 
-func (d *DeployHelm) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (d *DeployHelm) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy Helm " + d.params["path"],
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 }
 

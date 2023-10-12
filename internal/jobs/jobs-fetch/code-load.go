@@ -4,7 +4,6 @@ import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
 	"xs/pkg/controllers"
-	"xs/pkg/io"
 )
 
 type CodeLoad struct {
@@ -43,11 +42,11 @@ func (t *CodeLoad) Execute() *jobs.Result {
 	}
 }
 
-func (t *CodeLoad) Description() jobs.JobDescription {
-	return jobs.JobDescription{
-		Color:       io.Blue,
+func (t *CodeLoad) Title() jobs.ItemTitle {
+	return jobs.ItemTitle{
+		Style:       jobs.DEFAULT_STYLE,
 		Description: t.packageName + " -> " + t.targetDir,
-		Short:       "Reddy",
+		Name:        "Reddy",
 	}
 
 }
