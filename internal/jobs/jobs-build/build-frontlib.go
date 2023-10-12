@@ -56,8 +56,8 @@ func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring
 	pt.MoveTo(src)
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.printConsole}
-	go stdPrinter.Processing()
+	stdPrinter := io.StdPrinter{Key: b.Title().Name, Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.printConsole}
+
 	result := stdPrinter.Start()
 
 	absoluteDestPath, err := filepath.Abs(dest)

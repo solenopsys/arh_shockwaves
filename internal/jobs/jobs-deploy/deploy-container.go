@@ -21,8 +21,7 @@ func (d *DeployContainer) Execute() *jobs.Result {
 	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: command, Args: argsSplit, PrintToConsole: d.printConsole}
-	go stdPrinter.Processing()
+	stdPrinter := io.StdPrinter{Key: d.Title().Name, Command: command, Args: argsSplit, PrintToConsole: d.printConsole}
 	result := stdPrinter.Start()
 
 	if result == 0 {

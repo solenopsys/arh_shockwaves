@@ -33,8 +33,8 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: command, Args: argsSplit, PrintToConsole: c.printConsole}
-	go stdPrinter.Processing()
+	stdPrinter := io.StdPrinter{Key: c.Title().Name, Command: command, Args: argsSplit, PrintToConsole: c.printConsole}
+
 	result := stdPrinter.Start()
 
 	if result == 0 {

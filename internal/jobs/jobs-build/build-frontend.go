@@ -35,8 +35,8 @@ func (n *BuildFrontend) Execute() *jobs.Result {
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: "ng", Args: argsSplit, PrintToConsole: n.printConsole}
-	go stdPrinter.Processing()
+	stdPrinter := io.StdPrinter{Key: n.Title().Name, Command: "ng", Args: argsSplit, PrintToConsole: n.printConsole}
+
 	result := stdPrinter.Start()
 
 	pt.MoveToBasePath()

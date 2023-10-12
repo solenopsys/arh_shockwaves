@@ -21,8 +21,7 @@ func (b *MicroFronted) build() int {
 	arg := "bmf " + lib
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Out: make(chan string), Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.PrintConsole}
-	go stdPrinter.Processing()
+	stdPrinter := io.StdPrinter{Key: b.Title().Name, Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.PrintConsole}
 	return stdPrinter.Start()
 }
 
