@@ -1,6 +1,7 @@
 package publish
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"gopkg.in/yaml.v3"
@@ -9,7 +10,7 @@ import (
 	"xs/internal/jobs"
 	jobs_publish "xs/internal/jobs/jobs-publish"
 	"xs/pkg/io"
-	"xs/pkg/tools"
+	"xs/pkg/ui"
 )
 
 var cmdSyncGit = &cobra.Command{
@@ -38,19 +39,18 @@ var cmdSyncGit = &cobra.Command{
 
 		jobsPlan := pg.ManeJobsPlan(nickname, filter)
 
-		for _, job := range jobsPlan {
-			jobs.PrintJob((job).Description())
+		p, m := ui.JobsToListModel(jobsPlan, "Publishing git repos", filter)
+
+		if _, err := p.Run(); err != nil {
+			fmt.Println("Error running program:", err)
+			os.Exit(1)
 		}
 
-		confirm := tools.ConfirmDialog("Load packets?")
+		p.Quit()
 
-		if confirm {
-			io.Println("Proceeding with the action.")
-			jobs.ExecuteJobsSync(jobs.ConvertJobs(jobsPlan))
+		jobsPlanAplied := pg.ManeJobsPlan(nickname, m.Value)
 
-		} else {
-			io.Println("Canceled.")
-		}
+		ui.ProcessingJobs(jobsPlanAplied)
 
 	},
 }

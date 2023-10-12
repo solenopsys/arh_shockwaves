@@ -84,3 +84,5 @@ var Cmd = &cobra.Command{
 		//}
 	},
 }
+
+//*Cmd.Flags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")

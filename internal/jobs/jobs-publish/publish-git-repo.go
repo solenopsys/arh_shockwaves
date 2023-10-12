@@ -181,7 +181,7 @@ func (t *PublishGitRepo) Execute() *jobs.Result {
 func (t *PublishGitRepo) Description() jobs.JobDescription {
 	return jobs.JobDescription{
 		Color:       io.Blue,
-		Description: "Publish repository: " + t.repoUrl,
-		Short:       "Reddy",
+		Description: t.repoUrl,
+		Short:       t.repoName,
 	}
 }
