@@ -26,7 +26,7 @@ func (t *TsConfigModuleRemove) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Remove link from tsconfig:  " + t.packageName,
-		Name:        "Reddy",
+		Name:        t.packageName,
 	}
 
 }

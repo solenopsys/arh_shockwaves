@@ -41,10 +41,11 @@ func (d *DeployContainer) Execute() *jobs.Result {
 }
 
 func (d *DeployContainer) Title() jobs.ItemTitle {
+	name := d.params["name"]
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
-		Description: "Deploy container: " + d.params["name"],
-		Name:        "Reddy",
+		Description: "Deploy container: " + name,
+		Name:        name,
 	}
 }
 

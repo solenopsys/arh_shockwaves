@@ -39,7 +39,7 @@ func (t *TemplateLoad) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Template load " + t.packageName + " to " + t.targetDir,
-		Name:        "Reddy",
+		Name:        t.packageName,
 	}
 }
 

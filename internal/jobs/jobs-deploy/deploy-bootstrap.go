@@ -24,7 +24,7 @@ func (d *DeployFrontendBootstrap) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy frontend bootstrap " + d.params["dist"],
-		Name:        "Reddy",
+		Name:        d.params["name"],
 	}
 }
 

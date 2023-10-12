@@ -38,7 +38,7 @@ func (d *DeployMicroFrontend) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy micro-frontend " + d.params["dist"],
-		Name:        "Reddy",
+		Name:        d.params["name"],
 	}
 }
 

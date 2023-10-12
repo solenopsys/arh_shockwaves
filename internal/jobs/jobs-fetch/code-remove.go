@@ -35,7 +35,7 @@ func (t *CodeRemove) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Remove " + t.packageName + " from " + t.targetDir,
-		Name:        "Reddy",
+		Name:        t.packageName,
 	}
 
 }

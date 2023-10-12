@@ -39,7 +39,7 @@ func (d *DeployHelm) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy Helm " + d.params["path"],
-		Name:        "Reddy",
+		Name:        d.params["name"],
 	}
 }
 

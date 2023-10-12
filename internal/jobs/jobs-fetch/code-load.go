@@ -46,7 +46,7 @@ func (t *CodeLoad) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
 		Description: t.packageName + " -> " + t.targetDir,
-		Name:        "Reddy",
+		Name:        t.packageName,
 	}
 
 }
