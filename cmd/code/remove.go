@@ -23,7 +23,7 @@ var cmdState = &cobra.Command{
 			io.Fatal("Workspace root dir not found")
 		}
 
-		jobsPlan := jobs.ConvertPjToJi(makeRemovePlan(pattern))
+		jobsPlan := jobs.ConvertPjToJi(makeRemovePlan("*"))
 		applied, changedPattern := ui.FilteredListView(jobsPlan, "Sources for remove", pattern)
 		if applied {
 			jobsPlanApplied := makeRemovePlan(changedPattern)

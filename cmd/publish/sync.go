@@ -36,7 +36,7 @@ var cmdSyncGit = &cobra.Command{
 			return
 		}
 
-		jobsPlan := jobs.ConvertPjToJi(pg.ManeJobsPlan(nickname, filter))
+		jobsPlan := jobs.ConvertPjToJi(pg.ManeJobsPlan(nickname, "*"))
 		applied, changedFilter := ui.FilteredListView(jobsPlan, "Publishing git repos", filter)
 		if applied {
 			jobsPlanApplied := pg.ManeJobsPlan(nickname, changedFilter)

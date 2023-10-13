@@ -25,13 +25,13 @@ var (
 	currentPkgNameStyle = lipgloss.NewStyle().Foreground(lipgloss.Color("211"))
 	doneStyle           = lipgloss.NewStyle().Margin(1, 2)
 	checkMark           = lipgloss.NewStyle().Foreground(lipgloss.Color("42")).SetString("✓")
-	errorMark           = lipgloss.NewStyle().Foreground(lipgloss.Color("80")).SetString("x")
+	errorMark           = lipgloss.NewStyle().Foreground(lipgloss.Color("#ff0000")).SetString("x")
 )
 
 func newModel(jobs []jobs.PrintableJob) model {
 	p := progress.New(
 		progress.WithDefaultGradient(),
-		progress.WithWidth(50),
+		progress.WithWidth(20),
 		progress.WithoutPercentage(),
 	)
 	s := spinner.New()
@@ -50,7 +50,6 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.WindowSizeMsg:
-
 		m.width, m.height = msg.Width, msg.Height
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -78,26 +77,28 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m model) funcName(resType lipgloss.Style) (tea.Model, tea.Cmd) {
 	if m.index >= len(m.jobs)-1 {
 		m.done = true
-		nextName := m.jobs[m.index].Title().Name
-		cmd := tea.Printf("%s %s ", resType, nextName)
-		return m, tea.Batch(cmd, tea.Quit)
+
+		progressNext := m.progress.SetPercent(1)
+		title := m.jobs[m.index].Title()
+		return m, tea.Batch(progressNext, tea.Printf("%s %s - %s", resType, title.Name, title.Description))
 	}
 
 	// Update progress bar
 	progressCmd := m.progress.SetPercent(float64(m.index) / float64(len(m.jobs)-1))
-	name := m.jobs[m.index].Title().Name
+	title := m.jobs[m.index].Title()
+
 	m.index++
 
 	job := m.jobs[m.index]
 
-	comands := []tea.Cmd{
+	commands := []tea.Cmd{
 		progressCmd,
-		tea.Printf("%s %s ", resType, name),
+		tea.Printf("%s %s - %s ", resType, title.Name, title.Description),
 		runJob(job),
 	}
 
 	return m, tea.Batch(
-		comands...,
+		commands...,
 	)
 }
 
@@ -106,7 +107,7 @@ func (m model) View() string {
 	w := lipgloss.Width(fmt.Sprintf("%d", n))
 
 	if m.done {
-		return doneStyle.Render(fmt.Sprintf("Done!  %d jobs.\n", n))
+		return doneStyle.Render(fmt.Sprintf("Done:  %d jobs! (Press [q] for exit)", n))
 	}
 
 	pkgCount := fmt.Sprintf(" %*d/%*d", w, m.index, w, n-1)
@@ -125,6 +126,7 @@ func (m model) View() string {
 	return spin + info + gap + prog + pkgCount
 }
 
+type exitMessage string
 type jobExecMessage string
 type jobErrorMessage string
 

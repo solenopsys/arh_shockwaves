@@ -24,7 +24,7 @@ var cmdAdd = &cobra.Command{
 			io.Fatal("Workspace root dir not found")
 		}
 
-		jobsPlan := jobs.ConvertPjToJi(makeAddPlan(pattern))
+		jobsPlan := jobs.ConvertPjToJi(makeAddPlan("*"))
 		applied, changedPattern := ui.FilteredListView(jobsPlan, "Sources for loaded", pattern)
 		if applied {
 			jobsPlanApplied := makeAddPlan(changedPattern)

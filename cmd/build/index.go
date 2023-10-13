@@ -26,7 +26,7 @@ var Cmd = &cobra.Command{
 		}
 
 		publish := len(args) > 1 && args[1] == PUBLISH
-		jobsPlan := jobs.ConvertPjToJi(JobsPlanByGroups(filter, publish))
+		jobsPlan := jobs.ConvertPjToJi(JobsPlanByGroups("*", publish))
 		applied, changedFilter := ui.FilteredListView(jobsPlan, "Build this projects", filter)
 		if applied {
 			jobsPlanApplied := JobsPlanByGroups(changedFilter, publish)
