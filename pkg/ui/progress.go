@@ -77,20 +77,27 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m model) funcName(resType lipgloss.Style) (tea.Model, tea.Cmd) {
 	if m.index >= len(m.jobs)-1 {
-		// Everything's been installed. We're done!
 		m.done = true
-		return m, tea.Quit
+		nextName := m.jobs[m.index].Title().Name
+		cmd := tea.Printf("%s %s ", resType, nextName)
+		return m, tea.Batch(cmd, tea.Quit)
 	}
 
 	// Update progress bar
 	progressCmd := m.progress.SetPercent(float64(m.index) / float64(len(m.jobs)-1))
-
+	name := m.jobs[m.index].Title().Name
 	m.index++
+
 	job := m.jobs[m.index]
-	return m, tea.Batch(
+
+	comands := []tea.Cmd{
 		progressCmd,
-		tea.Printf("%s %s ", resType, m.jobs[m.index].Title().Name),
-		runJob(job), // download the next package
+		tea.Printf("%s %s ", resType, name),
+		runJob(job),
+	}
+
+	return m, tea.Batch(
+		comands...,
 	)
 }
 
@@ -110,7 +117,7 @@ func (m model) View() string {
 
 	job := m.jobs[m.index]
 	pkgName := currentPkgNameStyle.Render(job.Title().Name)
-	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Run " + pkgName + " <- " + job.Title().Description)
+	info := lipgloss.NewStyle().MaxWidth(cellsAvail).Render("Run " + pkgName + " (" + job.Title().Description + ")")
 
 	cellsRemaining := max(0, m.width-lipgloss.Width(spin+info+prog+pkgCount))
 	gap := strings.Repeat(" ", cellsRemaining)

@@ -28,15 +28,16 @@ func (b *MicroFronted) build() int {
 func (b *MicroFronted) Execute() *jobs.Result {
 
 	pt := xstool.PathTools{}
-	pt.MoveTo("frontends") //todo move to const
 	pt.SetBasePathPwd()
-	defer pt.MoveToBasePath()
+	pt.MoveTo("frontends") //todo move to const
 
-	fl := services.NewFrontLibController()
+	fl := services.NewFrontLibController(b.Title().Name)
 
 	fl.PreProcessing()
 	result := b.build()
 	fl.PostProcessing()
+
+	defer pt.MoveToBasePath()
 
 	if result == 0 {
 		return &jobs.Result{

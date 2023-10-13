@@ -29,6 +29,7 @@ func (s *LogStore) Processing() {
 			}
 
 			count, err := s.store[message.Key].WriteString(r)
+			//	print(r)
 
 			s.statistic[message.Key] = s.statistic[message.Key] + count
 			if err != nil {
@@ -43,7 +44,11 @@ var logStoreInstance *LogStore
 
 func GetLogStore() *LogStore {
 	logStoreOnce.Do(func() {
-		logStoreInstance = &LogStore{}
+		logStoreInstance = &LogStore{
+			MessagesStream: make(chan LogMessage),
+			store:          make(map[string]io.StringWriter),
+			statistic:      make(map[string]int),
+		}
 		go logStoreInstance.Processing()
 	})
 	return logStoreInstance

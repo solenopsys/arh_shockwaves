@@ -16,6 +16,7 @@ type FrontLibsController struct {
 	remoteCheck     map[string]bool
 	pinningRequests *PinningRequests
 	pinningService  *wrappers.Pinning
+	key             string
 }
 
 const NPM_APPLICATION = "pnpm"
@@ -26,7 +27,10 @@ func (b *FrontLibsController) genCache() {
 	if err != nil {
 		io.Println("Error executing command:", err)
 	} else {
-		io.Println("Output:", string(output))
+		store := io.GetLogStore()
+		message := string(output)
+		store.MessagesStream <- io.LogMessage{Message: message, Key: b.key}
+		//println(message)
 	}
 }
 
@@ -36,7 +40,7 @@ func (b *FrontLibsController) CacheCheck() {
 	}
 }
 
-func NewFrontLibController() *FrontLibsController {
+func NewFrontLibController(key string) *FrontLibsController {
 	return &FrontLibsController{
 		libs:            make(map[string]string),
 		remoteCheck:     make(map[string]bool),
@@ -45,6 +49,7 @@ func NewFrontLibController() *FrontLibsController {
 		ipfsNode:        wrappers.NewIpfsNode(),
 		pinningRequests: NewPinningRequests(),
 		pinningService:  wrappers.NewPinning(),
+		key:             key,
 	}
 }
 
@@ -53,7 +58,7 @@ func (b *FrontLibsController) filePath(fileName string) string {
 }
 
 func (b *FrontLibsController) tryDownLoadLib(fileName string) bool {
-	io.Println("Try download static front lib:", fileName)
+	//io.Println("Try download static front lib:", fileName)
 	cid, err := b.pinningRequests.FindFontLib(fileName)
 	if err == nil {
 		requests := NewIpfsRequests()
@@ -100,14 +105,14 @@ func (b *FrontLibsController) loadCache() {
 func (b *FrontLibsController) localLibExists(fileName string) bool {
 	path := b.filePath(fileName)
 	_, err := os.Stat(path)
+
 	return !os.IsNotExist(err)
 }
 
 func (b *FrontLibsController) PreProcessing() {
 	b.genCache()
 	b.loadCache()
-	for libName, fileName := range b.libs {
-		io.Println("Check lib:", libName, "file name:", fileName)
+	for _, fileName := range b.libs {
 		libInLocalCache := b.localLibExists(fileName)
 		if !libInLocalCache {
 			b.remoteCheck[fileName] = b.tryDownLoadLib(fileName)
