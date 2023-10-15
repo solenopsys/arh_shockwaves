@@ -4,7 +4,6 @@ import (
 	"os"
 	"path/filepath"
 	"xs/internal/jobs"
-	"xs/pkg/io"
 	"xs/pkg/wrappers"
 )
 
@@ -23,11 +22,12 @@ func (b *BuildHelm) Execute() *jobs.Result {
 
 	distFile := dist + "/" + parent + ".tar.gz"
 	absolutPath, _ := filepath.Abs(pathHelmDir)
-	io.Println("path", absolutPath)
+	//io.Println("path", absolutPath)
 
 	arch := wrappers.ArchiveDir(absolutPath, "helm")
 
-	io.Println("archive size", len(arch))
+	//io.Println("archive size", len(arch))
+	os.Remove(distFile)
 
 	err := os.WriteFile(distFile, arch, 0444)
 

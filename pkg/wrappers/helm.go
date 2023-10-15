@@ -13,26 +13,24 @@ import (
 	"xs/pkg/io"
 )
 
-func PushDir(archive []byte) {
+func PushDir(archive []byte) (string, error) {
 	buffer := bytes.NewBuffer(archive)
 
 	url := viper.GetString("hosts.helmRepository") + "/api/charts"
 	resp, err := http.Post(url, "application/octet-stream", buffer)
 	if err != nil {
-		io.Println("Error sending request:", err)
-		os.Exit(1)
+		return "", err
 	}
 	defer resp.Body.Close()
 
 	// Read the response body
 	responseBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		io.Println("Error reading response:", err)
-		os.Exit(1)
+		return "", err
 	}
 
 	// Print the response body
-	io.Println(string(responseBody))
+	return string(responseBody), err
 }
 
 func ArchiveDir(dirName string, parentDir string) []byte {

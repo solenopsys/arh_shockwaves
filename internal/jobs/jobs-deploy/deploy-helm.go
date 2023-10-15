@@ -26,12 +26,19 @@ func (d *DeployHelm) Execute() *jobs.Result {
 		}
 	}
 
-	wrappers.PushDir(archBytes)
+	resp, err := wrappers.PushDir(archBytes)
 
-	return &jobs.Result{
-		Success:     true,
-		Error:       nil,
-		Description: "BuildHelm executed",
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
+	} else {
+		return &jobs.Result{
+			Success:     true,
+			Error:       nil,
+			Description: "Build Helm executed" + resp,
+		}
 	}
 }
 

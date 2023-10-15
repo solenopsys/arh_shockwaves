@@ -50,7 +50,8 @@ func checkoutFromBareRepository(repoPath, targetRefName string) error {
 
 	// Checkout the desired branch or commit.
 	err = worktree.Checkout(&git.CheckoutOptions{
-		Hash: ref.Hash(),
+		Hash:  ref.Hash(),
+		Force: true,
 		//	Branch: plumbing.ReferenceName(targetRefName),
 
 		Create: false, // Set to true if you want to create a new branch if it doesn't exist.
@@ -161,6 +162,7 @@ func (g *GoGit) CloneFromIpfs() error {
 	}
 
 	err = checkoutFromBareRepository(g.BasePath, "refs/heads/master")
+
 	if err != nil {
 		return err
 	}
