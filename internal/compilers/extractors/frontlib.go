@@ -9,6 +9,7 @@ type Frontlib struct {
 func (e Frontlib) Extract(name string, path string) map[string]string {
 	distribution := wrappers.LoadNgDest(path)
 	params := map[string]string{
+		"name": name,
 		"path": path,
 		"dist": distribution,
 	}

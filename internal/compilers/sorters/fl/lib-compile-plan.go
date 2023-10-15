@@ -34,7 +34,7 @@ func (c *LibCompilePlan) LoadConfigs(libs []*configs.XsModule) {
 	c.packagesOrder = ord
 }
 
-func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsExtractor, jobCreate func(params map[string]string) jobs.PrintableJob) []jobs.PrintableJob { // todo need refactoring
+func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsExtractor, jobCreate func(params map[string]string) []jobs.PrintableJob) []jobs.PrintableJob { // todo need refactoring
 
 	cache := NewCompileCache(".xs/compiled")
 
@@ -82,7 +82,7 @@ func (c *LibCompilePlan) MakeJobs(force bool, extractor internal.CompileParamsEx
 
 				currentJob := jobCreate(params)
 
-				results = append(results, currentJob)
+				results = append(results, currentJob...)
 
 				c.compileNow[pack.Name] = false
 				c.packagesOrder.SetCompiled(pack.Name)

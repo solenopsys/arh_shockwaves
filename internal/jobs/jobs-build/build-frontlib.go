@@ -68,13 +68,11 @@ func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring
 	pt.MoveToBasePath()
 
 	if result == 0 {
-		io.PrintColor("OK", io.Green)
+		//io.PrintColor("OK", io.Green)
 
-		io.Println("Make link: ", absoluteDestPath)
+		//io.Println("Make link: ", absoluteDestPath)
 		pt.MoveTo("frontends") //todo move to const
-		currentDir, err := os.Getwd()
-
-		println("current path", currentDir)
+		_, err := os.Getwd()
 
 		cmd := exec.Command(NPM_APPLICATION, "link", absoluteDestPath)
 

@@ -36,7 +36,7 @@ func (c *CompilePlanning) createUniversal(key string,
 func NewCompilePlanning(publish bool) *CompilePlanning {
 	c := &CompilePlanning{publish: publish}
 	c.orders = map[string]sorters.Sorter{}
-	c.orders[("frontlib")] = sorters.NowFrontLibSorter()
+	c.orders[("frontlib")] = sorters.NowFrontLibSorter(publish)
 	c.createUniversal("bootstrap", jobs_build.NewBuildFrontend, jobs_deploy.NewDeployFrontendBootstrap, extractors.Frontend{})
 	c.createUniversal("microfrontend", jobs_build.NewMicroFronted, jobs_deploy.NewDeployMicroFrontend, extractors.Microfrontend{})
 	c.createUniversal("helm", jobs_build.NewBuildHelm, jobs_deploy.NewDeployHelm, extractors.Backend{})
