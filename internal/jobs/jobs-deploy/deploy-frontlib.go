@@ -1,8 +1,10 @@
 package jobs_deploy
 
 import (
+	"path/filepath"
 	"xs/internal/jobs"
 	"xs/pkg/io"
+	xstool "xs/pkg/tools"
 )
 
 type DeployFrontlib struct {
@@ -12,9 +14,19 @@ type DeployFrontlib struct {
 
 func (d *DeployFrontlib) Execute() *jobs.Result {
 	dest := d.params["dist"]
+	src := d.params["path"]
 	command := "pnpm"
-	stdPrinter := io.StdPrinter{Key: d.Title().Name, Command: command, Args: []string{"publish", dest}, PrintToConsole: d.printConsole}
+	pt := xstool.PathTools{}
+	pt.SetBasePathPwd() // remove it
+	pt.MoveTo(src)
+	absoluteDestPath, err := filepath.Abs(dest)
+	if err != nil {
+		io.Panic(err)
+	}
+	stdPrinter := io.StdPrinter{Key: d.Title().Name, Command: command, Args: []string{"publish", absoluteDestPath}, PrintToConsole: d.printConsole}
 	result := stdPrinter.Start()
+
+	pt.MoveToBasePath()
 
 	if result == 0 {
 		return &jobs.Result{

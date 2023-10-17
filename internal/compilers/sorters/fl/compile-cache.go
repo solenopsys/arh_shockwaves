@@ -25,7 +25,7 @@ func (c *CompileCache) clear() error {
 }
 
 func (c *CompileCache) SaveHash(srcHash string, dstHash string) error {
-	return os.WriteFile(c.cacheIndexDir+"/"+srcHash, []byte(dstHash), 0444)
+	return os.WriteFile(c.cacheIndexDir+"/"+srcHash, []byte(dstHash), 0777)
 }
 
 func (c *CompileCache) CheckHash(srcHash string, dstHash string) bool {

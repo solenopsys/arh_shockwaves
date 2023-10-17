@@ -1,7 +1,7 @@
 format: xs-configuration-v2
 files:
   workspace: "/xs-workspace.yaml"
-  tsconfig: "/frontends/configurations/typescript/base.json"
+  tsconfig: "/tsconfig.json"
 hosts:
   ipfsNode: "ipfs-api.solenopsys.org:80"
   pinningService: "http://pinning.solenopsys.org"
@@ -14,7 +14,7 @@ templates:
     contracts: "@solenopsys/tp-contracts"
     embedded: "@solenopsys/tp-embedded"
     engineering: "@solenopsys/tp-engineering"
-  creation: { }
+  creation: {}
 git:
   paths:
     bootstraps: frontends/bootstraps
