@@ -182,5 +182,6 @@ func (t *PublishGitRepo) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: t.repoUrl,
 		Name:        t.repoName,
+		Key:         "publish-git-repo-" + t.repoName,
 	}
 }

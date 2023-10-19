@@ -21,7 +21,7 @@ func (b *MicroFronted) build() int {
 	arg := "bmf " + lib
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Key: b.Title().Name, Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.PrintConsole}
+	stdPrinter := io.StdPrinter{Key: b.Title().Key, Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.PrintConsole}
 	return stdPrinter.Start()
 }
 
@@ -31,7 +31,7 @@ func (b *MicroFronted) Execute() *jobs.Result {
 	pt.SetBasePathPwd()
 	pt.MoveTo("frontends") //todo move to const
 
-	fl := services.NewFrontLibController(b.Title().Name)
+	fl := services.NewFrontLibController(b.Title().Key)
 
 	fl.PreProcessing()
 	result := b.build()
@@ -60,6 +60,7 @@ func (b *MicroFronted) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: b.params["lib"],
 		Name:        b.params["name"],
+		Key:         "build-microfrontend-" + b.params["name"],
 	}
 }
 

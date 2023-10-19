@@ -23,7 +23,7 @@ func (d *DeployFrontlib) Execute() *jobs.Result {
 	if err != nil {
 		io.Panic(err)
 	}
-	stdPrinter := io.StdPrinter{Key: d.Title().Name, Command: command, Args: []string{"publish", absoluteDestPath}, PrintToConsole: d.printConsole}
+	stdPrinter := io.StdPrinter{Key: d.Title().Key, Command: command, Args: []string{"publish", absoluteDestPath}, PrintToConsole: d.printConsole}
 	result := stdPrinter.Start()
 
 	pt.MoveToBasePath()
@@ -49,6 +49,7 @@ func (d *DeployFrontlib) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy frontlib: " + name,
 		Name:        name,
+		Key:         "deploy-frontlib-" + name,
 	}
 }
 

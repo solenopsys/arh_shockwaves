@@ -40,7 +40,8 @@ var cmdSyncGit = &cobra.Command{
 		applied, changedFilter := ui.FilteredListView(jobsPlan, "Publishing git repos", filter)
 		if applied {
 			jobsPlanApplied := pg.ManeJobsPlan(nickname, changedFilter)
-			ui.ProcessingJobs(jobsPlanApplied)
+			executor := jobs.NewExecutor(jobsPlanApplied)
+			ui.ProcessingJobs(executor)
 		}
 	},
 }

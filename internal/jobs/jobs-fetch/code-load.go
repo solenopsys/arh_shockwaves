@@ -47,6 +47,7 @@ func (t *CodeLoad) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: t.packageName + " -> " + t.targetDir,
 		Name:        t.packageName,
+		Key:         "code-load-" + t.packageName,
 	}
 
 }

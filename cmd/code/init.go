@@ -13,6 +13,7 @@ var cmdInit = &cobra.Command{
 	Args:  cobra.MinimumNArgs(0),
 	Run: func(cmd *cobra.Command, args []string) {
 		load := jobs_fetch.NewTemplateLoad("@solenopsys/tp-workspace", ".")
-		ui.ProcessingJobs([]jobs.PrintableJob{load})
+		executor := jobs.NewExecutor([]jobs.PrintableJob{load})
+		ui.ProcessingJobs(executor)
 	},
 }

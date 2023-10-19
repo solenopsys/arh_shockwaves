@@ -29,6 +29,7 @@ func (t *TsConfigModuleInject) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Inject to tsconfig link for:  " + t.packageName,
 		Name:        t.packageName,
+		Key:         "tsconfig-module-inject-" + t.packageName,
 	}
 
 }

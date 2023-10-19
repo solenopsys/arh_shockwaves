@@ -47,6 +47,7 @@ func (d *DeployHelm) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy Helm " + d.params["path"],
 		Name:        d.params["name"],
+		Key:         "deploy-name-" + d.params["name"],
 	}
 }
 

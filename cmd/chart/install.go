@@ -17,6 +17,7 @@ var cmdInstall = &cobra.Command{
 		version := args[1]
 
 		load := jobs_chart.NewChartInstall(chart, repoUrl, version)
-		ui.ProcessingJobs([]jobs.PrintableJob{load})
+		executor := jobs.NewExecutor([]jobs.PrintableJob{load})
+		ui.ProcessingJobs(executor)
 	},
 }

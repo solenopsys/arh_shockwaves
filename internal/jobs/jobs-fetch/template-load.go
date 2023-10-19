@@ -40,6 +40,7 @@ func (t *TemplateLoad) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Template load " + t.packageName + " to " + t.targetDir,
 		Name:        t.packageName,
+		Key:         "template-load-" + t.packageName,
 	}
 }
 

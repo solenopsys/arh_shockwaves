@@ -34,6 +34,7 @@ var cmdList = &cobra.Command{
 				Style:       jobs.DEFAULT_STYLE,
 				Description: item.Name,
 				Name:        item.Name,
+				Key:         "chart-list-" + item.Name,
 			})
 		}
 

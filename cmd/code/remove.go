@@ -27,7 +27,8 @@ var cmdState = &cobra.Command{
 		applied, changedPattern := ui.FilteredListView(jobsPlan, "Sources for remove", pattern)
 		if applied {
 			jobsPlanApplied := makeRemovePlan(changedPattern)
-			ui.ProcessingJobs(jobsPlanApplied)
+			executor := jobs.NewExecutor(jobsPlanApplied)
+			ui.ProcessingJobs(executor)
 		}
 	},
 }

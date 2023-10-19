@@ -21,7 +21,7 @@ func (d *DeployContainer) Execute() *jobs.Result {
 	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Key: d.Title().Name, Command: command, Args: argsSplit, PrintToConsole: d.printConsole}
+	stdPrinter := io.StdPrinter{Key: d.Title().Key, Command: command, Args: argsSplit, PrintToConsole: d.printConsole}
 	result := stdPrinter.Start()
 
 	if result == 0 {
@@ -45,6 +45,7 @@ func (d *DeployContainer) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Deploy container: " + name,
 		Name:        name,
+		Key:         "deploy-container-" + name,
 	}
 }
 

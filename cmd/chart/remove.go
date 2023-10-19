@@ -14,6 +14,8 @@ var cmdRemove = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		chart := args[0]
 		load := jobs_chart.NewChartRemove(chart)
-		ui.ProcessingJobs([]jobs.PrintableJob{load})
+
+		executor := jobs.NewExecutor([]jobs.PrintableJob{load})
+		ui.ProcessingJobs(executor)
 	},
 }

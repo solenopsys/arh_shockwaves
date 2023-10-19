@@ -28,7 +28,8 @@ var cmdAdd = &cobra.Command{
 		applied, changedPattern := ui.FilteredListView(jobsPlan, "Sources for loaded", pattern)
 		if applied {
 			jobsPlanApplied := makeAddPlan(changedPattern)
-			ui.ProcessingJobs(jobsPlanApplied)
+			executor := jobs.NewExecutor(jobsPlanApplied)
+			ui.ProcessingJobs(executor)
 		}
 	},
 }

@@ -50,6 +50,7 @@ func (b *BuildHelm) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: b.params["path"],
 		Name:        b.params["name"],
+		Key:         "build-helm" + b.params["name"],
 	}
 }
 

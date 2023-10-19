@@ -27,6 +27,7 @@ func (t *TsConfigModuleRemove) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: "Remove link from tsconfig:  " + t.packageName,
 		Name:        t.packageName,
+		Key:         "tsconfig-module-remove-" + t.packageName,
 	}
 
 }

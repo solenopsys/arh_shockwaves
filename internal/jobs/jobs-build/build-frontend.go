@@ -21,6 +21,7 @@ func (b *BuildFrontend) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: b.params["path"],
 		Name:        b.params["name"],
+		Key:         "build-frontend-" + b.params["name"],
 	}
 }
 
@@ -35,7 +36,7 @@ func (n *BuildFrontend) Execute() *jobs.Result {
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Key: n.Title().Name, Command: "ng", Args: argsSplit, PrintToConsole: n.printConsole}
+	stdPrinter := io.StdPrinter{Key: n.Title().Key, Command: "ng", Args: argsSplit, PrintToConsole: n.printConsole}
 
 	result := stdPrinter.Start()
 

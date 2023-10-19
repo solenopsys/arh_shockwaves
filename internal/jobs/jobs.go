@@ -18,6 +18,7 @@ type ItemTitle struct {
 	Style       lipgloss.Style
 	Description string
 	Name        string
+	Key         string
 }
 
 type UiListItem interface {

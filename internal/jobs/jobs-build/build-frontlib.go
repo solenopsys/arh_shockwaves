@@ -45,6 +45,7 @@ func (b *BuildFrontLib) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: b.params["path"],
 		Name:        b.params["name"],
+		Key:         "build-frontlib" + b.params["name"],
 	}
 }
 
@@ -56,7 +57,7 @@ func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring
 	pt.MoveTo(src)
 	arg := "build"
 	argsSplit := strings.Split(arg, " ")
-	stdPrinter := io.StdPrinter{Key: b.Title().Name, Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.printConsole}
+	stdPrinter := io.StdPrinter{Key: b.Title().Key, Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.printConsole}
 
 	result := stdPrinter.Start()
 

@@ -42,6 +42,7 @@ func (c ChartInstall) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: c.repoUrl,
 		Name:        c.chart,
+		Key:         "chart-install-" + c.chart,
 	}
 }
 

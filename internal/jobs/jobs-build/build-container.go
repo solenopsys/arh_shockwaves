@@ -33,7 +33,7 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 
-	stdPrinter := io.StdPrinter{Key: c.Title().Name, Command: command, Args: argsSplit, PrintToConsole: c.printConsole}
+	stdPrinter := io.StdPrinter{Key: c.Title().Key, Command: command, Args: argsSplit, PrintToConsole: c.printConsole}
 
 	result := stdPrinter.Start()
 
@@ -57,6 +57,7 @@ func (b *BuildContainer) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: b.params["path"],
 		Name:        b.params["name"],
+		Key:         "build-container-" + b.params["name"],
 	}
 }
 

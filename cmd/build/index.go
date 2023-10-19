@@ -30,7 +30,8 @@ var Cmd = &cobra.Command{
 		applied, changedFilter := ui.FilteredListView(jobsPlan, "Build this projects", filter)
 		if applied {
 			jobsPlanApplied := JobsPlanByGroups(changedFilter, publish)
-			ui.ProcessingJobs(jobsPlanApplied)
+			executor := jobs.NewExecutor(jobsPlanApplied)
+			ui.ProcessingJobs(executor)
 		}
 	},
 }
