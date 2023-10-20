@@ -1,6 +1,7 @@
 package jobs_deploy
 
 import (
+	"path/filepath"
 	"xs/internal/jobs"
 	"xs/pkg/tools"
 )
@@ -16,9 +17,8 @@ func (d *DeployMicroFrontend) Execute() *jobs.Result {
 	labels := make(map[string]string)
 	labels["type"] = "microfrontend"
 	labels["name"] = name
-	// labels["version"] = todo
-
-	err := tools.IpfsPublishDir(distDir, labels)
+	absoluteDestPath, err := filepath.Abs(distDir)
+	err = tools.IpfsPublishDir(absoluteDestPath, labels)
 
 	if err != nil {
 		return &jobs.Result{

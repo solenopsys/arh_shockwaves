@@ -8,11 +8,11 @@ type Microfrontend struct {
 }
 
 func (e Microfrontend) Extract(name string, path string) map[string]string {
-	lib := strings.Replace(path, "./modules/", "@", 1)
-	distribution := strings.Replace(path, "./", "./dist/", 1)
+	path = strings.Replace(path, "./modules/", "@", 1)
+	distribution := strings.Replace(path, "./frontends/", "./frontends/dist/", 1)
 
 	params := map[string]string{ // todo remove this
-		"lib":  lib,
+		"path": path,
 		"dist": distribution,
 		"name": name,
 	}

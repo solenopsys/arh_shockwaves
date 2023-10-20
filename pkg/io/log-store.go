@@ -39,6 +39,20 @@ func (s *LogStore) Processing() {
 	}
 }
 
+func (s *LogStore) GetStatistic(key string) int {
+	if s.store[key] == nil {
+		return 0
+	}
+	return s.statistic[key]
+}
+
+func (s *LogStore) GetLog(key string) string {
+	if s.store[key] == nil {
+		return ""
+	}
+	return s.store[key].(*strings.Builder).String()
+}
+
 var logStoreOnce sync.Once
 var logStoreInstance *LogStore
 

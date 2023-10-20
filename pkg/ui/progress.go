@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 	"xs/internal/jobs"
+	"xs/pkg/io"
 )
 
 type model struct {
@@ -54,7 +55,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "ctrl+c", "esc", "q":
 			return m, tea.Quit
+		case "l":
+			return m.printLogs()
 		}
+
 	case jobExecMessage:
 		return m.funcName(checkMark)
 	case jobErrorMessage:
@@ -70,6 +74,20 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 		return m, cmd
 	}
+	return m, nil
+}
+
+func (m model) printLogs() (tea.Model, tea.Cmd) {
+	keys := m.executor.GetFailKeys()
+	store := io.GetLogStore()
+
+	for _, key := range keys {
+		fmt.Printf("Log (%s) -------------------->	\n", key)
+		log := store.GetLog(key)
+		fmt.Printf(log)
+
+	}
+
 	return m, nil
 }
 
@@ -103,7 +121,7 @@ func (m model) View() string {
 	w := lipgloss.Width(fmt.Sprintf("%d", n))
 
 	if m.executor.IsDone() {
-		return doneStyle.Render(fmt.Sprintf("Executed:  %d jobs (success: %d errors: %d) \nPress [q] for exit",
+		return doneStyle.Render(fmt.Sprintf("Executed:  %d jobs (success: %d errors: %d) \nPress [q] for exit or [l] for seen logs",
 			n, m.executor.SuccessCount(), m.executor.ErrorCount()))
 	}
 

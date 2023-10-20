@@ -54,6 +54,16 @@ func (j *Executor) RunJob() *Result {
 	return execute
 }
 
+func (j *Executor) GetFailKeys() []string {
+	keys := make([]string, 0)
+	for _, job := range j.jobs {
+		if !*j.results[job.Title().Key] {
+			keys = append(keys, job.Title().Key)
+		}
+	}
+	return keys
+}
+
 func NewExecutor(jobs []PrintableJob) *Executor {
 	return &Executor{jobs: jobs, index: 0, results: make(map[string]*bool)}
 }

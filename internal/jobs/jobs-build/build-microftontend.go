@@ -2,7 +2,6 @@ package jobs_build
 
 import (
 	"errors"
-	"strings"
 	"xs/internal/jobs"
 	"xs/internal/services"
 	"xs/pkg/io"
@@ -15,13 +14,8 @@ type MicroFronted struct {
 }
 
 func (b *MicroFronted) build() int {
-	lib := strings.Replace(b.params["lib"], "./frontends", ".", 1) // todo remove replace
-	//	m := params["name"]
-
-	arg := "bmf " + lib
-	argsSplit := strings.Split(arg, " ")
-
-	stdPrinter := io.StdPrinter{Key: b.Title().Key, Command: NPM_APPLICATION, Args: argsSplit, PrintToConsole: b.PrintConsole}
+	name := b.params["name"]
+	stdPrinter := io.StdPrinter{Key: b.Title().Key, Command: NPM_APPLICATION, Args: []string{"bmf", name}, PrintToConsole: b.PrintConsole}
 	return stdPrinter.Start()
 }
 
@@ -58,7 +52,7 @@ func (b *MicroFronted) Execute() *jobs.Result {
 func (b *MicroFronted) Title() jobs.ItemTitle {
 	return jobs.ItemTitle{
 		Style:       jobs.DEFAULT_STYLE,
-		Description: b.params["lib"],
+		Description: "Build microfrontend: " + b.params["path"],
 		Name:        b.params["name"],
 		Key:         "build-microfrontend-" + b.params["name"],
 	}

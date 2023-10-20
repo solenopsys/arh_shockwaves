@@ -23,7 +23,7 @@ func (d *DeployFrontlib) Execute() *jobs.Result {
 	if err != nil {
 		io.Panic(err)
 	}
-	stdPrinter := io.StdPrinter{Key: d.Title().Key, Command: command, Args: []string{"publish", absoluteDestPath}, PrintToConsole: d.printConsole}
+	stdPrinter := io.StdPrinter{Key: d.Title().Key, Command: command, Args: []string{"publish", absoluteDestPath, "--no-git-checks"}, PrintToConsole: d.printConsole}
 	result := stdPrinter.Start()
 
 	pt.MoveToBasePath()
