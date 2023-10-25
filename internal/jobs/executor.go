@@ -57,7 +57,7 @@ func (j *Executor) RunJob() *Result {
 func (j *Executor) GetFailKeys() []string {
 	keys := make([]string, 0)
 	for _, job := range j.jobs {
-		if !*j.results[job.Title().Key] {
+		if j.results[job.Title().Key] != nil && !*j.results[job.Title().Key] {
 			keys = append(keys, job.Title().Key)
 		}
 	}

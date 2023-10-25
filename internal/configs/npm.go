@@ -8,6 +8,7 @@ import (
 
 type NpmLibPackage struct {
 	Name                       string            `json:"name"`
+	Version                    string            `json:"version"`
 	AllowedNonPeerDependencies map[string]string `json:"allowedNonPeerDependencies"`
 	Dependencies               map[string]string `json:"dependencies"`
 	PeerDependencies           map[string]string `json:"peerDependencies"`

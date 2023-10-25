@@ -3,7 +3,9 @@ package jobs_deploy
 import (
 	"path/filepath"
 	"xs/internal/jobs"
+	"xs/pkg/io"
 	"xs/pkg/tools"
+	"xs/pkg/wrappers"
 )
 
 type DeployMicroFrontend struct {
@@ -13,12 +15,24 @@ type DeployMicroFrontend struct {
 func (d *DeployMicroFrontend) Execute() *jobs.Result {
 	distDir := d.params["dist"]
 	name := d.params["name"]
+	version := d.params["version"]
 
 	labels := make(map[string]string)
 	labels["type"] = "microfrontend"
 	labels["name"] = name
+	labels["version"] = version
 	absoluteDestPath, err := filepath.Abs(distDir)
-	err = tools.IpfsPublishDir(absoluteDestPath, labels)
+	cid, err := tools.IpfsPublishDir(absoluteDestPath, labels)
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
+	}
+	p := wrappers.NewPinning()
+	ipnsCid, err := p.SmartName(name, cid)
+
+	io.Debug("ipnsCID", ipnsCid)
 
 	if err != nil {
 		return &jobs.Result{

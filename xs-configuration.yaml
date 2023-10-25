@@ -2,6 +2,10 @@ format: xs-configuration-v2
 files:
   workspace: "/xs-workspace.yaml"
   tsconfig: "/tsconfig.json"
+scriptsNames:
+  buildMicroFrontend: "build-microfrontend"
+  cacheSynchronization: "cache-synchronization"
+  buildBootstrap: "build-bootstrap"
 hosts:
   ipfsNode: "ipfs-api.solenopsys.org:80"
   pinningService: "http://pinning.solenopsys.org"

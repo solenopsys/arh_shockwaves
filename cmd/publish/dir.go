@@ -15,12 +15,12 @@ var cmdDir = &cobra.Command{
 		labels := make(map[string]string)
 		labels["type"] = "dir"
 
-		err := tools.IpfsPublishDir(dir, labels)
+		cid, err := tools.IpfsPublishDir(dir, labels)
 
 		if err != nil {
 			io.Println(err)
 		} else {
-			io.Println("Pined!")
+			io.Println("Pined! ", cid)
 		}
 	},
 }

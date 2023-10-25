@@ -5,23 +5,23 @@ import (
 	"xs/pkg/wrappers"
 )
 
-func IpfsPublishDir(dir string, labels map[string]string) error {
+func IpfsPublishDir(dir string, labels map[string]string) (string, error) {
 
 	ipfsNode := wrappers.IpfsNode{IpfsNodeAddr: viper.GetString("hosts.ipfsNode")}
 	cid, err := ipfsNode.UploadDirToIpfsNode(dir)
 	pinning := wrappers.NewPinning()
 
 	if err != nil {
-		return err
+		return cid, err
 	} else {
 		//io.Println("File cid: ", cid)
 	}
 	_, err = pinning.SmartPin(cid, labels)
 
 	if err != nil {
-		return err
+		return cid, err
 	} else {
 		//io.Println("Pined cid: ", cid)
-		return nil
+		return cid, nil
 	}
 }

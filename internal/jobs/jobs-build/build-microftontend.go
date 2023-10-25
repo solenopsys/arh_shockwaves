@@ -2,6 +2,7 @@ package jobs_build
 
 import (
 	"errors"
+	"github.com/spf13/viper"
 	"xs/internal/jobs"
 	"xs/internal/services"
 	"xs/pkg/io"
@@ -15,7 +16,10 @@ type MicroFronted struct {
 
 func (b *MicroFronted) build() int {
 	name := b.params["name"]
-	stdPrinter := io.StdPrinter{Key: b.Title().Key, Command: NPM_APPLICATION, Args: []string{"bmf", name}, PrintToConsole: b.PrintConsole}
+
+	scriptName := viper.GetString("scriptsNames.buildMicroFrontend")
+
+	stdPrinter := io.StdPrinter{Key: b.Title().Key, Command: NPM_APPLICATION, Args: []string{scriptName, name}, PrintToConsole: b.PrintConsole}
 	return stdPrinter.Start()
 }
 
