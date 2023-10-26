@@ -1,6 +1,8 @@
 package jobs_build
 
 import (
+	"errors"
+	"github.com/spf13/viper"
 	"strings"
 	"xs/internal/jobs"
 	"xs/pkg/io"
@@ -21,7 +23,7 @@ func (b *BuildFrontend) Title() jobs.ItemTitle {
 		Style:       jobs.DEFAULT_STYLE,
 		Description: b.params["path"],
 		Name:        b.params["name"],
-		Key:         "build-frontend-" + b.params["name"],
+		Key:         "build-bootstrap-" + b.params["name"],
 	}
 }
 
@@ -29,24 +31,30 @@ func (n *BuildFrontend) Execute() *jobs.Result {
 
 	pt := xstool.PathTools{}
 	src := n.params["path"]
+	packageName := strings.Replace(n.params["name"], "@", "", 1)
 
 	pt.SetBasePathPwd()
 	pt.MoveTo(src)
 
-	arg := "build"
-	argsSplit := strings.Split(arg, " ")
+	scriptName := viper.GetString("scriptsNames.buildBootstrap")
 
-	stdPrinter := io.StdPrinter{Key: n.Title().Key, Command: "ng", Args: argsSplit, PrintToConsole: n.printConsole}
+	stdPrinter := io.StdPrinter{Key: n.Title().Key, Command: "pnpm", Args: []string{scriptName, packageName}, PrintToConsole: n.printConsole}
 
 	result := stdPrinter.Start()
 
 	pt.MoveToBasePath()
 
 	if result == 0 {
-		io.PrintColor("OK", io.Green)
+		return &jobs.Result{
+			Success:     true,
+			Error:       nil,
+			Description: "Build bootstrap executed",
+		}
 	} else {
-		io.PrintColor("ERROR", io.Red)
+		return &jobs.Result{
+			Success:     false,
+			Error:       errors.New("Build bootstrap  failed"),
+			Description: "Build bootstrap  failed",
+		}
 	}
-
-	return nil
 }

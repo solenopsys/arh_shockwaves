@@ -1,7 +1,7 @@
 package jobs
 
 type Executor struct {
-	results map[string]*bool
+	results map[string]bool
 	index   int
 	jobs    []PrintableJob
 }
@@ -17,7 +17,7 @@ func (j *Executor) SuccessCount() int {
 func (j *Executor) calcCount(result bool) int {
 	successCount := 0
 	for _, v := range j.results {
-		if *v == result {
+		if v == result {
 			successCount++
 		}
 	}
@@ -50,14 +50,19 @@ func (j *Executor) IsDone() bool {
 func (j *Executor) RunJob() *Result {
 	job := j.GetCurrent()
 	execute := job.Execute()
-	j.results[job.Title().Key] = &execute.Success
+	if execute == nil {
+		j.results[job.Title().Key] = false
+	} else {
+		j.results[job.Title().Key] = execute.Success
+	}
+
 	return execute
 }
 
 func (j *Executor) GetFailKeys() []string {
 	keys := make([]string, 0)
 	for _, job := range j.jobs {
-		if j.results[job.Title().Key] != nil && !*j.results[job.Title().Key] {
+		if !j.results[job.Title().Key] {
 			keys = append(keys, job.Title().Key)
 		}
 	}
@@ -65,5 +70,5 @@ func (j *Executor) GetFailKeys() []string {
 }
 
 func NewExecutor(jobs []PrintableJob) *Executor {
-	return &Executor{jobs: jobs, index: 0, results: make(map[string]*bool)}
+	return &Executor{jobs: jobs, index: 0, results: make(map[string]bool)}
 }

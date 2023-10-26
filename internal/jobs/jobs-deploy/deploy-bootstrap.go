@@ -1,7 +1,11 @@
 package jobs_deploy
 
 import (
+	"path/filepath"
 	"xs/internal/jobs"
+	"xs/pkg/io"
+	"xs/pkg/tools"
+	"xs/pkg/wrappers"
 )
 
 type DeployFrontendBootstrap struct {
@@ -9,14 +13,36 @@ type DeployFrontendBootstrap struct {
 }
 
 func (d *DeployFrontendBootstrap) Execute() *jobs.Result {
-	path := d.params["dist"]
+	distDir := d.params["dist"]
+	name := d.params["name"]
 
-	println("not implemented: ", path)
+	labels := make(map[string]string)
+	labels["type"] = "bootstrap"
+	labels["name"] = name
+	absoluteDestPath, err := filepath.Abs(distDir)
+	cid, err := tools.IpfsPublishDir(absoluteDestPath, labels)
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
+	}
+	p := wrappers.NewPinning()
+	ipnsCid, err := p.SmartName(name, cid)
 
-	return &jobs.Result{
-		Success:     true,
-		Error:       nil,
-		Description: "BuildHelm executed",
+	io.Debug("ipnsCID", ipnsCid)
+
+	if err != nil {
+		return &jobs.Result{
+			Success: false,
+			Error:   err,
+		}
+	} else {
+		return &jobs.Result{
+			Success:     true,
+			Error:       nil,
+			Description: "Bootstap deployed executed " + name,
+		}
 	}
 }
 
