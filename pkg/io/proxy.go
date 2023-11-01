@@ -28,6 +28,7 @@ func StartProxy(staticDir string, port string) {
 
 	mux.Handle("/dag", reverseProxy)
 	mux.Handle("/modules/", modulesFileServer)
+	mux.Handle("/shared/", modulesFileServer)
 	// Serve static files for any path
 	mux.Handle("/", fileServer)
 
