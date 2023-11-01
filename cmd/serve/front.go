@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"sync"
 	"xs/pkg/io"
+	"xs/pkg/tools"
 )
 
 var cmdFront = &cobra.Command{
@@ -24,9 +25,16 @@ var cmdFront = &cobra.Command{
 			strPort := strconv.Itoa(port)
 
 			io.Println("Print: " + name + ": " + strPort)
-			go io.StartProxy("./dist/fronts/"+name, strPort)
-			port++
-			wg.Add(1)
+			dir := "./dist/bootstraps/" + name
+
+			if tools.Exists(dir) {
+				go io.StartProxy(dir, strPort)
+				port++
+				wg.Add(1)
+			} else {
+				println("Not found module: " + dir)
+			}
+
 		}
 
 		wg.Wait()

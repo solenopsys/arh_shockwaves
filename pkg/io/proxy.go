@@ -12,6 +12,7 @@ func StartProxy(staticDir string, port string) {
 
 	// Create a file server handler
 	fileServer := http.FileServer(http.Dir(staticDir))
+	modulesFileServer := http.FileServer(http.Dir("./dist/"))
 
 	targetURL, _ := url.Parse("http://solenopsys.org/")
 
@@ -26,7 +27,7 @@ func StartProxy(staticDir string, port string) {
 	}
 
 	mux.Handle("/dag", reverseProxy)
-
+	mux.Handle("/modules/", modulesFileServer)
 	// Serve static files for any path
 	mux.Handle("/", fileServer)
 
