@@ -29,7 +29,10 @@ func (c *BuildContainer) Execute() *jobs.Result {
 	command := "nerdctl"
 	io.Println("command:" + command)
 
-	arg := "build --platform=" + c.platform + "  --progress=plain --output type=image,name=" + c.registry + "/" + name + ":latest ."
+	pn := strings.Replace(name, "@", "/", 1)
+	tag := c.registry + pn + ":latest"
+	//arg := "build --platform=" + c.platform + "  --progress=plain --output type=image,name=" + tag + " ."
+	arg := "build" + " -t " + tag + " --platform=" + c.platform + "  --progress=plain" + " ."
 	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 

@@ -16,8 +16,8 @@ func (d *DeployContainer) Execute() *jobs.Result {
 	name := d.params["name"]
 
 	command := "nerdctl"
-
-	arg := " push " + d.registry + "/" + name + ":latest "
+	pn := strings.Replace(name, "@", "/", 1)
+	arg := "push " + d.registry + pn + ":latest"
 	io.Println(command + " " + arg)
 	argsSplit := strings.Split(arg, " ")
 

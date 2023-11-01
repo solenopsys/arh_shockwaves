@@ -22,7 +22,7 @@ type FrontLibsController struct {
 const NPM_APPLICATION = "pnpm"
 
 func (b *FrontLibsController) genCache() {
-	cmd := exec.Command(NPM_APPLICATION, []string{"cache"}...)
+	cmd := exec.Command(NPM_APPLICATION, []string{"cache-synchronization"}...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		io.Println("Error executing command:", err)
@@ -44,8 +44,8 @@ func NewFrontLibController(key string) *FrontLibsController {
 	return &FrontLibsController{
 		libs:            make(map[string]string),
 		remoteCheck:     make(map[string]bool),
-		cacheFile:       ".xs/cache.json",
-		npmCacheDir:     "node_modules/.cache/native-federation",
+		cacheFile:       ".xs/to-upload.json",
+		npmCacheDir:     "dist/shared",
 		ipfsNode:        wrappers.NewIpfsNode(),
 		pinningRequests: NewPinningRequests(),
 		pinningService:  wrappers.NewPinning(),
@@ -110,14 +110,7 @@ func (b *FrontLibsController) localLibExists(fileName string) bool {
 }
 
 func (b *FrontLibsController) PreProcessing() {
-	b.genCache()
-	b.loadCache()
-	for _, fileName := range b.libs {
-		libInLocalCache := b.localLibExists(fileName)
-		if !libInLocalCache {
-			b.remoteCheck[fileName] = b.tryDownLoadLib(fileName)
-		}
-	}
+
 }
 
 func (b *FrontLibsController) checkRemoteLib(fileName string) bool {
