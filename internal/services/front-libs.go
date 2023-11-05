@@ -12,8 +12,6 @@ type FrontLibsController struct {
 	cacheFile       string
 	npmCacheDir     string
 	ipfsNode        *wrappers.IpfsNode
-	libs            map[string]string
-	remoteCheck     map[string]bool
 	pinningRequests *PinningRequests
 	pinningService  *wrappers.Pinning
 	key             string
@@ -42,8 +40,6 @@ func (b *FrontLibsController) CacheCheck() {
 
 func NewFrontLibController(key string) *FrontLibsController {
 	return &FrontLibsController{
-		libs:            make(map[string]string),
-		remoteCheck:     make(map[string]bool),
 		cacheFile:       ".xs/to-upload.json",
 		npmCacheDir:     "dist/shared",
 		ipfsNode:        wrappers.NewIpfsNode(),
@@ -88,20 +84,6 @@ func (b *FrontLibsController) tryUpLoadLib(fileName string) (string, error) {
 	return b.pinningService.SmartPin(cid, labels)
 }
 
-func (b *FrontLibsController) loadCache() {
-
-	file, err := os.ReadFile(b.cacheFile)
-	if err != nil {
-		io.Panic(err)
-	}
-
-	err = json.Unmarshal(file, &b.libs)
-	if err != nil {
-		io.Panic(err)
-	}
-
-}
-
 func (b *FrontLibsController) localLibExists(fileName string) bool {
 	path := b.filePath(fileName)
 	_, err := os.Stat(path)
@@ -113,28 +95,30 @@ func (b *FrontLibsController) PreProcessing() {
 
 }
 
-func (b *FrontLibsController) checkRemoteLib(fileName string) bool {
-	if val, exists := b.remoteCheck[fileName]; exists {
-		return val
-	} else {
-		_, err := b.pinningRequests.FindFontLib(fileName)
-		exists := err == nil
-		b.remoteCheck[fileName] = exists
-		return exists
-	}
-}
-
 func (b *FrontLibsController) PostProcessing() {
-	for libName, fileName := range b.libs {
-		libInLocalCache := b.localLibExists(fileName)
-		libExistsInRemote := b.checkRemoteLib(fileName)
-		if libInLocalCache && !libExistsInRemote {
-			cid, err := b.tryUpLoadLib(fileName)
-			io.Println("Upload lib:", libName, "file name:", fileName, "cid:", cid)
-			if err != nil {
-				io.Panic(err)
-			}
-			b.remoteCheck[fileName] = true
+	file, err := os.ReadFile(b.cacheFile)
+	if err != nil {
+		io.Panic(err)
+	}
+
+	var libs map[string]string
+
+	err = json.Unmarshal(file, &libs)
+	if err != nil {
+		io.Panic(err)
+	}
+	for libName, fileName := range libs {
+
+		cid, err := b.tryUpLoadLib(fileName)
+		io.Println("Upload lib:", libName, "file name:", fileName, "cid:", cid)
+		if err != nil {
+			io.Panic(err)
 		}
+
+	}
+
+	err = os.Remove(b.cacheFile)
+	if err != nil {
+		io.Panic(err)
 	}
 }
