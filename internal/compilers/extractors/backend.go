@@ -10,7 +10,7 @@ type Backend struct {
 
 func (e Backend) Extract(name string, path string) map[string]string {
 
-	res, backendsDir := tools.FindWorkspaceRootDir()
+	res, rootDir := tools.FindWorkspaceRootDir()
 	if !res {
 		io.Fatal("Workspace root dir not found")
 	}
@@ -18,7 +18,7 @@ func (e Backend) Extract(name string, path string) map[string]string {
 	params := map[string]string{
 		"name": name,
 		"path": path,
-		"dist": backendsDir + "/backends/dist",
+		"dist": rootDir + "/backends/dist",
 	}
 	return params
 }

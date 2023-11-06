@@ -3,6 +3,7 @@ package jobs_fetch
 import (
 	"xs/internal/configs"
 	"xs/internal/jobs"
+	"xs/pkg/tools"
 )
 
 type TsConfigModuleRemove struct {
@@ -11,9 +12,22 @@ type TsConfigModuleRemove struct {
 
 func (t *TsConfigModuleRemove) Execute() *jobs.Result {
 	injector := configs.NewTsInjector()
+	res, rootDir := tools.FindWorkspaceRootDir()
+	if !res {
+		return &jobs.Result{
+			Success:     false,
+			Error:       nil,
+			Description: "Workspace root dir not found",
+		}
+	}
+	pt := tools.PathTools{}
+
+	pt.SetBasePathPwd()
+	pt.MoveTo(rootDir + "/frontends")
 	injector.Load()
 	injector.RemovePackage(t.packageName)
 	injector.Save()
+	pt.MoveToBasePath()
 
 	return &jobs.Result{
 		Success:     true,
