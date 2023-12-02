@@ -12,12 +12,12 @@ hosts:
   helmRepository: "http://helm.solenopsys.org"
 templates:
   sections:
-    converged: "@solenopsys/pl-tp-converged" # все что связано с ui
-    shockwaves: "@solenopsys/pl-tp-shockwaves" # все что связано c хранением и обработкои данных
-    combinatorics: "@solenopsys/pl-tp-combinatorics" # все что связано с физическими устройствами
-    synthetic: "@solenopsys/pl-tp-synthetic" # блокчейн и смарт контракты
-    matrix: "@solenopsys/pl-tp-matrix" # все что связано со стандартами и соглашениями
-    platform: "@solenopsys/pl-tp-platform" # все что связано с платформой
+    converged: "@solenopsys/tp-converged" # все что связано с ui
+    shockwaves: "@solenopsys/tp-shockwaves" # все что связано c хранением и обработкои данных
+    combinatorics: "@solenopsys/tp-combinatorics" # все что связано с физическими устройствами
+    synthetic: "@solenopsys/tp-synthetic" # блокчейн и смарт контракты
+    matrix: "@solenopsys/tp-matrix" # все что связано со стандартами и соглашениями
+    platform: "@solenopsys/tp-platform" # все что связано с платформой
   creation: {}
 git:
   paths:
