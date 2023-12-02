@@ -12,24 +12,41 @@ hosts:
   helmRepository: "http://helm.solenopsys.org"
 templates:
   sections:
-    frontends: "@solenopsys/tp-frontends"
-    backends: "@solenopsys/tp-backends"
-    tools: "@solenopsys/tp-tools"
-    contracts: "@solenopsys/tp-contracts"
-    embedded: "@solenopsys/tp-embedded"
-    engineering: "@solenopsys/tp-engineering"
+    converged: "@solenopsys/pl-tp-converged" # все что связано с ui
+    shockwaves: "@solenopsys/pl-tp-shockwaves" # все что связано c хранением и обработкои данных
+    combinatorics: "@solenopsys/pl-tp-combinatorics" # все что связано с физическими устройствами
+    synthetic: "@solenopsys/pl-tp-synthetic" # блокчейн и смарт контракты
+    matrix: "@solenopsys/pl-tp-matrix" # все что связано со стандартами и соглашениями
+    platform: "@solenopsys/pl-tp-platform" # все что связано с платформой
   creation: {}
 git:
   paths:
-    bootstraps: frontends/bootstraps
-    frontlibs: frontends/libraries
-    uimatrix: frontends/libraries
-    microfrontends: frontends/modules
-    tools: tools
-    templates: templates
-    backlibs: backends/libraries
-    deployments: backends/deployments
-    microservices: backends/modules
+    # converged
+    bootstraps: converged/bootstraps
+    frontlibs: converged/libraries
+    uimatrix: converged/libraries
+    microfrontends: converged/microfrontends
+    # shockwaves
+    backlibs: shockwaves/libraries
+    deployments: shockwaves/deployments
+    microservices: shockwaves/microservices
+    dataservices: shockwaves/dataservices
+    microkernels: shockwaves/microkernels
+    # combinatorics
+    firmware: combinatorics/firmware
+    electronic: combinatorics/electronic
+    engineering: combinatorics/engineering
+    # synthetic
+    contracts: synthetic/contracts
+    chains: synthetic/chains
+    # platform
+    templates: platform/templates
+    tools: platform/tools
+    content: platform/content
+    generators: platform/generators
+    # matrix
+    standards: matrix/standards
+
   prefixes:
     bs: bootstraps
     fl: frontlibs
@@ -40,6 +57,16 @@ git:
     bl: backlibs
     dp: deployments
     ms: microservices
+    ds: dataservices
+    mc: microkernels
+    ct: content
+    st: standards
+    fw: firmware
+    el: electronic
+    en: engineering
+    cn: contracts
+    ch: chains
+    gn: generators
 jobs:
   builders:
     bootstrap:
