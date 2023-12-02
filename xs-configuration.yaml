@@ -46,6 +46,9 @@ git:
     generators: platform/generators
     # matrix
     standards: matrix/standards
+    protocols: matrix/protocols
+    interfaces: matrix/interfaces
+    guidelines: matrix/guidelines
 
   prefixes:
     bs: bootstraps
@@ -61,6 +64,9 @@ git:
     mc: microkernels
     ct: content
     st: standards
+    pr: protocols
+    in: interfaces
+    gl: guidelines
     fw: firmware
     el: electronic
     en: engineering
