@@ -36,6 +36,7 @@ git:
     firmware: combinatorics/firmware
     electronic: combinatorics/electronic
     engineering: combinatorics/engineering
+    microchips: combinatorics/microchips
     # synthetic
     contracts: synthetic/contracts
     chains: synthetic/chains
@@ -73,6 +74,7 @@ git:
     cn: contracts
     ch: chains
     gn: generators
+    ic: microchips
 jobs:
   builders:
     bootstrap:
