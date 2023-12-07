@@ -78,24 +78,25 @@ git:
 jobs:
   builders:
     bootstrap:
-      - frontends/bootstraps
+      - converged/bootstraps
     microfrontend:
-      - frontends/modules
+      - converged/modules
     frontlib:
-      - frontends/libraries
+      - converged/libraries
     helm:
-      - backends/deployments
+      - shockwaves/deployments
     backlib:
-      - backends/libraries
+      - shockwaves/libraries
     container:
-      - backends/modules
+      - shockwaves/modules
   processors:
     ts_injector:
       description: Injects source code location to tsconfig.json file
       triggers:
         - type: post
           sections:
-            - frontends
+            - converged/libraries
+            - converged/modules
           command:
             - code
             - add
@@ -104,7 +105,8 @@ jobs:
       triggers:
         - type: post
           sections:
-            - frontends
+            - converged/libraries
+            - converged/modules
           command:
             - code
             - remove

@@ -49,9 +49,15 @@ func makeAddPlan(pattern string) []jobs.PrintableJob {
 		packPath := strings.Replace(packageName, "@", "/", -1)
 		moduleSubDir := directory + packPath
 		moduleSubDirExists := tools.Exists(moduleSubDir)
-		subDir := strings.Split(directory, "/")[0]
-		templateJob := checkTemplateExists(subDir)
+		subDirs := strings.Split(directory, "/")
+		var subDir string
+		if len(subDirs) > 1 {
+			subDir = strings.Join(subDirs[0:2], "/")
+		} else {
+			subDir = subDirs[0]
+		}
 
+		templateJob := checkTemplateExists(subDir)
 		templatesJobs[subDir] = &templateJob
 
 		if !moduleSubDirExists {
