@@ -27,7 +27,7 @@ func (b *MicroFronted) Execute() *jobs.Result {
 
 	pt := xstool.PathTools{}
 	pt.SetBasePathPwd()
-	pt.MoveTo("frontends") //todo move to const
+	pt.MoveTo("converged") //todo move to const
 
 	fl := services.NewFrontLibController(b.Title().Key)
 

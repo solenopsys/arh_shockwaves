@@ -18,7 +18,7 @@ func (e Backend) Extract(name string, path string) map[string]string {
 	params := map[string]string{
 		"name": name,
 		"path": path,
-		"dist": rootDir + "/backends/dist",
+		"dist": rootDir + "/shockwaves/dist",
 	}
 	return params
 }

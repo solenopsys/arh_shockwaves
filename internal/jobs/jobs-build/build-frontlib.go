@@ -72,7 +72,7 @@ func (b *BuildFrontLib) Execute() *jobs.Result { // todo refactoring
 		//io.PrintColor("OK", io.Green)
 
 		//io.Println("Make link: ", absoluteDestPath)
-		pt.MoveTo("frontends") //todo move to const
+		pt.MoveTo("converged") //todo move to const
 		_, err := os.Getwd()
 
 		cmd := exec.Command(NPM_APPLICATION, "link", absoluteDestPath)

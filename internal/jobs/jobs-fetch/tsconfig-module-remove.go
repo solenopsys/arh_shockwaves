@@ -23,7 +23,7 @@ func (t *TsConfigModuleRemove) Execute() *jobs.Result {
 	pt := tools.PathTools{}
 
 	pt.SetBasePathPwd()
-	pt.MoveTo(rootDir + "/frontends")
+	pt.MoveTo(rootDir + "/converged")
 	injector.Load()
 	injector.RemovePackage(t.packageName)
 	injector.Save()

@@ -8,7 +8,7 @@ type Bootstrap struct {
 func (e Bootstrap) Extract(name string, path string) map[string]string {
 
 	packageName := strings.Replace(name, "@", "", 1)
-	distribution := "./frontends/dist/bootstraps/" + packageName
+	distribution := "./converged/dist/bootstraps/" + packageName
 
 	params := map[string]string{
 		"path": path,

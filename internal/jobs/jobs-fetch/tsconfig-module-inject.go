@@ -25,7 +25,7 @@ func (t *TsConfigModuleInject) Execute() *jobs.Result {
 	pt := tools.PathTools{}
 
 	pt.SetBasePathPwd()
-	pt.MoveTo(rootDir + "/frontends")
+	pt.MoveTo(rootDir + "/converged")
 	injector.Load()
 	injector.AddPackage(t.packageName, t.targetDir)
 	injector.Save()
@@ -49,6 +49,6 @@ func (t *TsConfigModuleInject) Title() jobs.ItemTitle {
 }
 
 func NewTsConfigModuleInject(packageName string, targetDir string) jobs.PrintableJob {
-	subDir := strings.Replace(targetDir, "frontends/", "", 1) // todo move to const or change logic
+	subDir := strings.Replace(targetDir, "converged/", "", 1) // todo move to const or change logic
 	return &TsConfigModuleInject{packageName: packageName, targetDir: subDir}
 }
