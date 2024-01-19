@@ -1,4 +1,4 @@
-# XS - (eXec Solenopsys) - cli tool
+#  cli tool for start shockwaves
 
 Point to start global infrastructure of Solenopsys network.
 
